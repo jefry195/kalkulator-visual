@@ -1133,7 +1133,7 @@
                             <input type="checkbox" id="finishing-potong" data-key="potong" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
                             <label for="finishing-potong" class="text-xs font-medium text-slate-300">Potong Jadi (Cutting)</label>
                         </div>
-                        <span id="badge-cost-potong" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20"></span>
+                        <span id="badge-cost-potong" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 hidden"></span>
                     </div>
                     <div class="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
                         <div class="flex items-center justify-between gap-2">
@@ -1141,7 +1141,7 @@
                                 <input type="checkbox" id="finishing-lipat" data-key="lipat" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
                                 <label for="finishing-lipat" class="text-xs font-medium text-slate-300">Lipat Mesin</label>
                             </div>
-                            <span id="badge-cost-lipat" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20"></span>
+                            <span id="badge-cost-lipat" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 hidden"></span>
                         </div>
                         <div id="jumlah-lipatan-container" class="mt-2 hidden">
                             <input type="number" id="jumlah-lipatan" class="form-input text-xs py-1" placeholder="Jml Lipatan" value="1" min="1">
@@ -1152,7 +1152,7 @@
                             <input type="checkbox" id="finishing-spotuv" data-key="spotuv" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
                             <label for="finishing-spotuv" class="text-xs font-medium text-slate-300">Spot UV (Varnish)</label>
                         </div>
-                        <span id="badge-cost-spotuv" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20"></span>
+                        <span id="badge-cost-spotuv" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 hidden"></span>
                     </div>
                 </div>
                 <div class="border-t border-slate-800/80 pt-3 mt-3">
@@ -1161,7 +1161,7 @@
                             <input type="checkbox" id="finishing-hotfoil" data-key="hotfoil" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
                             <label for="finishing-hotfoil" class="text-xs font-semibold text-slate-200">Hot Foil / Poly Emas/Perak</label>
                         </div>
-                        <span id="badge-cost-hotfoil" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20"></span>
+                        <span id="badge-cost-hotfoil" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 hidden"></span>
                     </div>
                     <div id="hotfoil-container" class="mt-2.5 hidden bg-slate-950 p-2.5 rounded-lg border border-slate-800">
                         <label class="text-[11px] text-slate-400 block mb-1">Ukuran Area Foil (P x L cm):</label>
@@ -1179,7 +1179,7 @@
                             <input type="checkbox" id="finishing-stickercut" data-key="stickercut" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
                             <label for="finishing-stickercut" class="text-xs font-medium text-slate-200">+ Kiss Cut Stiker</label>
                         </div>
-                        <span id="badge-cost-stickercut" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20"></span>
+                        <span id="badge-cost-stickercut" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 hidden"></span>
                     </div>
                     <div id="sticker-cutting-container" class="mt-2 hidden">
                         <select id="sticker-cutting-type" class="form-select text-xs py-1">
@@ -1192,7 +1192,7 @@
                             <input type="checkbox" id="finishing-laminatingkaku" data-key="laminatingkaku" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
                             <label for="finishing-laminatingkaku" class="text-xs font-medium text-slate-200">Laminating Hard Press / Kaku</label>
                         </div>
-                        <span id="badge-cost-laminatingkaku" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20"></span>
+                        <span id="badge-cost-laminatingkaku" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 hidden"></span>
                     </div>
                 </div>`;
 
@@ -1650,8 +1650,17 @@
             function updateFinishingBadges() {
                 const qty = parseInt(el.jumlah.value) || 1000;
                 const isDigital = el.jenisMesin.value === 'digital';
+                const isDTF = el.jenisMesin.value === 'dtf';
                 const sisiCetak = parseInt(el.sisi.value) || 1;
                 const bleed = parseFloat(el.bleedInput.value) || 0;
+
+                if (isDTF || availableSizes.length === 0) {
+                    ['badge-cost-potong', 'badge-cost-lipat', 'badge-cost-spotuv', 'badge-cost-hotfoil', 'badge-cost-stickercut', 'badge-cost-laminatingkaku'].forEach(id => {
+                        const b = document.getElementById(id);
+                        if (b) b.classList.add('hidden');
+                    });
+                    return;
+                }
 
                 const activeSize = availableSizes[currentActiveSizeIndex] || availableSizes[0] || { p: 10, l: 10, multiplier: 1 };
                 const p = activeSize.p + (bleed * 2);
@@ -1662,41 +1671,47 @@
                 const totalPlano = Math.ceil(qty / pcsPerPlano);
                 const patternsNeeded = Math.ceil(qty / activeSize.multiplier);
 
+                function setBadge(id, cost) {
+                    const badge = document.getElementById(id);
+                    if (badge) {
+                        if (cost && cost > 0) {
+                            badge.textContent = `+${formatRupiah(cost)}`;
+                            badge.classList.remove('hidden');
+                        } else {
+                            badge.classList.add('hidden');
+                        }
+                    }
+                }
+
                 // 1. Potong Jadi
                 let costPotong = isDigital ? HARGA_DIGITAL.finishing.potongJadi : Math.max(HARGA_OFFSET_FINISHING.potong.min, qty * HARGA_OFFSET_FINISHING.potong.per_pcs);
-                const badgePotong = document.getElementById('badge-cost-potong');
-                if (badgePotong) badgePotong.textContent = `+${formatRupiah(costPotong)}`;
+                setBadge('badge-cost-potong', costPotong);
 
                 // 2. Lipat Mesin
                 const jmlLipatan = parseInt(document.getElementById('jumlah-lipatan')?.value) || 1;
                 let costLipat = Math.max(HARGA_OFFSET_FINISHING.lipat.min, qty * jmlLipatan * HARGA_OFFSET_FINISHING.lipat.per_lipatan_pcs);
-                const badgeLipat = document.getElementById('badge-cost-lipat');
-                if (badgeLipat) badgeLipat.textContent = `+${formatRupiah(costLipat)}`;
+                setBadge('badge-cost-lipat', costLipat);
 
                 // 3. Spot UV
                 const areaPattern = Math.max(1, (p - bleed * 2) * (l - bleed * 2));
                 let costSpotUV = Math.max(HARGA_OFFSET_FINISHING.spotuv.min, patternsNeeded * areaPattern * HARGA_OFFSET_FINISHING.spotuv.per_cm2) * sisiCetak;
-                const badgeSpotUV = document.getElementById('badge-cost-spotuv');
-                if (badgeSpotUV) badgeSpotUV.textContent = `+${formatRupiah(costSpotUV)}`;
+                setBadge('badge-cost-spotuv', costSpotUV);
 
                 // 4. Hot Foil
                 const foilP = parseFloat(document.getElementById('hotfoil-panjang')?.value) || 5;
                 const foilL = parseFloat(document.getElementById('hotfoil-lebar')?.value) || 5;
                 const areaFoil = foilP * foilL;
                 let costHotFoil = Math.max(HARGA_OFFSET_FINISHING.hotfoil.min, patternsNeeded * areaFoil * HARGA_OFFSET_FINISHING.hotfoil.per_cm2) * sisiCetak;
-                const badgeHotFoil = document.getElementById('badge-cost-hotfoil');
-                if (badgeHotFoil) badgeHotFoil.textContent = `+${formatRupiah(costHotFoil)}`;
+                setBadge('badge-cost-hotfoil', costHotFoil);
 
                 // 5. Kiss Cut Stiker (Digital)
                 const typeSticker = document.getElementById('sticker-cutting-type')?.value || 'bawah5';
                 let costStickerCut = totalPlano * HARGA_DIGITAL.finishing.cuttingStiker[typeSticker];
-                const badgeStickerCut = document.getElementById('badge-cost-stickercut');
-                if (badgeStickerCut) badgeStickerCut.textContent = `+${formatRupiah(costStickerCut)}`;
+                setBadge('badge-cost-stickercut', isDigital ? costStickerCut : 0);
 
                 // 6. Laminating Hard Press (Digital)
                 let costLaminatingKaku = totalPlano * HARGA_DIGITAL.finishing.laminatingKakuPerLembar;
-                const badgeLamKaku = document.getElementById('badge-cost-laminatingkaku');
-                if (badgeLamKaku) badgeLamKaku.textContent = `+${formatRupiah(costLaminatingKaku)}`;
+                setBadge('badge-cost-laminatingkaku', isDigital ? costLaminatingKaku : 0);
             }
 
             function updatePaperInfo(breakdown) {
