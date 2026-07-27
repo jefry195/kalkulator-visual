@@ -337,45 +337,7 @@
                     </div>
                 </section>
 
-                <!-- 3. Smart Profit Margin & Markup Controller -->
-                <section class="glass-card-accent rounded-2xl p-6">
-                    <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-5">
-                        <div class="flex items-center gap-3">
-                            <span
-                                class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold text-sm flex items-center justify-center border border-emerald-500/30">3</span>
-                            <h2 class="text-lg font-bold text-white">Pengaturan Margin Keuntungan & Pricing</h2>
-                        </div>
-                        <span
-                            class="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">Auto-Calculate</span>
-                    </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <label for="profit-margin-slider"
-                                    class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Margin Profit
-                                    (%):</label>
-                                <span id="margin-percent-display" class="text-sm font-bold text-emerald-400">30%</span>
-                            </div>
-                            <input type="range" id="profit-margin-slider" min="0" max="150" value="30" step="5"
-                                class="w-full">
-                            <p class="text-[11px] text-slate-400 mt-1.5">Geser untuk mengatur margin keuntungan berbasis
-                                HPP Modal.</p>
-                        </div>
-                        <div>
-                            <label for="profit-nominal-input"
-                                class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Atau
-                                Nominal Profit Tambahan (Rp):</label>
-                            <div class="relative">
-                                <span class="absolute left-3 top-2.5 text-xs text-slate-400 font-medium">Rp</span>
-                                <input type="number" id="profit-nominal-input" min="0" step="5000"
-                                    class="form-input pl-9 font-bold text-emerald-400" placeholder="0">
-                            </div>
-                            <p class="text-[11px] text-slate-400 mt-1.5">Opsional: Isi jika ingin menambah profit fix
-                                nominal.</p>
-                        </div>
-                    </div>
-                </section>
 
                 <!-- Action Button Container -->
                 <div class="flex flex-wrap gap-4 pt-2">
@@ -977,9 +939,6 @@
                 bahanKertas: document.getElementById('bahan-kertas'),
                 finishingOptions: document.getElementById('finishing-options'),
                 finishingContainer: document.getElementById('finishing-container'),
-                profitMarginSlider: document.getElementById('profit-margin-slider'),
-                marginPercentDisplay: document.getElementById('margin-percent-display'),
-                profitNominalInput: document.getElementById('profit-nominal-input'),
                 hargaJualCard: document.getElementById('harga-jual-card'),
                 modalTotal: document.getElementById('modal-total'),
                 profitVal: document.getElementById('profit-val'),
@@ -1681,30 +1640,24 @@
                 const jenisMesin = el.jenisMesin.value;
                 totalModalCache = breakdown.totalModal;
 
-                // Profit Margin Controller calculations
-                const marginPercent = parseFloat(el.profitMarginSlider.value) || 0;
-                const profitNominal = parseFloat(el.profitNominalInput.value) || 0;
-                el.marginPercentDisplay.textContent = `${marginPercent}%`;
-
                 let totalJual = 0; let hargaSatuanAktual = 0; let hargaPerLembar = 0;
 
                 if (jenisMesin === 'digital' || jenisMesin === 'dtf') {
                     el.jualPerLembarContainer.classList.remove('hidden');
                     const biayaSettingDigital = 25000;
-                    const baseMarginProfit = (totalModalCache * (marginPercent / 100));
-                    totalJual = totalModalCache + biayaSettingDigital + baseMarginProfit + profitNominal;
+                    totalJual = totalModalCache + biayaSettingDigital;
 
                     hargaSatuanAktual = jumlah > 0 ? totalJual / jumlah : 0;
                     if (breakdown.totalPlano > 0) hargaPerLembar = totalJual / breakdown.totalPlano;
 
                     const calculatedProfit = totalJual - totalModalCache;
                     el.profitVal.textContent = formatRupiah(calculatedProfit);
+                    el.profitContainer.classList.remove('hidden');
                 } else { // Offset
                     el.jualPerLembarContainer.classList.add('hidden');
-                    const calculatedProfit = (totalModalCache * (marginPercent / 100)) + profitNominal;
-                    totalJual = totalModalCache + calculatedProfit;
+                    totalJual = totalModalCache;
                     hargaSatuanAktual = jumlah > 0 ? totalJual / jumlah : 0;
-                    el.profitVal.textContent = formatRupiah(calculatedProfit);
+                    el.profitContainer.classList.add('hidden');
                 }
 
                 el.jualSatuanAktual.textContent = formatRupiah(hargaSatuanAktual);
@@ -1805,16 +1758,12 @@
                     penawaranText += `\n• ${requestedQty.toLocaleString('id-ID')} pcs: *${formatRupiah(currentRoundedUnit)} / pcs*`;
                     penawaranText += `\n• Total Order: *${formatRupiah(totalJualDigi)}*`;
                 } else {
-                    const marginPercent = parseFloat(el.profitMarginSlider.value) || 0;
-                    const profitNominal = parseFloat(el.profitNominalInput.value) || 0;
                     const quantities = Array.from(new Set([requestedQty, 1000, 2000, 3000, 5000, 10000])).sort((a, b) => a - b);
 
                     quantities.forEach(qty => {
                         let result = (el.productSelector.value === 'kotakTutupTerpisah') ? getCombinedBreakdown(qty) : calculateBreakdown(availableSizes[currentActiveSizeIndex]?.p || 10, availableSizes[currentActiveSizeIndex]?.l || 10, availableSizes[currentActiveSizeIndex]?.multiplier || 1, qty);
                         if (result && !result.error) {
-                            const HPPUnit = result.totalModal / qty;
-                            const totalJualQty = result.totalModal + (result.totalModal * (marginPercent / 100)) + profitNominal;
-                            const unitPrice = totalJualQty / qty;
+                            const unitPrice = result.totalModal / qty;
                             const roundedUnitPrice = (qty === requestedQty && currentRoundedUnit > 0) ? currentRoundedUnit : roundToNearest25(unitPrice);
                             const totalHargaTier = roundedUnitPrice * qty;
 
@@ -2068,7 +2017,6 @@
                     total: totalSell,
                     productId: el.productSelector.value,
                     jenisMesin: el.jenisMesin.value,
-                    marginPercent: el.profitMarginSlider.value,
                 };
 
                 history.unshift(item);
@@ -2112,8 +2060,6 @@
                 if (confirm("Reset semua input form ke awal?")) {
                     generateForm(el.productSelector.value);
                     el.jumlah.value = "1000";
-                    el.profitMarginSlider.value = "30";
-                    el.profitNominalInput.value = "";
                     el.resultContainer.classList.add('hidden');
                     el.visualizationSection.classList.add('hidden');
                     el.priceResultsSection.classList.add('hidden');
@@ -2144,8 +2090,6 @@
                 }
             });
 
-            el.profitMarginSlider.addEventListener('input', () => calculateAndRenderPricing(false));
-            el.profitNominalInput.addEventListener('input', () => calculateAndRenderPricing(false));
             el.jumlah.addEventListener('input', triggerLiveCalculate);
             el.sisi.addEventListener('change', triggerLiveCalculate);
             el.jumlahWarna.addEventListener('change', triggerLiveCalculate);
