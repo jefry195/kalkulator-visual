@@ -614,6 +614,8 @@
 
             // --- 1. DATA CONSTANTS & SCHEMAS ---
             const UKURAN_PLANO = [
+                { id: 'komori_sprint', nama: 'Komori Sprint L 225 B (48 x 66 cm)', planoP: 66.0, planoL: 48.0, factor: 2 },
+                { id: 'komori_lithrone', nama: 'Komori Lithrone L28 (52 x 72 cm)', planoP: 72.0, planoL: 52.0, factor: 2 },
                 { id: 'a3plus', nama: 'A3+ Sheet (32.9 x 48.3 cm)', planoP: 48.3, planoL: 32.9, factor: 1 },
                 { id: 'a3', nama: 'A3 Sheet (29.7 x 42.0 cm)', planoP: 42.0, planoL: 29.7, factor: 1 },
                 { id: 'a4', nama: 'A4 Sheet (21.0 x 29.7 cm)', planoP: 29.7, planoL: 21.0, factor: 1 },
@@ -1117,9 +1119,9 @@
                 else {
                     const bahan = JENIS_KERTAS.find(k => k.id === bahanId);
                     if (bahan && bahan.id.startsWith('kraft')) {
-                        opts = UKURAN_PLANO.filter(p => p.id.startsWith('plano_90_120'));
+                        opts = UKURAN_PLANO.filter(p => p.id.startsWith('komori') || p.id.startsWith('plano_90_120'));
                     } else {
-                        opts = UKURAN_PLANO.filter(p => p.id.startsWith('plano_79_109') || p.id === 'plano_65_100');
+                        opts = UKURAN_PLANO.filter(p => p.id.startsWith('komori') || p.id.startsWith('plano_79_109') || p.id === 'plano_65_100');
                     }
                 }
                 opts.forEach(p => el.planoSelector.add(new Option(p.nama, p.id)));
@@ -1461,12 +1463,12 @@
                 const p_size = size.p + (bleed * 2);
                 const l_size = size.l + (bleed * 2);
 
-                const MACHINE_MAX_PAPER_P = 64;
-                const MACHINE_MAX_PAPER_L = 46;
+                const MACHINE_MAX_PAPER_P = 72;
+                const MACHINE_MAX_PAPER_L = 52;
                 const isOversize = (p_size > MACHINE_MAX_PAPER_P || l_size > MACHINE_MAX_PAPER_L) && (l_size > MACHINE_MAX_PAPER_P || p_size > MACHINE_MAX_PAPER_L);
 
                 if (isOversize) {
-                    el.sizeWarningText.textContent = 'Peringatan: Ukuran melebihi batas cetak mesin offset standar (63x44 cm). Diperlukan mesin cetak plano besar.';
+                    el.sizeWarningText.textContent = 'Peringatan: Ukuran melebihi batas area cetak offset Komori Lithrone L28 (52x72 cm).';
                     el.sizeWarningText.classList.remove('hidden');
                 } else {
                     el.sizeWarningText.classList.add('hidden');
@@ -1491,8 +1493,8 @@
                 else if (mode === 'dtf') candidatePlanos = UKURAN_PLANO.filter(p => p.id.startsWith('a3') || p.id === 'a4');
                 else {
                     const bahan = JENIS_KERTAS.find(k => k.id === el.bahanKertas.value);
-                    if (bahan && bahan.id.startsWith('kraft')) candidatePlanos = UKURAN_PLANO.filter(p => p.id.startsWith('plano_90_120'));
-                    else candidatePlanos = UKURAN_PLANO.filter(p => p.id.startsWith('plano_79_109') || p.id === 'plano_65_100');
+                    if (bahan && bahan.id.startsWith('kraft')) candidatePlanos = UKURAN_PLANO.filter(p => p.id.startsWith('komori') || p.id.startsWith('plano_90_120'));
+                    else candidatePlanos = UKURAN_PLANO.filter(p => p.id.startsWith('komori') || p.id.startsWith('plano_79_109') || p.id === 'plano_65_100');
                 }
 
                 let bestPlano = null;
