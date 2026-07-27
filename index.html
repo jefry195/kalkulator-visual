@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Percetakan Visual Pro | Layout, HPP & Pricing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a',
+                        },
+                        darkbg: '#0b0f19',
+                        cardbg: '#151d2a',
+                        cardborder: '#243044'
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            background-color: #0b0f19;
+            color: #f1f5f9;
+        }
+
+        /* Glassmorphism & Custom Card Design */
+        .glass-card {
+            background: rgba(21, 29, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-card-accent {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.15);
+        }
+
+        .form-input,
+        .form-select {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            color: #f8fafc;
+            border-radius: 0.625rem;
+            padding: 0.625rem 0.875rem;
+            width: 100%;
+            transition: all 0.2s ease-in-out;
+            font-size: 0.875rem;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+            background-color: #1e293b;
+        }
+
+        .toggle-btn {
+            transition: all 0.2s ease;
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: #ffffff;
+            border-color: #6366f1;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+        }
+
+        /* SVG Canvas Styling */
+        #plano-visual-wrapper {
+            position: relative;
+            width: 100%;
+            background: #0f172a;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: #334155;
+            height: 6px;
+            border-radius: 3px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #6366f1;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+        }
+
+        /* Pulse Badge Animation */
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.85;
+                transform: scale(1.02);
+            }
+        }
+
+        .badge-recommend {
+            animation: pulse-glow 2.5s infinite ease-in-out;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen text-slate-200 antialiased pb-12">
+
+    <!-- Navbar / Header Header -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                        Kalkulator Percetakan <span
+                            class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">Visual
+                            Pro</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Estimasi Ukuran Pola, Layout Plano, HPP & Harga Jual Cetak</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+                <span
+                    class="px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-medium flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Mode Pintar Aktif
+                </span>
+                <button id="quick-reset-btn"
+                    class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition font-medium flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                        </path>
+                    </svg>
+                    Reset Form
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- LEFT COLUMN: INPUT SPECIFICATIONS & CONTROLS -->
+            <div class="lg:col-span-7 space-y-6">
+
+                <!-- 1. Spesifikasi Produk & Dimensi -->
+                <section class="glass-card rounded-2xl p-6 relative overflow-hidden">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-5">
+                        <div class="flex items-center gap-3">
+                            <span
+                                class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 font-bold text-sm flex items-center justify-center border border-indigo-500/30">1</span>
+                            <h2 class="text-lg font-bold text-white">Spesifikasi Produk & Dimensi</h2>
+                        </div>
+                        <span class="text-xs text-indigo-400 font-medium" id="preset-badge-info">Custom Flat /
+                            Box</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                        <div>
+                            <label for="product-selector"
+                                class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Tipe
+                                Produk Kemasan / Cetakan:</label>
+                            <select id="product-selector" class="form-select font-medium text-slate-100">
+                                <option value="lunchBox">Kotak Lunch Box (Atas & Bawah Beda)</option>
+                                <option value="riceBox">Rice Box</option>
+                                <option value="dineIn">Dine In Tray</option>
+                                <option value="kotakTutupTerpisah">Kotak Tutup Terpisah</option>
+                                <option value="kotakSambung">Kotak Sambung / Mailer Box</option>
+                                <option value="straightTuckEnd">Kotak Tutup Sambung (STE)</option>
+                                <option value="kebab">Kebab Sleeve</option>
+                                <option value="kotakMug">Kotak Mug</option>
+                                <option value="burger">Kotak Burger (Clamshell)</option>
+                                <option value="customFlat" selected>Custom Ukuran Datar (Brosur/Kartu/Stiker/Flyer)
+                                </option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="bleed-input"
+                                class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Bleed
+                                Margin / Potong (cm):</label>
+                            <div class="relative">
+                                <input type="number" id="bleed-input" value="0.75" step="0.05" min="0"
+                                    class="form-input pr-12 font-medium">
+                                <span class="absolute right-3 top-2.5 text-xs text-slate-400">cm / sisi</span>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="layout-mode"
+                                class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Orientasi
+                                & Algoritma Laying Out:</label>
+                            <select id="layout-mode" class="form-select font-medium">
+                                <option value="mixed">Optimal: Campuran Vertikal & Horizontal</option>
+                                <option value="portrait">Vertikal Saja (Tegak)</option>
+                                <option value="landscape">Horizontal Saja (Tidur)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Form Inputs Container -->
+                    <div id="calculator-form" class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 mb-4">
+                    </div>
+                </section>
+
+                <!-- 2. Spesifikasi Cetak & Kertas -->
+                <section class="glass-card rounded-2xl p-6">
+                    <div class="flex items-center gap-3 border-b border-slate-800 pb-4 mb-5">
+                        <span
+                            class="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 font-bold text-sm flex items-center justify-center border border-cyan-500/30">2</span>
+                        <h2 class="text-lg font-bold text-white">Spesifikasi Cetak, Kertas & Mesin</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div>
+                            <label for="jumlah"
+                                class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Jumlah
+                                Cetak (pcs):</label>
+                            <input type="number" id="jumlah" min="1" class="form-input font-bold text-indigo-400"
+                                placeholder="1000" value="1000">
+                        </div>
+                        <div>
+                            <label for="sisi"
+                                class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Sisi
+                                Cetak:</label>
+                            <select id="sisi" class="form-select font-medium">
+                                <option value="1">1 Sisi / Muka</option>
+                                <option value="2">2 Sisi / Bolak-Balik</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="jenis-mesin"
+                                class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Jenis
+                                Mesin Cetak:</label>
+                            <select id="jenis-mesin" class="form-select font-medium">
+                                <option value="offset" selected>Mesin Offset Commercial</option>
+                                <option value="digital">Digital Printing (A3+ Sheet)</option>
+                                <option value="dtf">Sablon Film DTF</option>
+                            </select>
+                        </div>
+                        <div id="jumlah-warna-container">
+                            <label for="jumlah-warna"
+                                class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Jumlah
+                                Warna Cetak:</label>
+                            <select id="jumlah-warna" class="form-select font-medium">
+                                <option value="1">1 Warna (Monochrome)</option>
+                                <option value="2">2 Warna</option>
+                                <option value="3">3 Warna</option>
+                                <option value="4" selected>4 Warna (Full Color CMYK)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="bahan-kertas"
+                                class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Bahan
+                                Kertas Cetak:</label>
+                            <select id="bahan-kertas" class="form-select font-medium text-slate-100"></select>
+                        </div>
+                        <div id="laminasi-container">
+                            <label for="laminasi"
+                                class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Laminasi
+                                Roll:</label>
+                            <select id="laminasi" class="form-select font-medium">
+                                <option value="none">Tanpa Laminasi</option>
+                                <option value="doff_1">Laminasi Doff 1 Sisi</option>
+                                <option value="doff_2">Laminasi Doff 2 Sisi</option>
+                                <option value="glossy_1">Laminasi Glossy 1 Sisi</option>
+                                <option value="glossy_2">Laminasi Glossy 2 Sisi</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Finishing Section -->
+                    <div class="mt-5 pt-4 border-t border-slate-800" id="finishing-container">
+                        <label
+                            class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">Finishing
+                            Tambahan:</label>
+                        <div id="finishing-options" class="bg-slate-900/50 p-4 rounded-xl border border-slate-800/80">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. Smart Profit Margin & Markup Controller -->
+                <section class="glass-card-accent rounded-2xl p-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-5">
+                        <div class="flex items-center gap-3">
+                            <span
+                                class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold text-sm flex items-center justify-center border border-emerald-500/30">3</span>
+                            <h2 class="text-lg font-bold text-white">Pengaturan Margin Keuntungan & Pricing</h2>
+                        </div>
+                        <span
+                            class="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">Auto-Calculate</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label for="profit-margin-slider"
+                                    class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Margin Profit
+                                    (%):</label>
+                                <span id="margin-percent-display" class="text-sm font-bold text-emerald-400">30%</span>
+                            </div>
+                            <input type="range" id="profit-margin-slider" min="0" max="150" value="30" step="5"
+                                class="w-full">
+                            <p class="text-[11px] text-slate-400 mt-1.5">Geser untuk mengatur margin keuntungan berbasis
+                                HPP Modal.</p>
+                        </div>
+                        <div>
+                            <label for="profit-nominal-input"
+                                class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Atau
+                                Nominal Profit Tambahan (Rp):</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-2.5 text-xs text-slate-400 font-medium">Rp</span>
+                                <input type="number" id="profit-nominal-input" min="0" step="5000"
+                                    class="form-input pl-9 font-bold text-emerald-400" placeholder="0">
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1.5">Opsional: Isi jika ingin menambah profit fix
+                                nominal.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Action Button Container -->
+                <div class="flex flex-wrap gap-4 pt-2">
+                    <button id="calculate-btn"
+                        class="flex-1 bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-600 hover:from-indigo-500 hover:to-indigo-500 text-white font-bold py-3.5 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 text-base">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                        Hitung Ukuran, Layout & Harga
+                    </button>
+                    <button id="save-history-btn"
+                        class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-3.5 px-5 rounded-xl border border-slate-700 transition flex items-center gap-2 text-sm">
+                        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4">
+                            </path>
+                        </svg>
+                        Simpan Estimasi
+                    </button>
+                </div>
+
+                <!-- 4. Optimasi Algoritmik & Custom Optimizer -->
+                <section id="optimization-section" class="glass-card rounded-2xl p-6 hidden">
+                    <h3
+                        class="text-base font-bold text-white mb-3 flex items-center gap-2 border-b border-slate-800 pb-3">
+                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        Optimasi Layout & Efisiensi Bahan
+                    </h3>
+                    <div id="optimization-suggestions-container">
+                        <p class="text-xs text-slate-400">Klik "Hitung Ukuran & Harga" untuk menganalisis saran
+                            optimasi.</p>
+                    </div>
+
+                    <div id="custom-optimization-section" class="mt-6 pt-5 border-t border-slate-800 hidden">
+                        <h4 class="text-sm font-semibold text-slate-200 mb-1">Pencarian Ukuran Optimal Berdasarkan
+                            Target</h4>
+                        <p class="text-xs text-slate-400 mb-4">Masukkan satu/beberapa dimensi target yang dikunci, lalu
+                            cari ukuran optimal untuk dimensi lainnya.</p>
+                        <div id="custom-optimization-form" class="mb-4"></div>
+                        <button id="run-custom-optimization-btn"
+                            class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 px-4 rounded-xl border border-slate-700 text-xs transition">
+                            Cari Kombinasi Ukuran Optimal
+                        </button>
+                        <div id="custom-optimization-result" class="mt-4 hidden"></div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- RIGHT COLUMN: VISUAL SVG CANVAS, PRICE BREAKDOWN & QUOTE -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="sticky top-20 space-y-6">
+
+                    <!-- Result Banner: Flat Pattern Dimension -->
+                    <div id="result-container" class="glass-card-accent rounded-2xl p-5 hidden">
+                        <div class="text-center">
+                            <span class="text-xs uppercase tracking-wider text-indigo-400 font-bold block mb-1">Hasil
+                                Ukuran Bentangan Potong</span>
+                            <div id="result-text" class="text-xl md:text-2xl font-black text-white"></div>
+                            <p id="formula-note" class="text-xs text-slate-400 mt-1"></p>
+                            <p id="size-warning-text"
+                                class="text-xs font-semibold text-rose-400 mt-2 hidden bg-rose-500/10 p-2 rounded-lg border border-rose-500/20">
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Visual Canvas SVG Section -->
+                    <section id="visualization-section" class="glass-card rounded-2xl p-5 hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-base font-bold text-white flex items-center gap-2">
+                                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z">
+                                    </path>
+                                </svg>
+                                Visualisasi Layout Plano
+                            </h3>
+                            <span id="best-paper-badge"
+                                class="badge-recommend hidden text-[11px] px-2.5 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 font-semibold">
+                                ⭐ Rekomendasi Terhemat
+                            </span>
+                        </div>
+
+                        <!-- Toggle Size Selector (If multiple sizes like 1pcs vs 2pcs exist) -->
+                        <div id="visualization-toggle-container" class="mb-4 hidden">
+                            <label
+                                class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Pilih
+                                Varian Layout:</label>
+                            <div id="visualization-toggles" class="flex flex-wrap gap-2" role="group"></div>
+                        </div>
+
+                        <!-- Plano Size Selector -->
+                        <div class="mb-4">
+                            <label for="ukuran-plano"
+                                class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Ukuran
+                                Sheet Kertas / Plano:</label>
+                            <select id="ukuran-plano" class="form-select font-medium text-slate-200"></select>
+                        </div>
+
+                        <!-- Interactive SVG Visual Wrapper Container -->
+                        <div
+                            class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 mb-4 overflow-hidden shadow-inner flex justify-center items-center min-h-[220px]">
+                            <div id="plano-visual-wrapper" class="w-full">
+                                <div id="plano-container"></div>
+                            </div>
+                        </div>
+
+                        <!-- Layout Metrics Summary -->
+                        <div class="text-center space-y-1">
+                            <p id="layout-result-text" class="text-sm font-bold text-indigo-400"></p>
+                            <div class="flex justify-center items-center gap-3 text-xs text-slate-400">
+                                <span id="waste-result-text" class="hidden"></span>
+                                <span class="text-slate-600">•</span>
+                                <span id="paper-info-text" class="hidden"></span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Price & Profit Results Breakdown Section -->
+                    <section id="price-results-section" class="space-y-4 hidden">
+                        <div id="harga-jual-card" class="glass-card rounded-2xl p-6 border border-indigo-500/20">
+                            <h3
+                                class="text-base font-bold text-white mb-4 border-b border-slate-800 pb-3 flex justify-between items-center">
+                                <span>Rincian HPP & Harga Jual</span>
+                                <span
+                                    class="text-xs font-semibold px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Akurat
+                                    & Terukur</span>
+                            </h3>
+
+                            <!-- HPP Cost Breakdown Details -->
+                            <div id="rincian-biaya-container"
+                                class="mb-4 p-3.5 bg-slate-900/80 rounded-xl border border-slate-800 text-xs space-y-2">
+                                <div class="flex justify-between text-slate-400">
+                                    <span>Biaya Kertas / Bahan:</span>
+                                    <span id="detail-bahan" class="font-semibold text-slate-200">Rp 0</span>
+                                </div>
+                                <div class="flex justify-between text-slate-400">
+                                    <span>Biaya Ongkos Cetak:</span>
+                                    <span id="detail-cetak" class="font-semibold text-slate-200">Rp 0</span>
+                                </div>
+                                <div class="flex justify-between text-slate-400">
+                                    <span>Biaya Finishing Tambahan:</span>
+                                    <span id="detail-finishing" class="font-semibold text-slate-200">Rp 0</span>
+                                </div>
+                            </div>
+
+                            <!-- Modal Total & Profit Display -->
+                            <div class="space-y-3">
+                                <div id="modal-container"
+                                    class="flex justify-between items-center p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+                                    <span class="text-xs font-semibold text-slate-400">Total HPP Modal (HPP):</span>
+                                    <span id="modal-total" class="text-sm font-bold text-slate-200">Rp 0</span>
+                                </div>
+
+                                <div id="profit-container"
+                                    class="p-3 bg-emerald-950/40 rounded-xl border border-emerald-500/30">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-xs font-bold text-emerald-400">Estimasi Total Profit:</span>
+                                        <span id="profit-val" class="font-extrabold text-base text-emerald-400">Rp
+                                            0</span>
+                                    </div>
+                                </div>
+
+                                <div class="pt-2 space-y-3">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-xs text-slate-400 font-medium">Harga Satuan HPP / Pas:</span>
+                                        <span id="jual-satuan-aktual" class="text-sm font-bold text-slate-300">Rp
+                                            0</span>
+                                    </div>
+                                    <div id="jual-per-lembar-container"
+                                        class="flex justify-between items-center hidden">
+                                        <span class="text-xs text-slate-400 font-medium">Harga per Sheet A3+:</span>
+                                        <span id="jual-per-lembar" class="text-sm font-bold text-slate-300">Rp 0</span>
+                                    </div>
+
+                                    <div>
+                                        <label for="jual-satuan-rounded"
+                                            class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Harga
+                                            Jual Satuan Dibulatkan (Rp):</label>
+                                        <input type="number" id="jual-satuan-rounded"
+                                            class="form-input text-right text-lg font-black text-emerald-400 border-2 border-emerald-500/60 bg-slate-950">
+                                    </div>
+
+                                    <div class="flex justify-between items-center pt-3 border-t border-slate-800">
+                                        <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Total
+                                            Harga Jual:</span>
+                                        <span id="jual-total" class="text-2xl font-black text-emerald-400">Rp 0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- WhatsApp Quote Generator Card -->
+                        <div id="penawaran-card" class="glass-card rounded-2xl p-6 hidden">
+                            <h3
+                                class="text-base font-bold text-white mb-3 border-b border-slate-800 pb-3 flex items-center justify-between">
+                                <span>Format Penawaran WhatsApp</span>
+                                <svg class="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
+                                </svg>
+                            </h3>
+                            <textarea id="whatsapp-text"
+                                class="w-full h-44 p-3 border border-slate-800 rounded-xl text-xs font-mono bg-slate-950 text-slate-300 focus:outline-none focus:border-indigo-500"
+                                readonly></textarea>
+                            <button id="copy-whatsapp-button"
+                                class="mt-3 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl transition shadow-md flex items-center justify-center gap-2 text-xs">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3">
+                                    </path>
+                                </svg>
+                                Salin Teks Penawaran WhatsApp
+                            </button>
+                            <p id="copy-success-message"
+                                class="text-xs text-emerald-400 text-center mt-2 font-medium hidden">✓ Teks penawaran
+                                berhasil disalin ke clipboard!</p>
+                        </div>
+
+                        <!-- Saved Estimates / History Card -->
+                        <div id="history-card" class="glass-card rounded-2xl p-5 border border-slate-800">
+                            <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-3">
+                                <h3
+                                    class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                                    <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Riwayat Estimasi Tersimpan
+                                </h3>
+                                <button id="clear-history-btn"
+                                    class="text-[11px] text-slate-500 hover:text-rose-400 font-medium">Hapus
+                                    Semua</button>
+                            </div>
+                            <div id="history-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                                <p class="text-xs text-slate-500 text-center py-3">Belum ada estimasi tersimpan.</p>
+                            </div>
+                        </div>
+
+                    </section>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- SCRIPT APPLICATION CORE LOGIC -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // --- 1. DATA CONSTANTS & SCHEMAS ---
+            const UKURAN_PLANO = [
+                { id: 'a3plus', nama: 'A3+ Sheet (32.9 x 48.3 cm)', planoP: 48.3, planoL: 32.9, factor: 1 },
+                { id: 'a3', nama: 'A3 Sheet (29.7 x 42.0 cm)', planoP: 42.0, planoL: 29.7, factor: 1 },
+                { id: 'a4', nama: 'A4 Sheet (21.0 x 29.7 cm)', planoP: 29.7, planoL: 21.0, factor: 1 },
+                { id: 'plano_79_109', nama: 'Plano Utama (79 x 109 cm)', planoP: 109.0, planoL: 79.0, factor: 1 },
+                { id: 'plano_65_100', nama: 'Plano Medium (65 x 100 cm)', planoP: 100.0, planoL: 65.0, factor: 1 },
+                { id: 'plano_79_109_per_3', nama: '1/3 Plano (65 x 39 cm)', planoP: 65.0, planoL: 39.0, factor: 3 },
+                { id: 'plano_79_109_per_4', nama: '1/4 Plano (54.5 x 39.5 cm)', planoP: 54.5, planoL: 39.5, factor: 4 },
+                { id: 'plano_79_109_per_5', nama: '1/5 Plano (33 x 45 cm)', planoP: 45.0, planoL: 33.0, factor: 5 },
+                { id: 'plano_79_109_per_6_custom', nama: '1/6 Plano (39.5 x 36 cm)', planoP: 39.5, planoL: 36.0, factor: 6 },
+                { id: 'plano_90_120', nama: 'Plano Jumbo (90 x 120 cm)', planoP: 120.0, planoL: 90.0, factor: 1 },
+                { id: 'plano_90_120_per_4', nama: '1/4 Plano Jumbo (60 x 45 cm)', planoP: 60.0, planoL: 45.0, factor: 4 },
+                { id: 'plano_90_120_per_6', nama: '1/6 Plano Jumbo (45 x 40 cm)', planoP: 45.0, planoL: 40.0, factor: 6 },
+            ];
+
+            const JENIS_KERTAS = [
+                { id: 'fotopaper_dig', nama: 'Fotopaper Premium', jenis: 'kertas', mesin: ['digital'] },
+                { id: 'basetik_dig', nama: 'Basetik / BC Premium', jenis: 'kertas', mesin: ['digital'] },
+                { id: 'ap310_dig', nama: 'Art Paper 310 gr', jenis: 'kertas', mesin: ['digital'] },
+                { id: 'ap260_dig', nama: 'Art Paper 260 gr', jenis: 'kertas', mesin: ['digital'] },
+                { id: 'ap230_dig', nama: 'Art Paper 230 gr', jenis: 'kertas', mesin: ['digital'] },
+                { id: 'ap210_dig', nama: 'Art Paper 210 gr', jenis: 'kertas', mesin: ['digital'] },
+                { id: 'ap150_dig', nama: 'Art Paper 150 gr', jenis: 'kertas', mesin: ['digital'] },
+                { id: 'ap120_dig', nama: 'Art Paper 120 gr', jenis: 'kertas', mesin: ['digital'] },
+                { id: 'hvs100_dig', nama: 'HVS 100 gr', jenis: 'kertas', mesin: ['digital'] },
+                { id: 'hvs80_dig', nama: 'HVS 80 gr', jenis: 'kertas', mesin: ['digital'] },
+                { id: 'stiker_bontax_dig', nama: 'Stiker Bontax Vinyl', jenis: 'stiker', mesin: ['digital'] },
+                { id: 'stiker_hvs_dig', nama: 'Stiker HVS', jenis: 'stiker', mesin: ['digital'] },
+                { id: 'stiker_quantac_dig', nama: 'Stiker Quantac Transparan', jenis: 'stiker', mesin: ['digital'] },
+                { id: 'dtf_a3', nama: 'DTF Film A3 Sheet', jenis: 'stiker', mesin: ['dtf'] },
+                { id: 'dtf_a4', nama: 'DTF Film A4 Sheet', jenis: 'stiker', mesin: ['dtf'] },
+                { id: 'ap120_off', nama: 'Art Paper 120gr', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'ap150_off', nama: 'Art Paper 150gr', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'ap210_off', nama: 'Art Paper 210gr', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'ap230_off', nama: 'Art Paper 230gr', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'ap260_off', nama: 'Art Paper 260gr', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'ap310_off', nama: 'Art Paper 310gr', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'duplex250_off', nama: 'Duplex 250gr', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'duplex310_off', nama: 'Duplex 310gr', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'ivory250_off', nama: 'Ivory 250gr', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'ivory300_off', nama: 'Ivory 300gr', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'ivory350_off', nama: 'Ivory 350gr', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'kraft290_off', nama: 'Kraft 290gr', jenis: 'kertas', mesin: ['offset'] },
+            ];
+
+            const HARGA_DIGITAL = {
+                hargaBahan: {
+                    fotopaper_dig: 5000, basetik_dig: 3800, ap310_dig: 4000, ap260_dig: 3300, ap230_dig: 3100,
+                    ap210_dig: 2900, ap150_dig: 2700, ap120_dig: 2500, hvs100_dig: 2300, hvs80_dig: 2000,
+                    stiker_bontax_dig: 4000, stiker_hvs_dig: 3500, stiker_quantac_dig: 8000,
+                    dtf_a3: 35000, dtf_a4: 20000
+                },
+                biayaProduksiPerLembar: 4000,
+                finishing: {
+                    laminasiPerLembar: 3000, laminatingKakuPerLembar: 5000,
+                    cuttingStiker: { bawah5: 9000, atas5: 6000 }, potongJadi: 50000
+                }
+            };
+
+            const HARGA_OFFSET_TIERED_4_WARNA = [
+                { minQty: 1, maxQty: 1000, baseCost: 850000, clickCost: 850000 },
+                { minQty: 1001, maxQty: 2000, baseCost: 850000, clickCost: 1300000 },
+                { minQty: 2001, maxQty: 3000, baseCost: 850000, clickCost: 1500000 },
+                { minQty: 3001, maxQty: 4000, baseCost: 1100000, clickCost: 1850000 },
+                { minQty: 4001, maxQty: 5000, baseCost: 1300000, clickCost: 2200000 },
+                { minQty: 5001, maxQty: 10000, baseCost: 2300000, clickCost: 3400000 },
+                { minQty: 10001, maxQty: Infinity, baseCost: 3300000, clickCost: 4400000 },
+            ];
+
+            const HARGA_OFFSET_TIERED_1_WARNA = [
+                { minQty: 1, maxQty: 1000, baseCost: 500000, clickCost: 750000 },
+                { minQty: 1001, maxQty: 2000, baseCost: 750000, clickCost: 1000000 },
+                { minQty: 2001, maxQty: 3000, baseCost: 850000, clickCost: 1250000 },
+                { minQty: 3001, maxQty: 4000, baseCost: 1000000, clickCost: 1500000 },
+                { minQty: 4001, maxQty: 5000, baseCost: 1100000, clickCost: 1750000 },
+                { minQty: 5001, maxQty: 9000, baseCost: 1500000, clickCost: 2600000 },
+                { minQty: 9001, maxQty: Infinity, baseCost: 1600000, clickCost: 2800000 },
+            ];
+
+            const HARGA_OFFSET_FINISHING = {
+                laminasiPerPlano: 4000,
+                potong: { nama: 'Potong Jadi', min: 15000, per_pcs: 25 },
+                lipat: { nama: 'Lipat Mesin', min: 50000, per_lipatan_pcs: 50 },
+                spotuv: { nama: 'Spot UV', min: 75000, per_cm2: 0.25 },
+                hotfoil: { nama: 'Hot Foil', min: 100000, per_cm2: 150 },
+            };
+
+            const HARGA_BAHAN_OFFSET = {
+                'ap120_off': { 'plano_79_109': 3500, 'plano_65_100': 2625, 'plano_79_109_per_4': 875, 'plano_79_109_per_5': 700, 'plano_79_109_per_6_custom': 583, 'plano_79_109_per_3': 1167 },
+                'ap150_off': { 'plano_79_109': 4500, 'plano_65_100': 3375, 'plano_79_109_per_4': 1125, 'plano_79_109_per_5': 900, 'plano_79_109_per_6_custom': 750, 'plano_79_109_per_3': 1500 },
+                'ap210_off': { 'plano_79_109': 5250, 'plano_65_100': 3938, 'plano_79_109_per_4': 1313, 'plano_79_109_per_5': 1050, 'plano_79_109_per_6_custom': 875, 'plano_79_109_per_3': 1750 },
+                'ap230_off': { 'plano_79_109': 6000, 'plano_65_100': 4500, 'plano_79_109_per_4': 1500, 'plano_79_109_per_5': 1200, 'plano_79_109_per_6_custom': 1000, 'plano_79_109_per_3': 2000 },
+                'ap260_off': { 'plano_79_109': 6750, 'plano_65_100': 5063, 'plano_79_109_per_4': 1688, 'plano_79_109_per_5': 1350, 'plano_79_109_per_6_custom': 1125, 'plano_79_109_per_3': 2250 },
+                'ap310_off': { 'plano_79_109': 7500, 'plano_65_100': 5625, 'plano_79_109_per_4': 1875, 'plano_79_109_per_5': 1500, 'plano_79_109_per_6_custom': 1250, 'plano_79_109_per_3': 2500 },
+                'duplex250_off': { 'plano_79_109': 4500, 'plano_65_100': 3375, 'plano_79_109_per_4': 1125, 'plano_79_109_per_5': 900, 'plano_79_109_per_6_custom': 750, 'plano_79_109_per_3': 1500 },
+                'duplex310_off': { 'plano_79_109': 5500, 'plano_65_100': 4125, 'plano_79_109_per_4': 1375, 'plano_79_109_per_5': 1100, 'plano_79_109_per_6_custom': 917, 'plano_79_109_per_3': 1833 },
+                'ivory250_off': { 'plano_79_109': 4500, 'plano_65_100': 3375, 'plano_79_109_per_4': 1125, 'plano_79_109_per_5': 900, 'plano_79_109_per_6_custom': 750, 'plano_79_109_per_3': 1500 },
+                'ivory300_off': { 'plano_79_109': 4750, 'plano_65_100': 3563, 'plano_79_109_per_4': 1188, 'plano_79_109_per_5': 950, 'plano_79_109_per_6_custom': 792, 'plano_79_109_per_3': 1583 },
+                'ivory350_off': { 'plano_79_109': 5250, 'plano_65_100': 3938, 'plano_79_109_per_4': 1313, 'plano_79_109_per_5': 1050, 'plano_79_109_per_6_custom': 875, 'plano_79_109_per_3': 1750 },
+                'kraft290_off': { 'plano_90_120': 4750, 'plano_90_120_per_4': 1188, 'plano_90_120_per_6': 792 },
+            };
+
+            const kotakSambungPresets = {
+                pisang_adina: { p: 16, l: 10, t: 5, tutup: 5 },
+                dapoer_tj: { p: 18, l: 16, t: 7, tutup: 7 },
+                martabak_leo: { p: 18, l: 12, t: 5, tutup: 2.5 },
+                warung_kediri: { p: 18, l: 18, t: 5.5, tutup: 5.5 },
+                pawon_rasa: { p: 19.5, l: 19.5, t: 6, tutup: 2.5 },
+                ayam_geprek: { p: 14, l: 10.5, t: 6.5, tutup: 3.3 },
+                demi_donat_k: { p: 18, l: 10, t: 8, tutup: 8 },
+                nats_time: { p: 16, l: 12, t: 7, tutup: 7 },
+                demi_donat_b: { p: 29, l: 20, t: 6, tutup: 6 },
+                balok_lumer: { p: 13.5, l: 13.5, t: 4, tutup: 4 },
+                zaki_donat: { p: 27, l: 18.5, t: 4.5, tutup: 4.5 },
+            };
+            const lunchBoxPresets = {
+                xs: { p_atas: 10, l_atas: 10, p_bawah: 8.5, l_bawah: 8.5, t: 4.5, tutup: 2.5 },
+                s: { p_atas: 13, l_atas: 10, p_bawah: 11, l_bawah: 8, t: 4.5, tutup: 2.5 },
+                m: { p_atas: 17.5, l_atas: 10.5, p_bawah: 16, l_bawah: 9, t: 5, tutup: 2.5 },
+                l: { p_atas: 20, l_atas: 12, p_bawah: 18, l_bawah: 11, t: 5, tutup: 2.5 },
+                corndog: { p_atas: 17, l_atas: 6, p_bawah: 15, l_bawah: 4, t: 5, tutup: 4 }
+            };
+            const riceBoxPresets = {
+                s: { p_atas: 9.5, l_atas: 8, p_bawah: 8, l_bawah: 6.5, t: 8, tutup: 3 },
+                m: { p_atas: 9.5, l_atas: 8, p_bawah: 8, l_bawah: 6.5, t: 10, tutup: 3 },
+                l: { p_atas: 11, l_atas: 9.5, p_bawah: 9, l_bawah: 8, t: 11.5, tutup: 3.5 }
+            };
+            const dineInPresets = {
+                xs: { p: 12, l: 8, t: 2.5 }, s: { p: 11, l: 9, t: 3.5 }, m: { p: 16, l: 9, t: 4 },
+                l: { p: 18, l: 10.5, t: 3.25 }, xl: { p: 18, l: 15.5, t: 5 }
+            };
+            const customFlatPresets = {
+                a0: { p: 118.9, l: 84.1, label: 'A0 (118.9 × 84.1 cm)' }, a1: { p: 84.1, l: 59.4, label: 'A1 (84.1 × 59.4 cm)' },
+                a2: { p: 59.4, l: 42.0, label: 'A2 (59.4 × 42 cm)' }, a3: { p: 42.0, l: 29.7, label: 'A3 (42 × 29.7 cm)' },
+                a3plus: { p: 48.3, l: 32.9, label: 'A3+ (48.3 × 32.9 cm)' }, a4: { p: 29.7, l: 21.0, label: 'A4 (29.7 × 21 cm)' },
+                a5: { p: 21.0, l: 14.85, label: 'A5 (21 × 14.85 cm)' }, a6: { p: 14.85, l: 10.5, label: 'A6 (14.85 × 10.5 cm)' },
+                a7: { p: 10.5, l: 7.4, label: 'A7 (10.5 × 7.4 cm)' }, a8: { p: 7.4, l: 5.2, label: 'A8 (7.4 × 5.2 cm)' },
+                b0: { p: 141.4, l: 100.0, label: 'B0 (141.4 × 100 cm)' }, b1: { p: 100.0, l: 70.7, label: 'B1 (100 × 70.7 cm)' },
+                b2: { p: 70.7, l: 50.0, label: 'B2 (70.7 × 50 cm)' }, b3: { p: 50.0, l: 35.3, label: 'B3 (50 × 35.3 cm)' },
+                b4: { p: 35.3, l: 25.0, label: 'B4 (35.3 × 25 cm)' }, b5: { p: 25.0, l: 17.6, label: 'B5 (25 × 17.6 cm)' },
+                b6: { p: 17.6, l: 12.5, label: 'B6 (17.6 × 12.5 cm)' }, b7: { p: 12.5, l: 8.8, label: 'B7 (12.5 × 8.8 cm)' },
+                c4: { p: 32.9, l: 22.9, label: 'C4 – Amplop (32.9 × 22.9 cm)' }, c5: { p: 22.9, l: 16.2, label: 'C5 – Amplop (22.9 × 16.2 cm)' },
+                c6: { p: 16.2, l: 11.4, label: 'C6 – Amplop (16.2 × 11.4 cm)' }, dl: { p: 22.0, l: 11.0, label: 'DL – Amplop Panjang (22 × 11 cm)' },
+                f4: { p: 33.0, l: 21.6, label: 'F4 / Folio (33 × 21.6 cm)' }, f3: { p: 43.2, l: 33.0, label: 'F3 / Double Folio (43.2 × 33 cm)' },
+                legal: { p: 35.6, l: 21.6, label: 'Legal US (35.6 × 21.6 cm)' }, letter: { p: 27.9, l: 21.6, label: 'Letter US (27.9 × 21.6 cm)' },
+                kartu_nama: { p: 9.0, l: 5.5, label: 'Kartu Nama Standard (9 × 5.5 cm)' }, kartu_nama_l: { p: 10.0, l: 6.0, label: 'Kartu Nama Lebar (10 × 6 cm)' },
+                kartu_nama_sq: { p: 6.0, l: 6.0, label: 'Kartu Nama Square (6 × 6 cm)' }, id_card: { p: 8.56, l: 5.4, label: 'ID Card / KTP (8.56 × 5.4 cm)' },
+                stiker_a5: { p: 21.0, l: 14.85, label: 'Stiker A5 (21 × 14.85 cm)' }, label_kecil: { p: 10.0, l: 7.0, label: 'Label Kecil (10 × 7 cm)' },
+                label_hpet: { p: 12.0, l: 5.0, label: 'Label HPET / Botol (12 × 5 cm)' },
+                brosur_dl: { p: 21.0, l: 10.0, label: 'Brosur DL Lipat 3 (21 × 10 cm)' }, flyer_a5: { p: 21.0, l: 14.85, label: 'Flyer A5 (21 × 14.85 cm)' },
+                flyer_a6: { p: 14.85, l: 10.5, label: 'Flyer A6 (14.85 × 10.5 cm)' }, kalender_a3: { p: 42.0, l: 29.7, label: 'Kalender A3 (42 × 29.7 cm)' },
+                kalender_a4: { p: 29.7, l: 21.0, label: 'Kalender A4 (29.7 × 21 cm)' },
+                nota_1_4: { p: 21.0, l: 10.0, label: 'Nota 1/4 Folio (21 × 10 cm)' }, nota_1_3: { p: 22.0, l: 14.0, label: 'Nota 1/3 Folio (22 × 14 cm)' },
+                nota_1_2: { p: 33.0, l: 10.5, label: 'Nota 1/2 Folio (33 × 10.5 cm)' },
+                banner_60: { p: 60.0, l: 160.0, label: 'Banner 60 × 160 cm' }, banner_90: { p: 90.0, l: 60.0, label: 'Spanduk 90 × 60 cm' },
+            };
+
+            const products = {
+                lunchBox: {
+                    name: "Kotak Lunch Box", note: "Menghitung ukuran 1 pcs & 2 pcs gandeng.",
+                    fields: [
+                        { id: 'p_atas', label: 'P Atas (cm)', placeholder: '18.2' }, { id: 'l_atas', label: 'L Atas (cm)', placeholder: '10.5' },
+                        { id: 'p_bawah', label: 'P Bawah (cm)', placeholder: '16.2' }, { id: 'l_bawah', label: 'L Bawah (cm)', placeholder: '8.5' },
+                        { id: 't', label: 'Tinggi (cm)', placeholder: '5' }, { id: 'tutup', label: 'Tutup (cm)', placeholder: '2.5' }
+                    ],
+                    calculate: (v, bleed) => {
+                        const p_flat_1 = v.l_atas + v.l_bawah + (2 * v.t) + v.tutup;
+                        const l_flat_1 = v.p_bawah + (2 * v.t);
+                        const p_flat_2 = p_flat_1;
+                        const l_flat_2 = v.t + v.p_bawah + v.t + v.tutup + v.p_atas + v.tutup + (v.t - v.tutup - ((v.p_atas - v.p_bawah) / 2));
+                        return {
+                            custom: `1 pcs: <strong>${p_flat_1.toFixed(1)} x ${l_flat_1.toFixed(1)} cm</strong><br>2 pcs Gandeng: <strong>${p_flat_2.toFixed(1)} x ${l_flat_2.toFixed(1)} cm</strong>`,
+                            sizes: [{ name: '1 pcs', p: p_flat_1, l: l_flat_1, multiplier: 1 }, { name: '2 pcs Gandeng', p: p_flat_2, l: l_flat_2, multiplier: 2 }]
+                        };
+                    }
+                },
+                riceBox: {
+                    name: "Rice Box", note: "Menghitung 1 pcs & 2 pcs gandeng.",
+                    fields: [
+                        { id: 'p_atas', label: 'P Atas (cm)', placeholder: '9.5' }, { id: 'l_atas', label: 'L Atas (cm)', placeholder: '8' },
+                        { id: 'p_bawah', label: 'P Bawah (cm)', placeholder: '8' }, { id: 'l_bawah', label: 'L Bawah (cm)', placeholder: '6.5' },
+                        { id: 't', label: 'Tinggi (cm)', placeholder: '10' }, { id: 'tutup', label: 'Tutup (cm)', placeholder: '3' }
+                    ],
+                    calculate: (v, bleed) => {
+                        const p_flat_1 = v.l_atas + v.l_bawah + (2 * v.t) + v.tutup;
+                        const l_flat_1 = v.p_bawah + (2 * v.t);
+                        const p_flat_2 = p_flat_1;
+                        const l_flat_2 = v.t + v.p_bawah + v.t + v.tutup + v.p_atas + v.tutup + (v.t - v.tutup - ((v.p_atas - v.p_bawah) / 2));
+                        return {
+                            custom: `1 pcs: <strong>${p_flat_1.toFixed(1)} x ${l_flat_1.toFixed(1)} cm</strong><br>2 pcs Gandeng: <strong>${p_flat_2.toFixed(1)} x ${l_flat_2.toFixed(1)} cm</strong>`,
+                            sizes: [{ name: '1 pcs', p: p_flat_1, l: l_flat_1, multiplier: 1 }, { name: '2 pcs Gandeng', p: p_flat_2, l: l_flat_2, multiplier: 2 }]
+                        };
+                    }
+                },
+                dineIn: {
+                    name: "Dine In Tray", note: "Menghitung ukuran 1, 2, dan 4 pcs gandeng.",
+                    fields: [{ id: 'p', label: 'Panjang (cm)', placeholder: '18' }, { id: 'l', label: 'Lebar (cm)', placeholder: '10' }, { id: 't', label: 'Tinggi (cm)', placeholder: '4' }],
+                    calculate: (v, bleed) => {
+                        const p1 = v.p + (2 * v.t); const l1 = v.l + (2 * v.t);
+                        return {
+                            custom: `1 pcs: <strong>${p1.toFixed(1)} x ${l1.toFixed(1)} cm</strong><br>2 pcs: <strong>${p1.toFixed(1)} x ${(l1 * 2).toFixed(1)} cm</strong><br>4 pcs: <strong>${(p1 * 2).toFixed(1)} x ${(l1 * 2).toFixed(1)} cm</strong>`,
+                            sizes: [{ name: '1 pcs', p: p1, l: l1, multiplier: 1 }, { name: '2 pcs', p: p1, l: l1 * 2, multiplier: 2 }, { name: '4 pcs', p: p1 * 2, l: l1 * 2, multiplier: 4 }]
+                        };
+                    }
+                },
+                kotakTutupTerpisah: {
+                    name: "Kotak Tutup Terpisah", note: "Menghitung 2 bagian terpisah (Bawah & Tutup Atas).",
+                    fields: [
+                        { type: 'separator', label: 'Bagian Bawah (Wadah)' },
+                        { id: 'p_bawah', label: 'P Bawah (cm)', placeholder: '23' }, { id: 'l_bawah', label: 'L Bawah (cm)', placeholder: '33' }, { id: 't_bawah', label: 'T Bawah (cm)', placeholder: '5' },
+                        { type: 'separator', label: 'Bagian Atas (Tutup)' },
+                        { id: 'p_atas', label: 'P Atas (cm)', placeholder: '23.5' }, { id: 'l_atas', label: 'L Atas (cm)', placeholder: '33.5' }, { id: 't_atas', label: 'T Atas (cm)', placeholder: '3' }
+                    ],
+                    calculate: (v, bleed) => {
+                        const pB = v.p_bawah + (2 * v.t_bawah); const lB = v.l_bawah + (2 * v.t_bawah);
+                        const pA = v.p_atas + (2 * v.t_atas); const lA = v.l_atas + (2 * v.t_atas);
+                        return {
+                            custom: `Bawah: <strong>${pB.toFixed(1)} x ${lB.toFixed(1)} cm</strong><br>Tutup Atas: <strong>${pA.toFixed(1)} x ${lA.toFixed(1)} cm</strong>`,
+                            sizes: [{ name: 'Bawah', p: pB, l: lB, multiplier: 1 }, { name: 'Atas', p: pA, l: lA, multiplier: 1 }]
+                        };
+                    }
+                },
+                kotakSambung: {
+                    name: "Kotak Sambung / Mailer", note: "Menghitung ukuran 1, 2, dan 4 pcs gandeng.",
+                    fields: [{ id: 'p', label: 'Panjang (cm)', placeholder: '14' }, { id: 'l', label: 'Lebar (cm)', placeholder: '10.5' }, { id: 't', label: 'Tinggi (cm)', placeholder: '6.5' }, { id: 'tutup', label: 'Tutup (cm)', placeholder: '3.5' }],
+                    calculate: (v, bleed) => {
+                        const p1 = (v.l * 2) + (v.t * 2) + v.tutup;
+                        const l1 = (v.t * 2) + v.p;
+                        const p2 = p1;
+                        const l2 = (v.p * 2) + (v.t * 2) + (v.tutup * 2) + (v.t - v.tutup);
+                        const p4 = p1 * 2;
+                        const l4 = l2;
+                        return {
+                            custom: `1 pcs: <strong>${p1.toFixed(1)} x ${l1.toFixed(1)} cm</strong><br>2 pcs: <strong>${p2.toFixed(1)} x ${l2.toFixed(1)} cm</strong><br>4 pcs: <strong>${p4.toFixed(1)} x ${l4.toFixed(1)} cm</strong>`,
+                            sizes: [
+                                { name: '1 pcs', p: p1, l: l1, multiplier: 1 },
+                                { name: '2 pcs', p: p2, l: l2, multiplier: 2 },
+                                { name: '4 pcs', p: p4, l: l4, multiplier: 4 }
+                            ]
+                        };
+                    }
+                },
+                straightTuckEnd: {
+                    name: "Kotak Tutup Sambung (STE)",
+                    note: "Menghitung 1, 2, dan 4 pcs (Tutup Atas & Bawah lengkap).",
+                    fields: [{ id: 'p', label: 'Panjang (cm)', placeholder: '10' }, { id: 'l', label: 'Lebar (cm)', placeholder: '5' }, { id: 't', label: 'Tinggi (cm)', placeholder: '15' }, { id: 'lem', label: 'Kuping Lem (cm)', placeholder: '1.5' }],
+                    calculate: (v, bleed) => {
+                        const p1 = (v.p * 2) + (v.l * 2) + v.lem;
+                        const l1 = v.t + (v.l * 2); // FIXED: both top & bottom flaps
+                        return {
+                            custom: `1 pcs: <strong>${p1.toFixed(1)} x ${l1.toFixed(1)} cm</strong><br>2 pcs: <strong>${p1.toFixed(1)} x ${(l1 * 2).toFixed(1)} cm</strong><br>4 pcs: <strong>${(p1 * 2).toFixed(1)} x ${(l1 * 2).toFixed(1)} cm</strong>`,
+                            sizes: [
+                                { name: '1 pcs', p: p1, l: l1, multiplier: 1 },
+                                { name: '2 pcs', p: p1, l: l1 * 2, multiplier: 2 },
+                                { name: '4 pcs', p: p1 * 2, l: l1 * 2, multiplier: 4 }
+                            ]
+                        };
+                    }
+                },
+                kebab: {
+                    name: "Kebab Sleeve", note: "Menghitung 1 pcs dan 2 pcs gandeng.",
+                    fields: [{ id: 'p', label: 'Panjang (cm)', placeholder: '26' }, { id: 'l', label: 'Lebar (cm)', placeholder: '9' }, { id: 'lem', label: 'Lidah Lem (cm)', placeholder: '1.5' }],
+                    calculate: (v, bleed) => {
+                        const p1 = v.p; const l1 = (v.l * 2) + v.lem;
+                        return {
+                            custom: `1 pcs: <strong>${p1.toFixed(1)} x ${l1.toFixed(1)} cm</strong><br>2 pcs: <strong>${p1.toFixed(1)} x ${(l1 * 2).toFixed(1)} cm</strong>`,
+                            sizes: [{ name: '1 pcs', p: p1, l: l1, multiplier: 1 }, { name: '2 pcs', p: p1, l: l1 * 2, multiplier: 2 }]
+                        };
+                    }
+                },
+                kotakMug: {
+                    name: "Kotak Mug Standard", note: "Menghitung 1 pcs dan 2 pcs gandeng.",
+                    fields: [{ id: 'p', label: 'Panjang (cm)', placeholder: '8' }, { id: 'l', label: 'Lebar (cm)', placeholder: '11' }, { id: 't', label: 'Tinggi (cm)', placeholder: '10' }, { id: 'lem', label: 'Lidah Lem (cm)', placeholder: '1.3' }, { id: 'kunci_bawah', label: 'Kunci Bawah (cm)', placeholder: '8' }],
+                    calculate: (v, bleed) => {
+                        const p1 = (2 * (v.p + v.l) + v.lem); const l1 = (v.t + v.l + v.kunci_bawah);
+                        return {
+                            custom: `1 pcs: <strong>${p1.toFixed(1)} x ${l1.toFixed(1)} cm</strong><br>2 pcs: <strong>${p1.toFixed(1)} x ${(l1 * 2).toFixed(1)} cm</strong>`,
+                            sizes: [{ name: '1 pcs', p: p1, l: l1, multiplier: 1 }, { name: '2 pcs', p: p1, l: l1 * 2, multiplier: 2 }]
+                        };
+                    }
+                },
+                burger: {
+                    name: "Kotak Burger (Clamshell)", note: "Menghitung pola bentangan 1 pcs.",
+                    fields: [
+                        { id: 'p', label: 'Panjang (cm)', placeholder: '10' }, { id: 'l', label: 'Lebar (cm)', placeholder: '10' },
+                        { id: 't_bawah', label: 'Tinggi Bawah (cm)', placeholder: '4' }, { id: 't_krkn', label: 'Tinggi Samping (cm)', placeholder: '5' },
+                        { id: 't_tutup', label: 'Tinggi Tutup (cm)', placeholder: '5' }
+                    ],
+                    calculate: (v, bleed) => {
+                        const p_pola = (v.l * 2) + (v.t_bawah * 3) + v.t_tutup;
+                        const l_pola = (v.t_krkn * 2) + v.p;
+                        return {
+                            custom: `1 pcs: <strong>${p_pola.toFixed(1)} x ${l_pola.toFixed(1)} cm</strong>`,
+                            sizes: [{ name: '1 pcs', p: p_pola, l: l_pola, multiplier: 1 }]
+                        };
+                    }
+                },
+                customFlat: {
+                    name: "Custom Ukuran Datar", note: "Ukuran potong jadi (brosur, kartu, stiker, dll).",
+                    fields: [{ id: 'p', label: 'Panjang Jadi (cm)', placeholder: '21' }, { id: 'l', label: 'Lebar Jadi (cm)', placeholder: '15' }],
+                    calculate: (v, bleed) => ({ sizes: [{ name: 'Default', p: v.p, l: v.l, multiplier: 1 }] })
+                }
+            };
+
+            // --- 2. DOM ELEMENTS & STATE ---
+            let availableSizes = [];
+            let totalModalCache = 0;
+            let currentActiveSizeIndex = 0;
+
+            const el = {
+                productSelector: document.getElementById('product-selector'),
+                presetBadgeInfo: document.getElementById('preset-badge-info'),
+                bleedInput: document.getElementById('bleed-input'),
+                layoutMode: document.getElementById('layout-mode'),
+                formContainer: document.getElementById('calculator-form'),
+                calculateBtn: document.getElementById('calculate-btn'),
+                saveHistoryBtn: document.getElementById('save-history-btn'),
+                quickResetBtn: document.getElementById('quick-reset-btn'),
+                resultContainer: document.getElementById('result-container'),
+                resultText: document.getElementById('result-text'),
+                formulaNote: document.getElementById('formula-note'),
+                sizeWarningText: document.getElementById('size-warning-text'),
+                visualizationSection: document.getElementById('visualization-section'),
+                bestPaperBadge: document.getElementById('best-paper-badge'),
+                planoSelector: document.getElementById('ukuran-plano'),
+                visualWrapper: document.getElementById('plano-visual-wrapper'),
+                planoContainer: document.getElementById('plano-container'),
+                layoutResultText: document.getElementById('layout-result-text'),
+                wasteResultText: document.getElementById('waste-result-text'),
+                paperInfoText: document.getElementById('paper-info-text'),
+                visualizationToggleContainer: document.getElementById('visualization-toggle-container'),
+                visualizationToggles: document.getElementById('visualization-toggles'),
+                priceResultsSection: document.getElementById('price-results-section'),
+                jumlah: document.getElementById('jumlah'),
+                sisi: document.getElementById('sisi'),
+                jenisMesin: document.getElementById('jenis-mesin'),
+                jumlahWarnaContainer: document.getElementById('jumlah-warna-container'),
+                jumlahWarna: document.getElementById('jumlah-warna'),
+                laminasi: document.getElementById('laminasi'),
+                laminasiContainer: document.getElementById('laminasi-container'),
+                bahanKertas: document.getElementById('bahan-kertas'),
+                finishingOptions: document.getElementById('finishing-options'),
+                finishingContainer: document.getElementById('finishing-container'),
+                profitMarginSlider: document.getElementById('profit-margin-slider'),
+                marginPercentDisplay: document.getElementById('margin-percent-display'),
+                profitNominalInput: document.getElementById('profit-nominal-input'),
+                hargaJualCard: document.getElementById('harga-jual-card'),
+                modalTotal: document.getElementById('modal-total'),
+                profitVal: document.getElementById('profit-val'),
+                profitContainer: document.getElementById('profit-container'),
+                jualSatuanAktual: document.getElementById('jual-satuan-aktual'),
+                jualPerLembarContainer: document.getElementById('jual-per-lembar-container'),
+                jualPerLembar: document.getElementById('jual-per-lembar'),
+                jualSatuanRounded: document.getElementById('jual-satuan-rounded'),
+                jualTotal: document.getElementById('jual-total'),
+                penawaranCard: document.getElementById('penawaran-card'),
+                whatsappText: document.getElementById('whatsapp-text'),
+                copyWhatsappButton: document.getElementById('copy-whatsapp-button'),
+                copySuccessMessage: document.getElementById('copy-success-message'),
+                historyCard: document.getElementById('history-card'),
+                historyList: document.getElementById('history-list'),
+                clearHistoryBtn: document.getElementById('clear-history-btn'),
+                optimizationSection: document.getElementById('optimization-section'),
+                optimizationSuggestionsContainer: document.getElementById('optimization-suggestions-container'),
+                customOptimizationSection: document.getElementById('custom-optimization-section'),
+                customOptimizationForm: document.getElementById('custom-optimization-form'),
+                runCustomOptimizationBtn: document.getElementById('run-custom-optimization-btn'),
+                customOptimizationResult: document.getElementById('custom-optimization-result'),
+            };
+
+            // --- 3. HELPER FUNCTIONS ---
+            function formatRupiah(angka) {
+                return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Math.round(angka || 0));
+            }
+            function roundToNearest25(num) {
+                return Math.ceil((num || 0) / 25) * 25;
+            }
+            function debounce(func, wait) {
+                let timeout;
+                return function (...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
+            }
+
+            function getPaperPrice(bahanId, planoId) {
+                const bahanObj = HARGA_BAHAN_OFFSET[bahanId];
+                if (!bahanObj) return 0;
+                if (bahanObj[planoId] !== undefined) return bahanObj[planoId];
+
+                const planoObj = UKURAN_PLANO.find(p => p.id === planoId);
+                const factor = planoObj ? (planoObj.factor || 1) : 1;
+                let basePrice = bahanObj['plano_79_109'] || bahanObj['plano_90_120'] || bahanObj['plano_65_100'] || 0;
+                return Math.round(basePrice / factor);
+            }
+
+            function copyToClipboard() {
+                el.whatsappText.select();
+                navigator.clipboard.writeText(el.whatsappText.value).then(() => {
+                    el.copySuccessMessage.classList.remove('hidden');
+                    setTimeout(() => el.copySuccessMessage.classList.add('hidden'), 2500);
+                }).catch(() => {
+                    document.execCommand('copy');
+                    el.copySuccessMessage.classList.remove('hidden');
+                    setTimeout(() => el.copySuccessMessage.classList.add('hidden'), 2500);
+                });
+            }
+
+            // --- 4. PRESET EVENT HANDLERS ---
+            function handleKotakSambungSizeChange(event) {
+                const presetKey = event.target.value;
+                if (presetKey === 'custom') return;
+                const preset = kotakSambungPresets[presetKey];
+                if (preset) {
+                    if (document.getElementById('p')) document.getElementById('p').value = preset.p;
+                    if (document.getElementById('l')) document.getElementById('l').value = preset.l;
+                    if (document.getElementById('t')) document.getElementById('t').value = preset.t;
+                    if (document.getElementById('tutup')) document.getElementById('tutup').value = preset.tutup;
+                }
+                triggerLiveCalculate();
+            }
+            function handleLunchboxSizeChange(event) {
+                const preset = lunchBoxPresets[event.target.value];
+                if (!preset) return;
+                const fields = { p_atas: preset.p_atas, l_atas: preset.l_atas, p_bawah: preset.p_bawah, l_bawah: preset.l_bawah, t: preset.t, tutup: preset.tutup };
+                for (const [id, value] of Object.entries(fields)) {
+                    const input = document.getElementById(id);
+                    if (input) input.value = value ?? '';
+                }
+                triggerLiveCalculate();
+            }
+            function handleRiceboxSizeChange(event) {
+                const preset = riceBoxPresets[event.target.value];
+                if (!preset) return;
+                const fields = { p_atas: preset.p_atas, l_atas: preset.l_atas, p_bawah: preset.p_bawah, l_bawah: preset.l_bawah, t: preset.t, tutup: preset.tutup };
+                for (const [id, value] of Object.entries(fields)) {
+                    const input = document.getElementById(id);
+                    if (input) input.value = value ?? '';
+                }
+                triggerLiveCalculate();
+            }
+            function handleDineInSizeChange(event) {
+                const preset = dineInPresets[event.target.value];
+                if (!preset) return;
+                const fields = { p: preset.p, l: preset.l, t: preset.t };
+                for (const [id, value] of Object.entries(fields)) {
+                    const input = document.getElementById(id);
+                    if (input) input.value = value ?? '';
+                }
+                triggerLiveCalculate();
+            }
+            function handleCustomFlatSizeChange(event) {
+                const key = event.target.value;
+                if (key === 'custom' || key === '') return;
+                const preset = customFlatPresets[key];
+                if (preset) {
+                    const inputP = document.getElementById('p');
+                    const inputL = document.getElementById('l');
+                    if (inputP) inputP.value = preset.p;
+                    if (inputL) inputL.value = preset.l;
+                }
+                triggerLiveCalculate();
+            }
+
+            function handleJenisMesinChange() {
+                const mode = el.jenisMesin.value;
+                const isDigital = mode === 'digital';
+                const isDTF = mode === 'dtf';
+                const isOffset = mode === 'offset';
+
+                el.jumlahWarnaContainer.classList.toggle('hidden', !isOffset);
+                el.jualPerLembarContainer.classList.toggle('hidden', !isDigital);
+
+                if (isDTF) {
+                    el.laminasiContainer.classList.add('hidden');
+                    el.finishingContainer.classList.add('hidden');
+                } else {
+                    el.laminasiContainer.classList.remove('hidden');
+                    el.finishingContainer.classList.remove('hidden');
+                }
+
+                const digitalFinishing = document.getElementById('digital-only-finishing');
+                if (digitalFinishing) {
+                    digitalFinishing.classList.toggle('hidden', !isDigital);
+                }
+
+                populateBahanOptions(mode);
+                triggerLiveCalculate();
+            }
+
+            function populateBahanOptions(mode) {
+                el.bahanKertas.innerHTML = '';
+                const filtered = JENIS_KERTAS.filter(k => k.mesin.includes(mode));
+                filtered.forEach(k => {
+                    el.bahanKertas.add(new Option(k.nama, k.id));
+                });
+                populatePlanoOptions(mode, el.bahanKertas.value);
+            }
+
+            function populatePlanoOptions(mode, bahanId) {
+                el.planoSelector.innerHTML = '';
+                let opts = [];
+                if (mode === 'digital') opts = UKURAN_PLANO.filter(p => p.id.startsWith('a3'));
+                else if (mode === 'dtf') opts = UKURAN_PLANO.filter(p => p.id.startsWith('a3') || p.id === 'a4');
+                else {
+                    const bahan = JENIS_KERTAS.find(k => k.id === bahanId);
+                    if (bahan && bahan.id.startsWith('kraft')) {
+                        opts = UKURAN_PLANO.filter(p => p.id.startsWith('plano_90_120'));
+                    } else {
+                        opts = UKURAN_PLANO.filter(p => p.id.startsWith('plano_79_109') || p.id === 'plano_65_100');
+                    }
+                }
+                opts.forEach(p => el.planoSelector.add(new Option(p.nama, p.id)));
+            }
+
+            function setupFinishingOptions() {
+                el.finishingOptions.innerHTML = `
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div class="flex items-center gap-2 bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
+                        <input type="checkbox" id="finishing-potong" data-key="potong" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
+                        <label for="finishing-potong" class="text-xs font-medium text-slate-300">Potong Jadi (Cutting)</label>
+                    </div>
+                    <div class="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="finishing-lipat" data-key="lipat" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
+                            <label for="finishing-lipat" class="text-xs font-medium text-slate-300">Lipat Mesin</label>
+                        </div>
+                        <div id="jumlah-lipatan-container" class="mt-2 hidden">
+                            <input type="number" id="jumlah-lipatan" class="form-input text-xs py-1" placeholder="Jml Lipatan" value="1" min="1">
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
+                        <input type="checkbox" id="finishing-spotuv" data-key="spotuv" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
+                        <label for="finishing-spotuv" class="text-xs font-medium text-slate-300">Spot UV (Varnish)</label>
+                    </div>
+                </div>
+                <div class="border-t border-slate-800/80 pt-3 mt-3">
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="finishing-hotfoil" data-key="hotfoil" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
+                        <label for="finishing-hotfoil" class="text-xs font-semibold text-slate-200">Hot Foil / Poly Emas/Perak</label>
+                    </div>
+                    <div id="hotfoil-container" class="mt-2.5 hidden bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+                        <label class="text-[11px] text-slate-400 block mb-1">Ukuran Area Foil (P x L cm):</label>
+                        <div class="flex items-center gap-2">
+                            <input type="number" id="hotfoil-panjang" class="form-input text-xs py-1" placeholder="P" value="5" min="0.1" step="0.1">
+                            <span class="text-xs text-slate-500">x</span>
+                            <input type="number" id="hotfoil-lebar" class="form-input text-xs py-1" placeholder="L" value="5" min="0.1" step="0.1">
+                            <span class="text-xs text-slate-400">cm</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="digital-only-finishing" class="border-t border-slate-800/80 pt-3 mt-3 hidden">
+                    <div class="flex items-center gap-2" id="sticker-cutting-section">
+                        <input type="checkbox" id="finishing-stickercut" data-key="stickercut" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
+                        <label for="finishing-stickercut" class="text-xs font-medium text-slate-200">+ Kiss Cut Stiker</label>
+                    </div>
+                    <div id="sticker-cutting-container" class="mt-2 hidden">
+                        <select id="sticker-cutting-type" class="form-select text-xs py-1">
+                            <option value="bawah5">Cutting Pola Kecil (&lt; 5 cm)</option>
+                            <option value="atas5">Cutting Pola Standar (&gt; 5 cm)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2 mt-3" id="laminating-kaku-section">
+                        <input type="checkbox" id="finishing-laminatingkaku" data-key="laminatingkaku" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
+                        <label for="finishing-laminatingkaku" class="text-xs font-medium text-slate-200">Laminating Hard Press / Kaku</label>
+                    </div>
+                </div>`;
+
+                document.getElementById('finishing-lipat').addEventListener('change', (e) => {
+                    document.getElementById('jumlah-lipatan-container').classList.toggle('hidden', !e.target.checked);
+                    triggerLiveCalculate();
+                });
+                document.getElementById('finishing-hotfoil').addEventListener('change', (e) => {
+                    document.getElementById('hotfoil-container').classList.toggle('hidden', !e.target.checked);
+                    triggerLiveCalculate();
+                });
+                document.getElementById('finishing-stickercut').addEventListener('change', (e) => {
+                    document.getElementById('sticker-cutting-container').classList.toggle('hidden', !e.target.checked);
+                    triggerLiveCalculate();
+                });
+                document.querySelectorAll('#finishing-options input, #finishing-options select').forEach(i => {
+                    i.addEventListener('change', triggerLiveCalculate);
+                });
+            }
+
+            function generateForm(productId) {
+                el.formContainer.innerHTML = '';
+                const product = products[productId];
+                if (!product) return;
+
+                el.presetBadgeInfo.textContent = product.name;
+
+                let presetSelectorHTML = '';
+                let eventListener = null;
+
+                if (productId === 'lunchBox') {
+                    presetSelectorHTML = `<label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Preset Ukuran Standard Lunchbox:</label><select id="preset-selector" class="form-select text-xs font-medium"><option value="custom">-- Custom Dimensi --</option><option value="xs">Size XS (10x10x4.5 cm)</option><option value="s">Size S (13x10x4.5 cm)</option><option value="m" selected>Size M (17.5x10.5x5 cm)</option><option value="l">Size L (20x12x5 cm)</option><option value="corndog">Corndog Box (17x6x5 cm)</option></select>`;
+                    eventListener = handleLunchboxSizeChange;
+                } else if (productId === 'riceBox') {
+                    presetSelectorHTML = `<label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Preset Ukuran Standard Ricebox:</label><select id="preset-selector" class="form-select text-xs font-medium"><option value="custom">-- Custom Dimensi --</option><option value="s">Size S (9.5x8x8 cm)</option><option value="m" selected>Size M (9.5x8x10 cm)</option><option value="l">Size L (11x9.5x11.5 cm)</option></select>`;
+                    eventListener = handleRiceboxSizeChange;
+                } else if (productId === 'dineIn') {
+                    presetSelectorHTML = `<label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Preset Ukuran Dine In Tray:</label><select id="preset-selector" class="form-select text-xs font-medium"><option value="custom">-- Custom Dimensi --</option><option value="xs">Size XS (12x8x2.5 cm)</option><option value="s">Size S (11x9x3.5 cm)</option><option value="m" selected>Size M (16x9x4 cm)</option><option value="l">Size L (18x10.5x3.25 cm)</option><option value="xl">Size XL (18x15.5x5 cm)</option></select>`;
+                    eventListener = handleDineInSizeChange;
+                } else if (productId === 'customFlat') {
+                    const groups = [
+                        { label: '── Seri ISO A (Kertas/Poster) ──', keys: ['a0', 'a1', 'a2', 'a3', 'a3plus', 'a4', 'a5', 'a6', 'a7', 'a8'] },
+                        { label: '── Seri ISO B ──', keys: ['b0', 'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7'] },
+                        { label: '── Seri Amplop ──', keys: ['c4', 'c5', 'c6', 'dl'] },
+                        { label: '── Seri Folio / Office ──', keys: ['f4', 'f3', 'legal', 'letter'] },
+                        { label: '── Kartu & Label ──', keys: ['kartu_nama', 'kartu_nama_l', 'kartu_nama_sq', 'id_card', 'stiker_a5', 'label_kecil', 'label_hpet'] },
+                        { label: '── Brosur & Flyer ──', keys: ['brosur_dl', 'flyer_a5', 'flyer_a6', 'kalender_a3', 'kalender_a4'] },
+                        { label: '── Nota & Kwitansi ──', keys: ['nota_1_4', 'nota_1_3', 'nota_1_2'] },
+                        { label: '── Spanduk & Large Format ──', keys: ['banner_60', 'banner_90'] },
+                    ];
+                    let optionsHTML = `<option value="custom">-- Custom Dimensi (isi manual) --</option>`;
+                    groups.forEach(g => {
+                        optionsHTML += `<option value="" disabled>${g.label}</option>`;
+                        g.keys.forEach(k => {
+                            const pr = customFlatPresets[k];
+                            if (pr) optionsHTML += `<option value="${k}">${pr.label}</option>`;
+                        });
+                    });
+                    presetSelectorHTML = `<label for="preset-selector" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Pilih Preset Ukuran Standard:</label><select id="preset-selector" class="form-select text-xs font-medium">${optionsHTML}</select>`;
+                    eventListener = handleCustomFlatSizeChange;
+                } else if (productId === 'kotakSambung') {
+                    presetSelectorHTML = `<label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Preset Ukuran Mailer Box / Dus Sambung:</label><select id="preset-selector" class="form-select text-xs font-medium"><option value="custom">-- Custom Dimensi --</option><option value="pisang_adina">Pisang Adina (16x10x5 cm)</option><option value="dapoer_tj">Dapoer TJ (18x16x7 cm)</option><option value="martabak_leo">Martabak (18x12x5 cm)</option><option value="warung_kediri">Warung Kediri (18x18x5.5 cm)</option><option value="pawon_rasa">Pawon Rasa (19.5x19.5x6 cm)</option><option value="ayam_geprek">Ayam Geprek (14x10.5x6.5 cm)</option><option value="demi_donat_k">Donat Kecil (18x10x8 cm)</option><option value="nats_time">Nats Time (16x12x7 cm)</option><option value="demi_donat_b">Donat Besar (29x20x6 cm)</option><option value="balok_lumer">Balok Lumer (13.5x13.5x4 cm)</option><option value="zaki_donat">Zaki Donat (27x18.5x4.5 cm)</option></select>`;
+                    eventListener = handleKotakSambungSizeChange;
+                }
+
+                if (presetSelectorHTML) {
+                    const div = document.createElement('div');
+                    div.className = 'mb-4 border-b border-slate-800 pb-3';
+                    div.innerHTML = presetSelectorHTML;
+                    el.formContainer.appendChild(div);
+                    const selectEl = document.getElementById('preset-selector');
+                    if (selectEl && eventListener) selectEl.addEventListener('change', eventListener);
+                }
+
+                const grid = document.createElement('div');
+                grid.className = 'grid grid-cols-2 sm:grid-cols-3 gap-3';
+                product.fields.forEach(f => {
+                    if (f.type === 'separator') {
+                        const h3 = document.createElement('h3');
+                        h3.className = 'col-span-full text-xs font-bold text-indigo-400 uppercase tracking-wider pt-3 border-t border-slate-800';
+                        h3.textContent = f.label;
+                        grid.appendChild(h3);
+                    } else {
+                        const div = document.createElement('div');
+                        div.innerHTML = `<label for="${f.id}" class="block text-xs font-medium text-slate-300 mb-1">${f.label}</label><input type="number" id="${f.id}" step="0.1" min="0.1" placeholder="${f.placeholder}" class="form-input font-bold text-slate-100 py-1.5 text-sm">`;
+                        grid.appendChild(div);
+                    }
+                });
+                el.formContainer.appendChild(grid);
+
+                // Auto select default preset initial values if available
+                const presetSel = document.getElementById('preset-selector');
+                if (presetSel && presetSel.value !== 'custom') {
+                    if (productId === 'lunchBox') handleLunchboxSizeChange({ target: { value: 'm' } });
+                    else if (productId === 'riceBox') handleRiceboxSizeChange({ target: { value: 'm' } });
+                    else if (productId === 'dineIn') handleDineInSizeChange({ target: { value: 'm' } });
+                }
+
+                // Register input change listener for manual typing
+                grid.querySelectorAll('input').forEach(inp => {
+                    inp.addEventListener('input', () => {
+                        const dropdown = document.getElementById('preset-selector');
+                        if (dropdown) dropdown.value = 'custom';
+                        triggerLiveCalculate();
+                    });
+                });
+            }
+
+            // --- 5. CORE LAYOUT ALGORITHM (FIXED & IMPROVED) ---
+            function findBestLayout(planoW, planoH, itemW, itemH) {
+                const layoutMode = el.layoutMode.value;
+                const planoArea = planoW * planoH;
+                const pieceArea = itemW * itemH;
+
+                function calc(cW, cH, iW, iH) {
+                    if (iW <= 0 || iH <= 0 || cW < iW || cH < iH) return { c: 0, r: 0, t: 0 };
+                    const eps = 0.0001;
+                    const c = Math.floor((cW + eps) / iW);
+                    const r = Math.floor((cH + eps) / iH);
+                    return { c, r, t: c * r };
+                }
+
+                const f1 = calc(planoW, planoH, itemW, itemH);
+                const l1 = { total: f1.t, config: [{ x: 0, y: 0, w: f1.c * itemW, h: f1.r * itemH, itemW, itemH }], name: "Vertikal Saja" };
+                l1.wastePercentage = planoArea > 0 ? Math.max(0, (1 - (l1.total * pieceArea / planoArea)) * 100) : 100;
+
+                const f2 = calc(planoW, planoH, itemH, itemW);
+                const l2 = { total: f2.t, config: [{ x: 0, y: 0, w: f2.c * itemH, h: f2.r * itemW, itemW: itemH, itemH: itemW }], name: "Horizontal Saja" };
+                l2.wastePercentage = planoArea > 0 ? Math.max(0, (1 - (l2.total * pieceArea / planoArea)) * 100) : 100;
+
+                if (layoutMode === 'portrait') return l1;
+                if (layoutMode === 'landscape') return l2;
+
+                // Mixed Vertical Base (l3)
+                let l3 = { total: f1.t, config: [...l1.config], name: "Campuran (Vertikal Base)" };
+                if (f1.t > 0) {
+                    const remW = planoW - l3.config[0].w;
+                    const remH = planoH - l3.config[0].h;
+                    const exR = calc(remW, planoH, itemH, itemW);
+                    const exB = calc(l3.config[0].w, remH, itemH, itemW);
+
+                    if (exR.t > 0 || exB.t > 0) {
+                        l3.total += (exR.t + exB.t);
+                        if (exR.t > 0) l3.config.push({ x: l3.config[0].w, y: 0, w: exR.c * itemH, h: exR.r * itemW, itemW: itemH, itemH: itemW });
+                        if (exB.t > 0) l3.config.push({ x: 0, y: l3.config[0].h, w: exB.c * itemH, h: exB.r * itemW, itemW: itemH, itemH: itemW });
+                    }
+                    // FIXED: Keep l3.total = f1.t if no extra fit, DO NOT reset to 0!
+                }
+                l3.wastePercentage = planoArea > 0 ? Math.max(0, (1 - (l3.total * pieceArea / planoArea)) * 100) : 100;
+
+                // Mixed Horizontal Base (l4)
+                let l4 = { total: f2.t, config: [...l2.config], name: "Campuran (Horizontal Base)" };
+                if (f2.t > 0) {
+                    const remW = planoW - l4.config[0].w;
+                    const remH = planoH - l4.config[0].h;
+                    const exR = calc(remW, planoH, itemW, itemH);
+                    const exB = calc(l4.config[0].w, remH, itemW, itemH);
+
+                    if (exR.t > 0 || exB.t > 0) {
+                        l4.total += (exR.t + exB.t);
+                        if (exR.t > 0) l4.config.push({ x: l4.config[0].w, y: 0, w: exR.c * itemW, h: exR.r * itemH, itemW, itemH });
+                        if (exB.t > 0) l4.config.push({ x: 0, y: l4.config[0].h, w: exB.c * itemW, h: exB.r * itemH, itemW, itemH });
+                    }
+                    // FIXED: Keep l4.total = f2.t if no extra fit, DO NOT reset to 0!
+                }
+                l4.wastePercentage = planoArea > 0 ? Math.max(0, (1 - (l4.total * pieceArea / planoArea)) * 100) : 100;
+
+                const layouts = [l1, l2, l3, l4].sort((a, b) => {
+                    if (b.total !== a.total) return b.total - a.total;
+                    return a.wastePercentage - b.wastePercentage;
+                });
+
+                const best = layouts[0];
+                best.config = best.config.filter(c => calc(c.w, c.h, c.itemW, c.itemH).t > 0);
+                return best;
+            }
+
+            // --- 6. SVG INTERACTIVE CANVAS RENDERER ---
+            function drawLayoutSVG(layout, plano, multiplier) {
+                el.planoContainer.innerHTML = '';
+                el.visualWrapper.style.aspectRatio = `${plano.planoP}/${plano.planoL}`;
+
+                if (!layout || layout.total === 0) {
+                    el.layoutResultText.textContent = "Tidak Muat pada ukuran sheet ini.";
+                    el.wasteResultText.classList.add('hidden');
+                    return;
+                }
+
+                const viewBoxP = plano.planoP;
+                const viewBoxL = plano.planoL;
+                const bleed = parseFloat(el.bleedInput.value) || 0;
+
+                let svgHTML = `<svg viewBox="0 0 ${viewBoxP} ${viewBoxL}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" class="select-none font-sans">`;
+                // Plano Background sheet
+                svgHTML += `<rect x="0" y="0" width="${viewBoxP}" height="${viewBoxL}" fill="#0f172a" stroke="#334155" stroke-width="0.5" rx="0.5" />`;
+
+                layout.config.forEach(c => {
+                    const eps = 0.0001;
+                    const cols = Math.round((c.w + eps) / c.itemW);
+                    const rows = Math.round((c.h + eps) / c.itemH);
+
+                    for (let r = 0; r < rows; r++) {
+                        for (let col = 0; col < cols; col++) {
+                            const px = c.x + (col * c.itemW);
+                            const py = c.y + (r * c.itemH);
+
+                            // Piece outer box
+                            svgHTML += `<rect x="${px}" y="${py}" width="${c.itemW}" height="${c.itemH}" fill="rgba(99, 102, 241, 0.15)" stroke="#6366f1" stroke-width="0.25" rx="0.2" />`;
+
+                            // Bleed dashed border inside if bleed > 0
+                            if (bleed > 0 && c.itemW > (bleed * 2) && c.itemH > (bleed * 2)) {
+                                svgHTML += `<rect x="${px + bleed}" y="${py + bleed}" width="${c.itemW - (bleed * 2)}" height="${c.itemH - (bleed * 2)}" fill="none" stroke="#ef4444" stroke-width="0.15" stroke-dasharray="0.4, 0.3" />`;
+                            }
+
+                            // Dimension label text if piece is large enough
+                            if (c.itemW > 6 && c.itemH > 4) {
+                                const realW = (c.itemW - (bleed * 2)).toFixed(1);
+                                const realH = (c.itemH - (bleed * 2)).toFixed(1);
+                                svgHTML += `<text x="${px + (c.itemW / 2)}" y="${py + (c.itemH / 2) + 0.4}" fill="#e2e8f0" font-size="${Math.min(1.8, c.itemW / 5)}" font-weight="600" text-anchor="middle" dominant-baseline="middle">${realW}x${realH}</text>`;
+                            }
+                        }
+                    }
+                });
+
+                svgHTML += `</svg>`;
+                el.planoContainer.innerHTML = svgHTML;
+
+                const totalPcs = layout.total * multiplier;
+                el.layoutResultText.innerHTML = `Layout: <strong>${layout.name}</strong> • Total: <span class="text-indigo-400 font-extrabold">${totalPcs} pcs</span> <span class="text-xs text-slate-400">(${layout.total} pola x ${multiplier} pcs)</span>`;
+                el.wasteResultText.textContent = `Sisa Sheet Kertas: ${layout.wastePercentage.toFixed(1)}%`;
+                el.wasteResultText.classList.remove('hidden');
+            }
+
+            function setupVisualization(sizes) {
+                el.visualizationSection.classList.remove('hidden');
+                el.visualizationToggles.innerHTML = '';
+
+                if (sizes.length > 1) {
+                    el.visualizationToggleContainer.classList.remove('hidden');
+                    sizes.forEach((s, i) => {
+                        const btn = document.createElement('button');
+                        btn.className = `toggle-btn px-3 py-1.5 text-xs font-semibold border rounded-lg ${i === currentActiveSizeIndex ? 'active' : 'bg-slate-900 text-slate-300 border-slate-700'}`;
+                        btn.textContent = s.name;
+                        btn.addEventListener('click', () => {
+                            currentActiveSizeIndex = i;
+                            document.querySelectorAll('.toggle-btn').forEach((b, idx) => {
+                                b.className = `toggle-btn px-3 py-1.5 text-xs font-semibold border rounded-lg ${idx === i ? 'active' : 'bg-slate-900 text-slate-300 border-slate-700'}`;
+                            });
+                            updateVisualization(s);
+                            calculateAndRenderPricing();
+                        });
+                        el.visualizationToggles.appendChild(btn);
+                    });
+                } else {
+                    currentActiveSizeIndex = 0;
+                    el.visualizationToggleContainer.classList.add('hidden');
+                }
+
+                updateVisualization(sizes[currentActiveSizeIndex] || sizes[0]);
+            }
+
+            function updateVisualization(size) {
+                if (!size) return;
+                const bleed = parseFloat(el.bleedInput.value) || 0;
+                const p_size = size.p + (bleed * 2);
+                const l_size = size.l + (bleed * 2);
+
+                const MACHINE_MAX_PAPER_P = 64;
+                const MACHINE_MAX_PAPER_L = 46;
+                const isOversize = (p_size > MACHINE_MAX_PAPER_P || l_size > MACHINE_MAX_PAPER_L) && (l_size > MACHINE_MAX_PAPER_P || p_size > MACHINE_MAX_PAPER_L);
+
+                if (isOversize) {
+                    el.sizeWarningText.textContent = 'Peringatan: Ukuran melebihi batas cetak mesin offset standar (63x44 cm). Diperlukan mesin cetak plano besar.';
+                    el.sizeWarningText.classList.remove('hidden');
+                } else {
+                    el.sizeWarningText.classList.add('hidden');
+                }
+
+                const plano = UKURAN_PLANO.find(p => p.id === el.planoSelector.value) || UKURAN_PLANO[0];
+                const layout = findBestLayout(plano.planoP, plano.planoL, p_size, l_size);
+                drawLayoutSVG(layout, plano, size.multiplier);
+
+                checkBestPaperRecommendation(size);
+            }
+
+            function checkBestPaperRecommendation(size) {
+                if (!size) return;
+                const bleed = parseFloat(el.bleedInput.value) || 0;
+                const p_size = size.p + (bleed * 2);
+                const l_size = size.l + (bleed * 2);
+                const mode = el.jenisMesin.value;
+
+                let candidatePlanos = [];
+                if (mode === 'digital') candidatePlanos = UKURAN_PLANO.filter(p => p.id.startsWith('a3'));
+                else if (mode === 'dtf') candidatePlanos = UKURAN_PLANO.filter(p => p.id.startsWith('a3') || p.id === 'a4');
+                else {
+                    const bahan = JENIS_KERTAS.find(k => k.id === el.bahanKertas.value);
+                    if (bahan && bahan.id.startsWith('kraft')) candidatePlanos = UKURAN_PLANO.filter(p => p.id.startsWith('plano_90_120'));
+                    else candidatePlanos = UKURAN_PLANO.filter(p => p.id.startsWith('plano_79_109') || p.id === 'plano_65_100');
+                }
+
+                let bestPlano = null;
+                let lowestWaste = 100;
+
+                candidatePlanos.forEach(plano => {
+                    const ly = findBestLayout(plano.planoP, plano.planoL, p_size, l_size);
+                    if (ly.total > 0 && ly.wastePercentage < lowestWaste) {
+                        lowestWaste = ly.wastePercentage;
+                        bestPlano = plano;
+                    }
+                });
+
+                if (bestPlano && bestPlano.id === el.planoSelector.value) {
+                    el.bestPaperBadge.classList.remove('hidden');
+                } else {
+                    el.bestPaperBadge.classList.add('hidden');
+                }
+            }
+
+            // --- 7. PRICING & HPP BREAKDOWN ENGINE ---
+            function calculateBreakdown(sizeP, sizeL, multiplier, customJumlah = null) {
+                const bleed = parseFloat(el.bleedInput.value) || 0;
+                const p = sizeP + (bleed * 2);
+                const l = sizeL + (bleed * 2);
+                const qty = customJumlah !== null ? customJumlah : (parseInt(el.jumlah.value) || 1000);
+                const plano = UKURAN_PLANO.find(u => u.id === el.planoSelector.value) || UKURAN_PLANO[0];
+                const sisiCetak = parseInt(el.sisi.value) || 1;
+
+                const layout = findBestLayout(plano.planoP, plano.planoL, p, l);
+                if (layout.total === 0) return { error: "Ukuran terlalu besar untuk sheet ini." };
+
+                const pcsPerPlano = layout.total * multiplier;
+                const totalPlano = Math.ceil(qty / pcsPerPlano);
+
+                let insheet = 0;
+                if (el.jenisMesin.value === 'offset') {
+                    insheet = 25 * (plano.factor || 1);
+                }
+
+                let costBahan = 0, costCetak = 0, totalBiayaFinishing = 0;
+
+                if (el.jenisMesin.value === 'digital') {
+                    const price = HARGA_DIGITAL.hargaBahan[el.bahanKertas.value] || 3000;
+                    costBahan = totalPlano * price;
+                    costCetak = totalPlano * HARGA_DIGITAL.biayaProduksiPerLembar * sisiCetak;
+                } else if (el.jenisMesin.value === 'dtf') {
+                    const price = HARGA_DIGITAL.hargaBahan[el.bahanKertas.value] || 20000;
+                    costBahan = totalPlano * price;
+                } else { // Offset
+                    const price = getPaperPrice(el.bahanKertas.value, el.planoSelector.value);
+                    costBahan = (totalPlano + insheet) * price;
+
+                    const jumlahWarna = parseInt(el.jumlahWarna.value) || 4;
+                    if (jumlahWarna === 1) {
+                        const tier = HARGA_OFFSET_TIERED_1_WARNA.find(t => qty >= t.minQty && qty <= t.maxQty);
+                        costCetak = tier ? (tier.baseCost + tier.clickCost) : 1250000;
+                    } else {
+                        const tier4 = HARGA_OFFSET_TIERED_4_WARNA.find(t => qty >= t.minQty && qty <= t.maxQty);
+                        const c4 = tier4 ? (tier4.baseCost + tier4.clickCost) : 1700000;
+                        if (jumlahWarna === 4) {
+                            costCetak = c4;
+                        } else {
+                            const tier1 = HARGA_OFFSET_TIERED_1_WARNA.find(t => qty >= t.minQty && qty <= t.maxQty);
+                            const c1 = tier1 ? (tier1.baseCost + tier1.clickCost) : 1250000;
+                            const step = (c4 - c1) / 3;
+                            costCetak = c1 + (step * (jumlahWarna - 1));
+                        }
+                    }
+                    costCetak *= sisiCetak;
+                }
+
+                // Finishing Cost Calculations
+                if (el.jenisMesin.value !== 'dtf') {
+                    const laminasiPilihan = el.laminasi.value;
+                    if (laminasiPilihan !== 'none') {
+                        const sisiLaminasi = parseInt(laminasiPilihan.split('_')[1]) || 1;
+                        const hargaLaminasiPerLembar = el.jenisMesin.value === 'digital' ? HARGA_DIGITAL.finishing.laminasiPerLembar : HARGA_OFFSET_FINISHING.laminasiPerPlano;
+                        totalBiayaFinishing += (totalPlano * hargaLaminasiPerLembar * sisiLaminasi);
+                    }
+
+                    document.querySelectorAll('#finishing-options input[type="checkbox"]:checked').forEach(cb => {
+                        const key = cb.dataset.key;
+                        const isDigital = el.jenisMesin.value === 'digital';
+                        if ((isDigital && ['spotuv', 'hotfoil', 'lipat'].includes(key)) || (!isDigital && ['stickercut', 'laminatingkaku'].includes(key))) return;
+
+                        const costRule = HARGA_OFFSET_FINISHING[key] || HARGA_DIGITAL.finishing[key];
+                        if (!costRule) return;
+
+                        let biayaItem = 0;
+                        const patternsNeeded = Math.ceil(qty / multiplier);
+                        if (key === 'potong') {
+                            biayaItem = isDigital ? HARGA_DIGITAL.finishing.potongJadi : Math.max(costRule.min, qty * costRule.per_pcs);
+                        } else if (key === 'lipat') {
+                            const jmlLipatan = parseInt(document.getElementById('jumlah-lipatan')?.value) || 1;
+                            biayaItem = Math.max(costRule.min, qty * jmlLipatan * costRule.per_lipatan_pcs);
+                        } else if (key === 'spotuv') {
+                            const area = Math.max(1, (p - bleed * 2) * (l - bleed * 2));
+                            biayaItem = Math.max(costRule.min, patternsNeeded * area * costRule.per_cm2) * sisiCetak;
+                        } else if (key === 'hotfoil') {
+                            const foilP = parseFloat(document.getElementById('hotfoil-panjang')?.value) || 0;
+                            const foilL = parseFloat(document.getElementById('hotfoil-lebar')?.value) || 0;
+                            if (foilP > 0 && foilL > 0) {
+                                const area = foilP * foilL;
+                                biayaItem = Math.max(costRule.min, patternsNeeded * area * costRule.per_cm2) * sisiCetak;
+                            }
+                        } else if (key === 'laminatingkaku') {
+                            biayaItem = totalPlano * HARGA_DIGITAL.finishing.laminatingKakuPerLembar;
+                        } else if (key === 'stickercut') {
+                            const tipe = document.getElementById('sticker-cutting-type')?.value || 'bawah5';
+                            biayaItem = totalPlano * HARGA_DIGITAL.finishing.cuttingStiker[tipe];
+                        }
+
+                        if (biayaItem > 0) totalBiayaFinishing += biayaItem;
+                    });
+                }
+
+                const totalModal = costBahan + costCetak + totalBiayaFinishing;
+                return { totalModal, totalPlano, insheet, biayaBahan: costBahan, biayaCetak: costCetak, totalBiayaFinishing };
+            }
+
+            function getCombinedBreakdown(qtyOverride = null) {
+                const qty = qtyOverride !== null ? qtyOverride : (parseInt(el.jumlah.value) || 1000);
+
+                if (el.productSelector.value === 'kotakTutupTerpisah') {
+                    let totalModal = 0; let totalPlano = 0; let totalInsheet = 0; let totalBiayaBahan = 0; let totalBiayaCetak = 0; let totalBiayaFinishing = 0;
+                    let hasError = false; let errorMessage = '';
+
+                    for (const size of availableSizes) {
+                        const res = calculateBreakdown(size.p, size.l, size.multiplier, qty);
+                        if (res) {
+                            if (res.error) { hasError = true; errorMessage = res.error; break; }
+                            totalModal += res.totalModal; totalPlano += res.totalPlano; totalInsheet += res.insheet;
+                            totalBiayaBahan += res.biayaBahan; totalBiayaCetak += res.biayaCetak; totalBiayaFinishing += res.totalBiayaFinishing;
+                        }
+                    }
+                    if (hasError) return { error: errorMessage };
+                    return { totalModal, totalPlano, insheet: totalInsheet, biayaBahan: totalBiayaBahan, biayaCetak: totalBiayaCetak, totalBiayaFinishing: totalBiayaFinishing };
+                } else {
+                    const activeSize = availableSizes[currentActiveSizeIndex] || availableSizes[0];
+                    if (!activeSize) return null;
+                    return calculateBreakdown(activeSize.p, activeSize.l, activeSize.multiplier, qty);
+                }
+            }
+
+            function calculateAndRenderPricing(resetRounded = true) {
+                let breakdown = getCombinedBreakdown();
+                if (!breakdown || breakdown.error) return;
+
+                updateHargaJual(resetRounded, breakdown);
+                updatePaperInfo(breakdown);
+            }
+
+            function updatePaperInfo(breakdown) {
+                let text = '';
+                if (el.productSelector.value === 'kotakTutupTerpisah') {
+                    let details = []; let grandTotal = 0;
+                    const qty = parseInt(el.jumlah.value) || 1000;
+                    availableSizes.forEach(size => {
+                        const res = calculateBreakdown(size.p, size.l, size.multiplier, qty);
+                        if (res && !res.error) {
+                            const totalPart = res.totalPlano + res.insheet;
+                            grandTotal += totalPart;
+                            details.push(`${size.name}: ${res.totalPlano} lbr (+${res.insheet} insheet)`);
+                        }
+                    });
+                    text = `Total Kertas: <strong>${grandTotal}</strong> lbr <span class="text-[11px] font-normal text-slate-400">(${details.join(', ')})</span>`;
+                } else {
+                    const total = breakdown.totalPlano + breakdown.insheet;
+                    text = `Kebutuhan Kertas: <strong>${total}</strong> lbr <span class="text-[11px] font-normal text-slate-400">(inc. ${breakdown.insheet} insheet)</span>`;
+                }
+                el.paperInfoText.innerHTML = text;
+                el.paperInfoText.classList.remove('hidden');
+            }
+
+            function updateHargaJual(resetRounded = false, breakdown) {
+                el.priceResultsSection.classList.remove('hidden');
+                el.penawaranCard.classList.remove('hidden');
+
+                const jumlah = parseInt(el.jumlah.value) || 1000;
+                const jenisMesin = el.jenisMesin.value;
+                totalModalCache = breakdown.totalModal;
+
+                // Profit Margin Controller calculations
+                const marginPercent = parseFloat(el.profitMarginSlider.value) || 0;
+                const profitNominal = parseFloat(el.profitNominalInput.value) || 0;
+                el.marginPercentDisplay.textContent = `${marginPercent}%`;
+
+                let totalJual = 0; let hargaSatuanAktual = 0; let hargaPerLembar = 0;
+
+                if (jenisMesin === 'digital' || jenisMesin === 'dtf') {
+                    el.jualPerLembarContainer.classList.remove('hidden');
+                    const biayaSettingDigital = 25000;
+                    const baseMarginProfit = (totalModalCache * (marginPercent / 100));
+                    totalJual = totalModalCache + biayaSettingDigital + baseMarginProfit + profitNominal;
+
+                    hargaSatuanAktual = jumlah > 0 ? totalJual / jumlah : 0;
+                    if (breakdown.totalPlano > 0) hargaPerLembar = totalJual / breakdown.totalPlano;
+
+                    const calculatedProfit = totalJual - totalModalCache;
+                    el.profitVal.textContent = formatRupiah(calculatedProfit);
+                } else { // Offset
+                    el.jualPerLembarContainer.classList.add('hidden');
+                    const calculatedProfit = (totalModalCache * (marginPercent / 100)) + profitNominal;
+                    totalJual = totalModalCache + calculatedProfit;
+                    hargaSatuanAktual = jumlah > 0 ? totalJual / jumlah : 0;
+                    el.profitVal.textContent = formatRupiah(calculatedProfit);
+                }
+
+                el.jualSatuanAktual.textContent = formatRupiah(hargaSatuanAktual);
+                el.jualPerLembar.textContent = formatRupiah(hargaPerLembar);
+                el.modalTotal.textContent = formatRupiah(totalModalCache);
+
+                document.getElementById('detail-bahan').textContent = formatRupiah(breakdown.biayaBahan);
+                document.getElementById('detail-cetak').textContent = formatRupiah(breakdown.biayaCetak);
+                document.getElementById('detail-finishing').textContent = formatRupiah(breakdown.totalBiayaFinishing);
+
+                if (resetRounded) {
+                    const finalSatuan = (jenisMesin === 'offset') ? roundToNearest25(hargaSatuanAktual) : Math.ceil(hargaSatuanAktual);
+                    el.jualSatuanRounded.value = finalSatuan;
+                    el.jualTotal.textContent = formatRupiah(finalSatuan * jumlah);
+                } else {
+                    const roundedPrice = parseFloat(el.jualSatuanRounded.value) || 0;
+                    el.jualTotal.textContent = formatRupiah(roundedPrice * jumlah);
+                }
+                generatePenawaran();
+            }
+
+            function generatePenawaran() {
+                const isDigital = el.jenisMesin.value === 'digital' || el.jenisMesin.value === 'dtf';
+                let polaMsg = '';
+
+                if (el.productSelector.value === 'kotakTutupTerpisah') {
+                    const parts = [];
+                    const bleed = parseFloat(el.bleedInput.value) || 0;
+                    availableSizes.forEach(size => {
+                        const p = size.p + (bleed * 2);
+                        const l = size.l + (bleed * 2);
+                        parts.push(`${size.name}: ${p.toFixed(1)}x${l.toFixed(1)} cm`);
+                    });
+                    polaMsg = parts.join(', ');
+                } else {
+                    const activeSize = availableSizes[currentActiveSizeIndex] || availableSizes[0];
+                    if (activeSize) {
+                        const bleed = parseFloat(el.bleedInput.value) || 0;
+                        const p = activeSize.p + (bleed * 2);
+                        const l = activeSize.l + (bleed * 2);
+                        polaMsg = `${p.toFixed(1)} x ${l.toFixed(1)} cm`;
+                    }
+                }
+
+                let ukuranDetail = '';
+                const pid = el.productSelector.value;
+                if (pid === 'lunchBox' || pid === 'riceBox') {
+                    const pA = document.getElementById('p_atas')?.value || 0; const lA = document.getElementById('l_atas')?.value || 0;
+                    const pB = document.getElementById('p_bawah')?.value || 0; const lB = document.getElementById('l_bawah')?.value || 0; const t = document.getElementById('t')?.value || 0;
+                    ukuranDetail = `Atas: ${pA}x${lA} cm, Bawah: ${pB}x${lB} cm, Tinggi: ${t} cm`;
+                } else if (pid === 'kotakTutupTerpisah') {
+                    const pB = document.getElementById('p_bawah')?.value || 0; const lB = document.getElementById('l_bawah')?.value || 0; const tB = document.getElementById('t_bawah')?.value || 0;
+                    const pA = document.getElementById('p_atas')?.value || 0; const lA = document.getElementById('l_atas')?.value || 0; const tA = document.getElementById('t_atas')?.value || 0;
+                    ukuranDetail = `Bawah: ${pB}x${lB}x${tB} cm, Tutup: ${pA}x${lA}x${tA} cm`;
+                } else if (pid === 'burger') {
+                    const p = document.getElementById('p')?.value; const l = document.getElementById('l')?.value; const t = document.getElementById('t_bawah')?.value;
+                    ukuranDetail = `P: ${p}cm x L: ${l}cm x T: ${t}cm`;
+                } else if (pid !== 'customFlat') {
+                    const p = document.getElementById('p')?.value; const l = document.getElementById('l')?.value; const t = document.getElementById('t')?.value; const tutup = document.getElementById('tutup')?.value;
+                    if (p && l) ukuranDetail = `${p} x ${l}`; if (t) ukuranDetail += ` x ${t}`; if (tutup) ukuranDetail += ` (Tutup: ${tutup})`; ukuranDetail += ' cm';
+                } else {
+                    const p = document.getElementById('p')?.value; const l = document.getElementById('l')?.value; ukuranDetail = `${p} x ${l} cm`;
+                }
+
+                const specLines = [
+                    `*PENAWARAN HARGA CETAK*`,
+                    `----------------------------`,
+                    `- Produk: ${el.productSelector.options[el.productSelector.selectedIndex].text}`,
+                    `- Dimensi Jadi: ${ukuranDetail}`,
+                    `- Pola Potong Bentangan: ${polaMsg}`,
+                    `- Bahan Kertas: ${el.bahanKertas.options[el.bahanKertas.selectedIndex].text}`,
+                    `- Spesifikasi Cetak: ${el.sisi.options[el.sisi.selectedIndex].text}`,
+                ];
+
+                if (!isDigital) {
+                    specLines.push(`- Warna Cetak: ${el.jumlahWarna.options[el.jumlahWarna.selectedIndex].text}`);
+                }
+
+                const finishingDetails = [];
+                const laminasiPilihan = el.laminasi.options[el.laminasi.selectedIndex].text;
+                if (laminasiPilihan !== 'Tanpa Laminasi') finishingDetails.push(laminasiPilihan);
+                document.querySelectorAll('#finishing-options input[type="checkbox"]:checked').forEach(cb => {
+                    const label = cb.nextElementSibling.textContent;
+                    finishingDetails.push(label);
+                });
+
+                if (finishingDetails.length > 0) {
+                    specLines.push(`- Finishing: ${finishingDetails.join(', ')}`);
+                }
+
+                let penawaranText = specLines.join('\n') + '\n\n*ESTIMASI HARGA JUAL:*';
+
+                const requestedQty = parseInt(el.jumlah.value) || 1000;
+                const currentRoundedUnit = parseFloat(el.jualSatuanRounded.value) || 0;
+
+                if (isDigital) {
+                    const totalJualDigi = currentRoundedUnit * requestedQty;
+                    penawaranText += `\n• ${requestedQty.toLocaleString('id-ID')} pcs: *${formatRupiah(currentRoundedUnit)} / pcs*`;
+                    penawaranText += `\n• Total Order: *${formatRupiah(totalJualDigi)}*`;
+                } else {
+                    const marginPercent = parseFloat(el.profitMarginSlider.value) || 0;
+                    const profitNominal = parseFloat(el.profitNominalInput.value) || 0;
+                    const quantities = Array.from(new Set([requestedQty, 1000, 2000, 3000, 5000, 10000])).sort((a, b) => a - b);
+
+                    quantities.forEach(qty => {
+                        let result = (el.productSelector.value === 'kotakTutupTerpisah') ? getCombinedBreakdown(qty) : calculateBreakdown(availableSizes[currentActiveSizeIndex]?.p || 10, availableSizes[currentActiveSizeIndex]?.l || 10, availableSizes[currentActiveSizeIndex]?.multiplier || 1, qty);
+                        if (result && !result.error) {
+                            const HPPUnit = result.totalModal / qty;
+                            const totalJualQty = result.totalModal + (result.totalModal * (marginPercent / 100)) + profitNominal;
+                            const unitPrice = totalJualQty / qty;
+                            const roundedUnitPrice = (qty === requestedQty && currentRoundedUnit > 0) ? currentRoundedUnit : roundToNearest25(unitPrice);
+                            const totalHargaTier = roundedUnitPrice * qty;
+
+                            penawaranText += `\n• ${qty.toLocaleString('id-ID')} pcs: *${formatRupiah(roundedUnitPrice)} / ${el.productSelector.value === 'kotakTutupTerpisah' ? 'set' : 'pcs'}* (Total: ${formatRupiah(totalHargaTier)})`;
+                        }
+                    });
+                }
+
+                penawaranText += `\n\n_ Catatan: Harga dapat berubah sewaktu-waktu sesuai kestabilan bahan._\n\nTerima kasih! 🙏\n*Dooren'z Percetakan Visual*`;
+                el.whatsappText.value = penawaranText;
+            }
+
+            // --- 8. CALCULATE ALL & OPTIMIZER ENGINE ---
+            function calculateAll() {
+                const product = products[el.productSelector.value];
+                if (!product) return;
+
+                const values = {};
+                let valid = true;
+                product.fields.forEach(f => {
+                    if (f.type !== 'separator') {
+                        const valInput = document.getElementById(f.id);
+                        const val = valInput ? valInput.value : '';
+                        if (val === '' || parseFloat(val) <= 0) valid = false;
+                        values[f.id] = parseFloat(val) || 0;
+                    }
+                });
+
+                if (!valid) {
+                    alert("Mohon isi semua kolom dimensi produk dengan angka > 0.");
+                    return;
+                }
+
+                const bleed = parseFloat(el.bleedInput.value) || 0;
+                const res = product.calculate(values, bleed);
+                availableSizes = res.sizes;
+
+                el.resultContainer.classList.remove('hidden');
+                el.resultText.innerHTML = res.custom || `Ukuran: ${availableSizes[0].p} x ${availableSizes[0].l} cm`;
+
+                setupVisualization(availableSizes);
+                calculateAndRenderPricing(true);
+
+                el.optimizationSection.classList.remove('hidden');
+                generateSimpleOptimizationSuggestions(product, values, bleed);
+                generateCustomOptimizationForm();
+                el.customOptimizationResult.classList.add('hidden');
+            }
+
+            const triggerLiveCalculate = debounce(() => {
+                if (el.resultContainer && !el.resultContainer.classList.contains('hidden')) {
+                    calculateAll();
+                }
+            }, 350);
+
+            // --- 9. OPTIMIZATION SUGGESTION LOGIC ---
+            function generateSimpleOptimizationSuggestions(product, currentValues, bleed) {
+                const plano = UKURAN_PLANO.find(p => p.id === el.planoSelector.value) || UKURAN_PLANO[0];
+                const baselineSizeResult = product.calculate(currentValues, bleed);
+                let baselineNormalizedYield = 0; let baselineWaste = 100; let baselineActiveSizeName = '';
+
+                if (baselineSizeResult.sizes[currentActiveSizeIndex]) {
+                    const baselineActiveSize = baselineSizeResult.sizes[currentActiveSizeIndex];
+                    const baselineLayout = findBestLayout(plano.planoP, plano.planoL, baselineActiveSize.p + 2 * bleed, baselineActiveSize.l + 2 * bleed);
+                    baselineNormalizedYield = baselineLayout.total * baselineActiveSize.multiplier;
+                    baselineWaste = baselineLayout.wastePercentage;
+                    baselineActiveSizeName = baselineActiveSize.name;
+                }
+                if (baselineNormalizedYield === 0) return;
+
+                let bestYieldSuggestion = null; let bestWasteSuggestion = null;
+                const step = 0.1; const maxChange = 1.0;
+
+                for (const field of product.fields) {
+                    if (field.type === 'separator') continue;
+                    for (const direction of [-1, 1]) {
+                        for (let change = step; change <= maxChange; change += step) {
+                            const newValues = { ...currentValues };
+                            newValues[field.id] = parseFloat((currentValues[field.id] + (change * direction)).toFixed(2));
+                            if (newValues[field.id] <= 0) continue;
+
+                            const newSizeResult = product.calculate(newValues, bleed);
+
+                            for (const newSize of newSizeResult.sizes) {
+                                const newLayout = findBestLayout(plano.planoP, plano.planoL, newSize.p + 2 * bleed, newSize.l + 2 * bleed);
+                                const newNormalizedYield = newLayout.total * newSize.multiplier;
+
+                                if (newNormalizedYield > baselineNormalizedYield) {
+                                    if (!bestYieldSuggestion || newNormalizedYield > bestYieldSuggestion.newNormalizedYield) {
+                                        bestYieldSuggestion = { type: 'yield', changeType: direction === -1 ? 'reduce' : 'increase', fieldLabel: field.label, originalValue: currentValues[field.id], newValue: newValues[field.id], originalNormalizedYield: baselineNormalizedYield, newNormalizedYield: newNormalizedYield, newSizeName: newSize.name, applyValues: newValues };
+                                    }
+                                } else if (newNormalizedYield === baselineNormalizedYield && newLayout.wastePercentage < baselineWaste) {
+                                    if (!bestWasteSuggestion || newLayout.wastePercentage < bestWasteSuggestion.newWaste) {
+                                        bestWasteSuggestion = { type: 'waste', changeType: direction === -1 ? 'reduce' : 'increase', fieldLabel: field.label, originalValue: currentValues[field.id], newValue: newValues[field.id], originalWaste: baselineWaste, newWaste: newLayout.wastePercentage, newSizeName: newSize.name, applyValues: newValues };
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                el.optimizationSuggestionsContainer.innerHTML = '';
+                let suggestions = [];
+                if (bestYieldSuggestion) suggestions.push(bestYieldSuggestion);
+                else if (bestWasteSuggestion) suggestions.push(bestWasteSuggestion);
+
+                if (suggestions.length > 0) {
+                    suggestions.forEach(sugg => {
+                        const suggDiv = document.createElement('div');
+                        let changeTypeText = sugg.changeType === 'reduce' ? 'mengurangi' : 'menambah';
+                        let layoutChangeText = baselineActiveSizeName !== sugg.newSizeName ? ` dan beralih ke varian <strong>${sugg.newSizeName}</strong>` : '';
+
+                        if (sugg.type === 'yield') {
+                            suggDiv.className = 'p-3.5 border rounded-xl mb-3 bg-emerald-950/40 border-emerald-500/30 text-xs';
+                            suggDiv.innerHTML = `<p class="font-bold text-emerald-400">💡 Saran Optimasi (Tambah Pcs Produk):</p><p class="text-slate-300 mt-1">Dengan <strong>${changeTypeText}</strong> ${sugg.fieldLabel} menjadi <strong>${sugg.newValue.toFixed(1)} cm</strong>${layoutChangeText}, Anda bisa mendapatkan hasil lebih banyak.</p><p class="mt-2 font-semibold">Hasil Potong: <span class="text-slate-500 line-through">${sugg.originalNormalizedYield} pcs</span> ➔ <span class="text-emerald-400 font-extrabold">${sugg.newNormalizedYield} pcs</span>.</p><button class="apply-suggestion-btn mt-2.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-xs transition">Terapkan Rekomendasi Ini</button>`;
+                        } else if (sugg.type === 'waste') {
+                            suggDiv.className = 'p-3.5 border rounded-xl mb-3 bg-amber-950/40 border-amber-500/30 text-xs';
+                            suggDiv.innerHTML = `<p class="font-bold text-amber-400">💡 Saran Optimasi (Kurangi Sisa Kertas):</p><p class="text-slate-300 mt-1">Dengan <strong>${changeTypeText}</strong> ${sugg.fieldLabel} menjadi <strong>${sugg.newValue.toFixed(1)} cm</strong>${layoutChangeText}, Anda bisa lebih hemat sisa kertas.</p><p class="mt-2 font-semibold">Sisa Sheet Kertas: <span class="text-slate-500 line-through">${sugg.originalWaste.toFixed(1)}%</span> ➔ <span class="text-amber-400 font-bold">${sugg.newWaste.toFixed(1)}%</span>.</p><button class="apply-suggestion-btn mt-2.5 px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg text-xs transition">Terapkan Rekomendasi Ini</button>`;
+                        }
+
+                        suggDiv.querySelector('.apply-suggestion-btn').addEventListener('click', () => {
+                            for (const [key, value] of Object.entries(sugg.applyValues)) {
+                                const inp = document.getElementById(key);
+                                if (inp) inp.value = value;
+                            }
+                            calculateAll();
+                            el.resultContainer.scrollIntoView({ behavior: 'smooth' });
+                        });
+                        el.optimizationSuggestionsContainer.appendChild(suggDiv);
+                    });
+                } else {
+                    el.optimizationSuggestionsContainer.innerHTML = `<p class="text-xs text-slate-400">Dimensi produk Anda saat ini sudah sangat optimal untuk layout sheet ini.</p>`;
+                }
+            }
+
+            function generateCustomOptimizationForm() {
+                const productId = el.productSelector.value;
+                const product = products[productId];
+                el.customOptimizationForm.innerHTML = '';
+                if (!product || productId === 'customFlat') {
+                    el.customOptimizationSection.classList.add('hidden');
+                    return;
+                }
+                el.customOptimizationSection.classList.remove('hidden');
+
+                const formGrid = document.createElement('div');
+                formGrid.className = 'grid grid-cols-2 sm:grid-cols-3 gap-2.5';
+                product.fields.forEach(field => {
+                    if (field.type !== 'separator') {
+                        const fieldWrapper = document.createElement('div');
+                        fieldWrapper.innerHTML = `<label for="custom_${field.id}" class="block text-[11px] font-medium text-slate-400 mb-1">${field.label}</label><input type="number" id="custom_${field.id}" name="${field.id}" placeholder="Target" step="0.1" min="0.1" class="form-input text-xs py-1">`;
+                        formGrid.appendChild(fieldWrapper);
+                    }
+                });
+                el.customOptimizationForm.appendChild(formGrid);
+            }
+
+            function runCustomOptimization() {
+                const productId = el.productSelector.value; const product = products[productId];
+                const bleed = parseFloat(el.bleedInput.value) || 0; const plano = UKURAN_PLANO.find(p => p.id === el.planoSelector.value) || UKURAN_PLANO[0];
+                const baselineValues = {}; const targetValues = {}; let allBaselineValid = true;
+
+                product.fields.forEach(field => {
+                    if (field.type !== 'separator') {
+                        const baseInput = document.getElementById(field.id);
+                        const targetInput = document.getElementById(`custom_${field.id}`);
+                        if (baseInput && baseInput.value) baselineValues[field.id] = parseFloat(baseInput.value); else allBaselineValid = false;
+                        if (targetInput && targetInput.value) targetValues[field.id] = parseFloat(targetInput.value);
+                    }
+                });
+
+                if (!allBaselineValid || Object.keys(targetValues).length === 0) {
+                    alert("Harap isi ukuran produk awal dan setidaknya satu ukuran target untuk optimasi custom.");
+                    return;
+                }
+
+                const baselineSizeResult = product.calculate(baselineValues, bleed); let baselineNormalizedYield = 0;
+                for (const size of baselineSizeResult.sizes) {
+                    const layout = findBestLayout(plano.planoP, plano.planoL, size.p + 2 * bleed, size.l + 2 * bleed);
+                    const currentYield = layout.total * size.multiplier;
+                    if (currentYield > baselineNormalizedYield) baselineNormalizedYield = currentYield;
+                }
+
+                let bestNormalizedYield = baselineNormalizedYield; let bestCombination = { ...baselineValues }; let bestLayoutName = '';
+                const variableFields = product.fields.filter(f => f.type !== 'separator' && !targetValues.hasOwnProperty(f.id));
+                let currentTestValues = { ...baselineValues, ...targetValues };
+                const searchRange = 1.0; const step = 0.1;
+
+                variableFields.forEach(field => {
+                    let bestValueForField = currentTestValues[field.id];
+                    for (let change = -searchRange; change <= searchRange; change += step) {
+                        const testValues = { ...currentTestValues };
+                        const newValue = parseFloat((baselineValues[field.id] + change).toFixed(2));
+                        if (newValue <= 0) continue;
+                        testValues[field.id] = newValue;
+                        const testSizeResult = product.calculate(testValues, bleed);
+                        for (const testSize of testSizeResult.sizes) {
+                            const newLayout = findBestLayout(plano.planoP, plano.planoL, testSize.p + 2 * bleed, testSize.l + 2 * bleed);
+                            const newNormalizedYield = newLayout.total * testSize.multiplier;
+                            if (newNormalizedYield > bestNormalizedYield) {
+                                bestNormalizedYield = newNormalizedYield;
+                                bestValueForField = newValue;
+                                bestLayoutName = testSize.name;
+                            }
+                        }
+                    }
+                    currentTestValues[field.id] = bestValueForField;
+                });
+                bestCombination = currentTestValues;
+
+                el.customOptimizationResult.classList.remove('hidden');
+                if (bestNormalizedYield > baselineNormalizedYield) {
+                    let resultHTML = `<div class="p-3.5 border rounded-xl bg-indigo-950/40 border-indigo-500/30 text-xs"><p class="font-bold text-indigo-300">Hasil Optimasi Custom Target:</p><ul class="list-disc list-inside mt-2 text-slate-300 space-y-1">`;
+                    for (const [key, value] of Object.entries(bestCombination)) {
+                        const fieldLabel = product.fields.find(f => f.id === key)?.label || key;
+                        const isTarget = targetValues.hasOwnProperty(key);
+                        resultHTML += `<li class="${isTarget ? 'font-bold text-indigo-400' : ''}">${fieldLabel}: ${value.toFixed(1)} cm ${isTarget ? '(Kunci Target)' : ''}</li>`;
+                    }
+                    resultHTML += `</ul><p class="mt-3 font-semibold text-slate-200">Hasil Potong: <span class="text-slate-500 line-through">${baselineNormalizedYield} pcs</span> ➔ <span class="text-indigo-400 font-bold">${bestNormalizedYield} pcs</span> (${bestLayoutName}).</p><button id="apply-custom-suggestion-btn" class="mt-2.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-lg text-xs transition">Terapkan Hasil Ke Form</button></div>`;
+                    el.customOptimizationResult.innerHTML = resultHTML;
+                    document.getElementById('apply-custom-suggestion-btn').addEventListener('click', () => {
+                        for (const [key, value] of Object.entries(bestCombination)) {
+                            const inp = document.getElementById(key);
+                            if (inp) inp.value = value;
+                        }
+                        calculateAll();
+                        el.resultContainer.scrollIntoView({ behavior: 'smooth' });
+                    });
+                } else {
+                    el.customOptimizationResult.innerHTML = `<p class="p-3 border rounded-xl bg-slate-900 border-slate-800 text-slate-400 text-xs">Tidak ditemukan kombinasi yang lebih baik dari ukuran saat ini dengan target yang dikunci.</p>`;
+                }
+            }
+
+            // --- 10. SAVED ESTIMATES & HISTORY (`localStorage`) ---
+            function saveCurrentEstimate() {
+                if (el.resultContainer.classList.contains('hidden')) {
+                    alert("Silakan tekan 'Hitung' terlebih dahulu sebelum menyimpan estimasi.");
+                    return;
+                }
+
+                const history = JSON.parse(localStorage.getItem('percetakan_history') || '[]');
+                const pName = el.productSelector.options[el.productSelector.selectedIndex].text;
+                const qty = parseInt(el.jumlah.value) || 1000;
+                const totalSell = el.jualTotal.textContent;
+
+                const item = {
+                    id: Date.now(),
+                    date: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+                    product: pName,
+                    qty: qty,
+                    total: totalSell,
+                    productId: el.productSelector.value,
+                    jenisMesin: el.jenisMesin.value,
+                    marginPercent: el.profitMarginSlider.value,
+                };
+
+                history.unshift(item);
+                if (history.length > 8) history.pop();
+                localStorage.setItem('percetakan_history', JSON.stringify(history));
+                renderHistory();
+
+                el.saveHistoryBtn.classList.add('bg-emerald-600');
+                setTimeout(() => el.saveHistoryBtn.classList.remove('bg-emerald-600'), 1000);
+            }
+
+            function renderHistory() {
+                const history = JSON.parse(localStorage.getItem('percetakan_history') || '[]');
+                if (history.length === 0) {
+                    el.historyList.innerHTML = `<p class="text-xs text-slate-500 text-center py-3">Belum ada estimasi tersimpan.</p>`;
+                    return;
+                }
+
+                el.historyList.innerHTML = history.map(item => `
+                    <div class="flex justify-between items-center bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 text-xs">
+                        <div>
+                            <p class="font-bold text-slate-200">${item.product}</p>
+                            <p class="text-[11px] text-slate-400">${item.qty.toLocaleString('id-ID')} pcs • ${item.date}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="font-extrabold text-emerald-400 block">${item.total}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // --- 11. INIT EVENT BINDINGS ---
+            el.calculateBtn.addEventListener('click', calculateAll);
+            el.saveHistoryBtn.addEventListener('click', saveCurrentEstimate);
+            el.clearHistoryBtn.addEventListener('click', () => {
+                localStorage.removeItem('percetakan_history');
+                renderHistory();
+            });
+
+            el.quickResetBtn.addEventListener('click', () => {
+                if (confirm("Reset semua input form ke awal?")) {
+                    generateForm(el.productSelector.value);
+                    el.jumlah.value = "1000";
+                    el.profitMarginSlider.value = "30";
+                    el.profitNominalInput.value = "";
+                    el.resultContainer.classList.add('hidden');
+                    el.visualizationSection.classList.add('hidden');
+                    el.priceResultsSection.classList.add('hidden');
+                    el.penawaranCard.classList.add('hidden');
+                    el.optimizationSection.classList.add('hidden');
+                }
+            });
+
+            el.productSelector.addEventListener('change', (e) => {
+                generateForm(e.target.value);
+                triggerLiveCalculate();
+            });
+            el.jenisMesin.addEventListener('change', handleJenisMesinChange);
+            el.bahanKertas.addEventListener('change', () => {
+                populatePlanoOptions(el.jenisMesin.value, el.bahanKertas.value);
+                triggerLiveCalculate();
+            });
+            el.planoSelector.addEventListener('change', () => {
+                if (availableSizes.length > 0) {
+                    updateVisualization(availableSizes[currentActiveSizeIndex] || availableSizes[0]);
+                    calculateAndRenderPricing(true);
+                }
+            });
+            el.layoutMode.addEventListener('change', () => {
+                if (availableSizes.length > 0) {
+                    updateVisualization(availableSizes[currentActiveSizeIndex] || availableSizes[0]);
+                    calculateAndRenderPricing(true);
+                }
+            });
+
+            el.profitMarginSlider.addEventListener('input', () => calculateAndRenderPricing(false));
+            el.profitNominalInput.addEventListener('input', () => calculateAndRenderPricing(false));
+            el.jumlah.addEventListener('input', triggerLiveCalculate);
+            el.sisi.addEventListener('change', triggerLiveCalculate);
+            el.jumlahWarna.addEventListener('change', triggerLiveCalculate);
+            el.laminasi.addEventListener('change', triggerLiveCalculate);
+            el.bleedInput.addEventListener('input', triggerLiveCalculate);
+
+            el.jualSatuanRounded.addEventListener('input', () => {
+                const breakdown = getCombinedBreakdown();
+                if (breakdown && !breakdown.error) updateHargaJual(false, breakdown);
+            });
+
+            el.copyWhatsappButton.addEventListener('click', copyToClipboard);
+            el.runCustomOptimizationBtn.addEventListener('click', runCustomOptimization);
+
+            // --- INITIAL SETUP EXECUTION ---
+            generateForm(el.productSelector.value);
+            setupFinishingOptions();
+            handleJenisMesinChange();
+            renderHistory();
+        });
+    </script>
+</body>
+
+</html>
