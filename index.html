@@ -291,7 +291,8 @@
                                 class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Jenis
                                 Mesin Cetak:</label>
                             <select id="jenis-mesin" class="form-select font-medium">
-                                <option value="offset" selected>Mesin Offset Commercial</option>
+                                <option value="offset_sprint" selected>Komori Sprint L 225 B (48 x 66 cm)</option>
+                                <option value="offset_lithrone">Komori Lithrone L28 (52 x 72 cm)</option>
                                 <option value="digital">Digital Printing (A3+ Sheet)</option>
                                 <option value="dtf">Sablon Film DTF</option>
                             </select>
@@ -1080,7 +1081,7 @@
                 const mode = el.jenisMesin.value;
                 const isDigital = mode === 'digital';
                 const isDTF = mode === 'dtf';
-                const isOffset = mode === 'offset';
+                const isOffset = mode.startsWith('offset');
 
                 el.jumlahWarnaContainer.classList.toggle('hidden', !isOffset);
                 el.jualPerLembarContainer.classList.toggle('hidden', !isDigital);
@@ -1104,7 +1105,8 @@
 
             function populateBahanOptions(mode) {
                 el.bahanKertas.innerHTML = '';
-                const filtered = JENIS_KERTAS.filter(k => k.mesin.includes(mode));
+                const isOffset = mode.startsWith('offset');
+                const filtered = JENIS_KERTAS.filter(k => k.mesin.includes(mode) || (isOffset && k.mesin.includes('offset')));
                 filtered.forEach(k => {
                     el.bahanKertas.add(new Option(k.nama, k.id));
                 });
@@ -1116,7 +1118,11 @@
                 let opts = [];
                 if (mode === 'digital') opts = UKURAN_PLANO.filter(p => p.id.startsWith('a3'));
                 else if (mode === 'dtf') opts = UKURAN_PLANO.filter(p => p.id.startsWith('a3') || p.id === 'a4');
-                else {
+                else if (mode === 'offset_sprint') {
+                    opts = UKURAN_PLANO.filter(p => p.id === 'komori_sprint' || p.id.startsWith('plano_79_109') || p.id === 'plano_65_100');
+                } else if (mode === 'offset_lithrone') {
+                    opts = UKURAN_PLANO.filter(p => p.id === 'komori_lithrone' || p.id.startsWith('plano_79_109') || p.id === 'plano_65_100');
+                } else {
                     const bahan = JENIS_KERTAS.find(k => k.id === bahanId);
                     if (bahan && bahan.id.startsWith('kraft')) {
                         opts = UKURAN_PLANO.filter(p => p.id.startsWith('komori') || p.id.startsWith('plano_90_120'));
@@ -1531,7 +1537,7 @@
                 const totalPlano = Math.ceil(qty / pcsPerPlano);
 
                 let insheet = 0;
-                if (el.jenisMesin.value === 'offset') {
+                if (el.jenisMesin.value.startsWith('offset')) {
                     insheet = 25 * (plano.factor || 1);
                 }
 
@@ -1775,7 +1781,7 @@
                 document.getElementById('detail-finishing').textContent = formatRupiah(breakdown.totalBiayaFinishing);
 
                 if (resetRounded) {
-                    const finalSatuan = (jenisMesin === 'offset') ? roundToNearest25(hargaSatuanAktual) : Math.ceil(hargaSatuanAktual);
+                    const finalSatuan = (jenisMesin.startsWith('offset')) ? roundToNearest25(hargaSatuanAktual) : Math.ceil(hargaSatuanAktual);
                     el.jualSatuanRounded.value = finalSatuan;
                     el.jualTotal.textContent = formatRupiah(finalSatuan * jumlah);
                 } else {
