@@ -2096,8 +2096,13 @@
 
             window.loadHistoryItem = function (id) {
                 const history = JSON.parse(localStorage.getItem('percetakan_history') || '[]');
-                const item = history.find(i => i.id === id);
+                const item = history.find(i => String(i.id) === String(id));
                 if (!item) return;
+
+                if (!item.fieldValues) {
+                    alert("Estimasi riwayat ini disimpan sebelum fitur 'Muat Format' diaktifkan. Silakan hitung dan tekan 'Simpan Estimasi' baru untuk mencoba fitur ini.");
+                    return;
+                }
 
                 // 1. Set Product Selector & Generate Form
                 if (item.productId && products[item.productId]) {
