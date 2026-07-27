@@ -2041,6 +2041,26 @@
                 const totalSell = el.jualTotal.textContent;
                 const unitSell = el.jualSatuanRounded.value ? formatRupiah(parseFloat(el.jualSatuanRounded.value)) : '';
 
+                // Collect product field values
+                const product = products[el.productSelector.value];
+                const fieldValues = {};
+                if (product && product.fields) {
+                    product.fields.forEach(f => {
+                        if (f.type !== 'separator') {
+                            const inp = document.getElementById(f.id);
+                            if (inp) fieldValues[f.id] = inp.value;
+                        }
+                    });
+                }
+
+                // Collect checked finishing dataset keys
+                const checkedFinishing = [];
+                document.querySelectorAll('#finishing-options input[type="checkbox"]:checked').forEach(cb => {
+                    if (cb.dataset.key) checkedFinishing.push(cb.dataset.key);
+                });
+
+                const presetVal = document.getElementById('preset-selector')?.value || 'custom';
+
                 const item = {
                     id: Date.now(),
                     date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) + ' ' + new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
@@ -2050,7 +2070,19 @@
                     total: totalSell,
                     unitPrice: unitSell,
                     productId: el.productSelector.value,
+                    presetVal: presetVal,
+                    fieldValues: fieldValues,
+                    bleedInput: el.bleedInput.value,
+                    layoutMode: el.layoutMode.value,
+                    jumlah: el.jumlah.value,
+                    sisi: el.sisi.value,
                     jenisMesin: el.jenisMesin.value,
+                    jumlahWarna: el.jumlahWarna?.value,
+                    bahanKertas: el.bahanKertas.value,
+                    planoSelector: el.planoSelector.value,
+                    laminasi: el.laminasi.value,
+                    checkedFinishing: checkedFinishing,
+                    jualSatuanRounded: el.jualSatuanRounded.value
                 };
 
                 history.unshift(item);
@@ -2061,6 +2093,85 @@
                 el.saveHistoryBtn.classList.add('bg-emerald-600');
                 setTimeout(() => el.saveHistoryBtn.classList.remove('bg-emerald-600'), 1000);
             }
+
+            window.loadHistoryItem = function (id) {
+                const history = JSON.parse(localStorage.getItem('percetakan_history') || '[]');
+                const item = history.find(i => i.id === id);
+                if (!item) return;
+
+                // 1. Set Product Selector & Generate Form
+                if (item.productId && products[item.productId]) {
+                    el.productSelector.value = item.productId;
+                    generateForm(item.productId);
+                }
+
+                // 2. Set Preset Selector if exists
+                if (item.presetVal) {
+                    const pSel = document.getElementById('preset-selector');
+                    if (pSel) pSel.value = item.presetVal;
+                }
+
+                // 3. Set Product Fields
+                if (item.fieldValues) {
+                    for (const [fId, val] of Object.entries(item.fieldValues)) {
+                        const inp = document.getElementById(fId);
+                        if (inp) inp.value = val;
+                    }
+                }
+
+                // 4. Set Specification Controls
+                if (item.bleedInput !== undefined) el.bleedInput.value = item.bleedInput;
+                if (item.layoutMode !== undefined) el.layoutMode.value = item.layoutMode;
+                if (item.jumlah !== undefined) el.jumlah.value = item.jumlah;
+                if (item.sisi !== undefined) el.sisi.value = item.sisi;
+
+                if (item.jenisMesin !== undefined) {
+                    el.jenisMesin.value = item.jenisMesin;
+                    const mode = item.jenisMesin;
+                    const isDigital = mode === 'digital';
+                    const isDTF = mode === 'dtf';
+                    const isOffset = mode === 'offset';
+
+                    el.jumlahWarnaContainer.classList.toggle('hidden', !isOffset);
+                    el.jualPerLembarContainer.classList.toggle('hidden', !isDigital);
+
+                    if (isDTF) {
+                        el.laminasiContainer.classList.add('hidden');
+                        el.finishingContainer.classList.add('hidden');
+                    } else {
+                        el.laminasiContainer.classList.remove('hidden');
+                        el.finishingContainer.classList.remove('hidden');
+                    }
+                    const digitalFinishing = document.getElementById('digital-only-finishing');
+                    if (digitalFinishing) digitalFinishing.classList.toggle('hidden', !isDigital);
+                    populateBahanOptions(mode);
+                }
+
+                if (item.jumlahWarna !== undefined && el.jumlahWarna) el.jumlahWarna.value = item.jumlahWarna;
+
+                if (item.bahanKertas !== undefined) {
+                    el.bahanKertas.value = item.bahanKertas;
+                    populatePlanoOptions(item.jenisMesin || 'offset', item.bahanKertas);
+                }
+
+                if (item.planoSelector !== undefined) el.planoSelector.value = item.planoSelector;
+                if (item.laminasi !== undefined) el.laminasi.value = item.laminasi;
+
+                // 5. Set Finishing Options
+                if (item.checkedFinishing && Array.isArray(item.checkedFinishing)) {
+                    document.querySelectorAll('#finishing-options input[type="checkbox"]').forEach(cb => {
+                        const isChecked = item.checkedFinishing.includes(cb.dataset.key);
+                        cb.checked = isChecked;
+                        cb.dispatchEvent(new Event('change'));
+                    });
+                }
+
+                // 6. Calculate & Render
+                calculateAll();
+
+                // 7. Scroll to Calculator Form & Result
+                el.resultContainer.scrollIntoView({ behavior: 'smooth' });
+            };
 
             window.deleteHistoryItem = function (id) {
                 let history = JSON.parse(localStorage.getItem('percetakan_history') || '[]');
@@ -2077,14 +2188,17 @@
                 }
 
                 el.historyList.innerHTML = history.map(item => `
-                    <div class="flex justify-between items-center bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 text-xs hover:border-slate-700 transition">
-                        <div class="pr-2">
-                            <p class="font-bold text-indigo-300">${item.title || item.product}</p>
-                            <p class="text-[11px] text-slate-400 mt-0.5">${item.qty.toLocaleString('id-ID')} pcs ${item.unitPrice ? '(' + item.unitPrice + '/pcs)' : ''} • ${item.date}</p>
+                    <div class="flex justify-between items-center bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 text-xs hover:border-indigo-500/50 cursor-pointer transition group" onclick="loadHistoryItem(${item.id})">
+                        <div class="pr-2 flex-1">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <p class="font-bold text-indigo-300 group-hover:text-indigo-400 transition">${item.title || item.product}</p>
+                                <span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 font-medium border border-indigo-500/20">Muat Format</span>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-0.5">${item.qty ? item.qty.toLocaleString('id-ID') + ' pcs' : ''} ${item.unitPrice ? '(' + item.unitPrice + '/pcs)' : ''} • ${item.date}</p>
                         </div>
                         <div class="text-right flex items-center gap-2">
                             <span class="font-extrabold text-emerald-400 block text-xs sm:text-sm">${item.total}</span>
-                            <button onclick="deleteHistoryItem(${item.id})" class="text-slate-500 hover:text-rose-400 p-1 transition" title="Hapus">
+                            <button onclick="event.stopPropagation(); deleteHistoryItem(${item.id})" class="text-slate-500 hover:text-rose-400 p-1 transition" title="Hapus">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             </button>
                         </div>
