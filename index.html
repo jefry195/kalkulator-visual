@@ -1824,7 +1824,7 @@
                         if (!costRule) return;
 
                         let biayaItem = 0;
-                        const patternsNeeded = Math.ceil(qty / multiplier);
+                        const patternsNeeded = Math.ceil(qty * multiplier);
                         if (key === 'potong') {
                             biayaItem = isDigital ? HARGA_DIGITAL.finishing.potongJadi : Math.max(costRule.min, qty * costRule.per_pcs);
                         } else if (key === 'lipat') {
@@ -1948,7 +1948,7 @@
                 const layout = findBestLayout(plano.planoP, plano.planoL, p, l);
                 const totalItemsNeeded = qty * activeSize.multiplier;
                 const totalPlano = layout.total > 0 ? Math.ceil(totalItemsNeeded / layout.total) : 1;
-                const patternsNeeded = Math.ceil(qty / activeSize.multiplier);
+                const patternsNeeded = Math.ceil(qty * activeSize.multiplier);
 
                 function setBadge(id, cost) {
                     const badge = document.getElementById(id);
