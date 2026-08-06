@@ -120,6 +120,7 @@
         /* Range Slider Styling */
         input[type=range] {
             -webkit-appearance: none;
+            appearance: none;
             background: #334155;
             height: 6px;
             border-radius: 3px;
@@ -127,6 +128,7 @@
 
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
+            appearance: none;
             height: 18px;
             width: 18px;
             border-radius: 50%;
@@ -221,17 +223,25 @@
                                 class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Tipe
                                 Produk Kemasan / Cetakan:</label>
                             <select id="product-selector" class="form-select font-medium text-slate-100">
-                                <option value="lunchBox">Kotak Lunch Box (Atas & Bawah Beda)</option>
-                                <option value="riceBox">Rice Box</option>
-                                <option value="dineIn">Dine In Tray</option>
-                                <option value="kotakTutupTerpisah">Kotak Tutup Terpisah</option>
-                                <option value="kotakSambung">Kotak Sambung / Mailer Box</option>
-                                <option value="straightTuckEnd">Kotak Tutup Sambung (STE)</option>
-                                <option value="kebab">Kebab Sleeve</option>
-                                <option value="kotakMug">Kotak Mug</option>
-                                <option value="burger">Kotak Burger (Clamshell)</option>
-                                <option value="customFlat" selected>Custom Ukuran Datar (Brosur/Kartu/Stiker/Flyer)
-                                </option>
+                                <optgroup label="── Buku, Compro & Majalah ──">
+                                    <option value="bukuStaples">Buku / Compro / Majalah (Jilid Staples / Kawat)</option>
+                                    <option value="bukuPerfect">Buku / Catalog / Majalah (Jilid Lem Panas / Perfect Binding)</option>
+                                    <option value="bukuSpiral">Buku / Agenda (Jilid Spiral / Wire-O)</option>
+                                </optgroup>
+                                <optgroup label="── Cetak Kemasan & Dus ──">
+                                    <option value="lunchBox">Kotak Lunch Box (Atas & Bawah Beda)</option>
+                                    <option value="riceBox">Rice Box</option>
+                                    <option value="dineIn">Dine In Tray</option>
+                                    <option value="kotakTutupTerpisah">Kotak Tutup Terpisah</option>
+                                    <option value="kotakSambung">Kotak Sambung / Mailer Box</option>
+                                    <option value="straightTuckEnd">Kotak Tutup Sambung (STE)</option>
+                                    <option value="kebab">Kebab Sleeve</option>
+                                    <option value="kotakMug">Kotak Mug</option>
+                                    <option value="burger">Kotak Burger (Clamshell)</option>
+                                </optgroup>
+                                <optgroup label="── Cetak Datar / Flat ──">
+                                    <option value="customFlat" selected>Custom Ukuran Datar (Brosur/Kartu/Stiker/Flyer)</option>
+                                </optgroup>
                             </select>
                         </div>
                         <div>
@@ -278,7 +288,7 @@
                                 placeholder="1000" value="1000">
                         </div>
                         <div>
-                            <label for="sisi"
+                            <label for="sisi" id="label-sisi-cetak"
                                 class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Sisi
                                 Cetak:</label>
                             <select id="sisi" class="form-select font-medium">
@@ -308,14 +318,14 @@
                                 <option value="4" selected>4 Warna (Full Color CMYK)</option>
                             </select>
                         </div>
-                        <div>
+                        <div id="single-bahan-container">
                             <label for="bahan-kertas"
                                 class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Bahan
                                 Kertas Cetak:</label>
                             <select id="bahan-kertas" class="form-select font-medium text-slate-100"></select>
                         </div>
                         <div id="laminasi-container">
-                            <label for="laminasi"
+                            <label for="laminasi" id="label-laminasi"
                                 class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Laminasi
                                 Roll:</label>
                             <select id="laminasi" class="form-select font-medium">
@@ -325,6 +335,28 @@
                                 <option value="glossy_1">Laminasi Glossy 1 Sisi</option>
                                 <option value="glossy_2">Laminasi Glossy 2 Sisi</option>
                             </select>
+                        </div>
+
+                        <!-- Dynamic Book Spec Container (Appears under Section 2 for Books) -->
+                        <div id="buku-spec-container" class="col-span-full grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t border-slate-800 hidden">
+                            <div>
+                                <label for="bahan-kertas-cover"
+                                    class="block text-xs font-semibold text-indigo-300 uppercase tracking-wider mb-1.5">Bahan Kertas Cover:</label>
+                                <select id="bahan-kertas-cover" class="form-select font-medium text-slate-100"></select>
+                            </div>
+                            <div>
+                                <label for="bahan-kertas-isi"
+                                    class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1.5">Bahan Kertas Isi:</label>
+                                <select id="bahan-kertas-isi" class="form-select font-medium text-slate-100"></select>
+                            </div>
+                            <div>
+                                <label for="sisi-isi"
+                                    class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Cetak Halaman Isi:</label>
+                                <select id="sisi-isi" class="form-select font-medium">
+                                    <option value="2" selected>2 Sisi Full Color (4/4)</option>
+                                    <option value="1">2 Sisi Hitam Putih (1/1)</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
@@ -638,13 +670,24 @@
                 { id: 'ap210_dig', nama: 'Art Paper 210 gr', jenis: 'kertas', mesin: ['digital'] },
                 { id: 'ap150_dig', nama: 'Art Paper 150 gr', jenis: 'kertas', mesin: ['digital'] },
                 { id: 'ap120_dig', nama: 'Art Paper 120 gr', jenis: 'kertas', mesin: ['digital'] },
+                { id: 'matte150_dig', nama: 'Matte / Silk Paper 150 gr', jenis: 'kertas', mesin: ['digital'] },
+                { id: 'matte120_dig', nama: 'Matte / Silk Paper 120 gr', jenis: 'kertas', mesin: ['digital'] },
+                { id: 'bookpaper70_dig', nama: 'Bookpaper / Novel 70 gr', jenis: 'kertas', mesin: ['digital'] },
                 { id: 'hvs100_dig', nama: 'HVS 100 gr', jenis: 'kertas', mesin: ['digital'] },
                 { id: 'hvs80_dig', nama: 'HVS 80 gr', jenis: 'kertas', mesin: ['digital'] },
+                { id: 'hvs70_dig', nama: 'HVS 70 gr', jenis: 'kertas', mesin: ['digital'] },
                 { id: 'stiker_bontax_dig', nama: 'Stiker Bontax Vinyl', jenis: 'stiker', mesin: ['digital'] },
                 { id: 'stiker_hvs_dig', nama: 'Stiker HVS', jenis: 'stiker', mesin: ['digital'] },
                 { id: 'stiker_quantac_dig', nama: 'Stiker Quantac Transparan', jenis: 'stiker', mesin: ['digital'] },
                 { id: 'dtf_a3', nama: 'DTF Film A3 Sheet', jenis: 'stiker', mesin: ['dtf'] },
                 { id: 'dtf_a4', nama: 'DTF Film A4 Sheet', jenis: 'stiker', mesin: ['dtf'] },
+                { id: 'hvs70_off', nama: 'HVS 70gr (Isi Buku)', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'hvs80_off', nama: 'HVS 80gr (Isi Buku)', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'hvs100_off', nama: 'HVS 100gr (Isi Buku)', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'bookpaper57_off', nama: 'Bookpaper 57gr (Novel)', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'bookpaper70_off', nama: 'Bookpaper 70gr (Novel)', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'matte120_off', nama: 'Matte Paper 120gr', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'matte150_off', nama: 'Matte Paper 150gr', jenis: 'kertas', mesin: ['offset'] },
                 { id: 'ap120_off', nama: 'Art Paper 120gr', jenis: 'kertas', mesin: ['offset'] },
                 { id: 'ap150_off', nama: 'Art Paper 150gr', jenis: 'kertas', mesin: ['offset'] },
                 { id: 'ap210_off', nama: 'Art Paper 210gr', jenis: 'kertas', mesin: ['offset'] },
@@ -662,7 +705,8 @@
             const HARGA_DIGITAL = {
                 hargaBahan: {
                     fotopaper_dig: 5000, basetik_dig: 3800, ap310_dig: 4000, ap260_dig: 3300, ap230_dig: 3100,
-                    ap210_dig: 2900, ap150_dig: 2700, ap120_dig: 2500, hvs100_dig: 2300, hvs80_dig: 2000,
+                    ap210_dig: 2900, ap150_dig: 2700, ap120_dig: 2500, matte150_dig: 3000, matte120_dig: 2800,
+                    bookpaper70_dig: 2200, hvs100_dig: 2300, hvs80_dig: 2000, hvs70_dig: 1800,
                     stiker_bontax_dig: 4000, stiker_hvs_dig: 3500, stiker_quantac_dig: 8000,
                     dtf_a3: 35000, dtf_a4: 20000
                 },
@@ -702,6 +746,13 @@
             };
 
             const HARGA_BAHAN_OFFSET = {
+                'hvs70_off': { 'plano_79_109': 1800, 'plano_65_100': 1350, 'plano_79_109_per_4': 450, 'plano_79_109_per_5': 360, 'plano_79_109_per_6_custom': 300, 'plano_79_109_per_3': 600 },
+                'hvs80_off': { 'plano_79_109': 2200, 'plano_65_100': 1650, 'plano_79_109_per_4': 550, 'plano_79_109_per_5': 440, 'plano_79_109_per_6_custom': 367, 'plano_79_109_per_3': 733 },
+                'hvs100_off': { 'plano_79_109': 2800, 'plano_65_100': 2100, 'plano_79_109_per_4': 700, 'plano_79_109_per_5': 560, 'plano_79_109_per_6_custom': 467, 'plano_79_109_per_3': 933 },
+                'bookpaper57_off': { 'plano_79_109': 2000, 'plano_65_100': 1500, 'plano_79_109_per_4': 500, 'plano_79_109_per_5': 400, 'plano_79_109_per_6_custom': 333, 'plano_79_109_per_3': 667 },
+                'bookpaper70_off': { 'plano_79_109': 2400, 'plano_65_100': 1800, 'plano_79_109_per_4': 600, 'plano_79_109_per_5': 480, 'plano_79_109_per_6_custom': 400, 'plano_79_109_per_3': 800 },
+                'matte120_off': { 'plano_79_109': 3600, 'plano_65_100': 2700, 'plano_79_109_per_4': 900, 'plano_79_109_per_5': 720, 'plano_79_109_per_6_custom': 600, 'plano_79_109_per_3': 1200 },
+                'matte150_off': { 'plano_79_109': 4600, 'plano_65_100': 3450, 'plano_79_109_per_4': 1150, 'plano_79_109_per_5': 920, 'plano_79_109_per_6_custom': 767, 'plano_79_109_per_3': 1533 },
                 'ap120_off': { 'plano_79_109': 3500, 'plano_65_100': 2625, 'plano_79_109_per_4': 875, 'plano_79_109_per_5': 700, 'plano_79_109_per_6_custom': 583, 'plano_79_109_per_3': 1167 },
                 'ap150_off': { 'plano_79_109': 4500, 'plano_65_100': 3375, 'plano_79_109_per_4': 1125, 'plano_79_109_per_5': 900, 'plano_79_109_per_6_custom': 750, 'plano_79_109_per_3': 1500 },
                 'ap210_off': { 'plano_79_109': 5250, 'plano_65_100': 3938, 'plano_79_109_per_4': 1313, 'plano_79_109_per_5': 1050, 'plano_79_109_per_6_custom': 875, 'plano_79_109_per_3': 1750 },
@@ -715,6 +766,32 @@
                 'ivory350_off': { 'plano_79_109': 5250, 'plano_65_100': 3938, 'plano_79_109_per_4': 1313, 'plano_79_109_per_5': 1050, 'plano_79_109_per_6_custom': 875, 'plano_79_109_per_3': 1750 },
                 'kraft290_off': { 'plano_90_120': 4750, 'plano_90_120_per_4': 1188, 'plano_90_120_per_6': 792 },
             };
+
+            const bukuPresets = {
+                a4: { p_buku: 29.7, l_buku: 21, label: 'A4 Standard (21 × 29.7 cm)' },
+                a5: { p_buku: 21, l_buku: 14.8, label: 'A5 Standard (14.8 × 21 cm)' },
+                b5: { p_buku: 25, l_buku: 17.6, label: 'B5 Standard (17.6 × 25 cm)' },
+                a6: { p_buku: 14.8, l_buku: 10.5, label: 'A6 Buku Saku (10.5 × 14.8 cm)' },
+                sq20: { p_buku: 20, l_buku: 20, label: 'Square Compro (20 × 20 cm)' }
+            };
+
+            function getGsmFromPaperId(id) {
+                if (!id) return 120;
+                const match = id.match(/(\d+)/);
+                return match ? parseInt(match[1]) : 120;
+            }
+
+            function getSpineThickness(halIsi, gsmIsi, jenisKertasId) {
+                const lembarIsi = Math.ceil((halIsi || 32) / 2);
+                const gsm = gsmIsi || getGsmFromPaperId(jenisKertasId);
+                let bulking = 0.0010;
+                if (jenisKertasId && jenisKertasId.includes('bookpaper')) bulking = 0.0014;
+                else if (jenisKertasId && jenisKertasId.includes('hvs')) bulking = 0.0011;
+                else if (jenisKertasId && (jenisKertasId.includes('ap') || jenisKertasId.includes('art'))) bulking = 0.00095;
+                else if (jenisKertasId && jenisKertasId.includes('matte')) bulking = 0.00105;
+                const spineCm = (lembarIsi * gsm * bulking) / 10;
+                return Math.max(0.15, parseFloat(spineCm.toFixed(2)));
+            }
 
             const kotakSambungPresets = {
                 pisang_adina: { p: 16, l: 10, t: 5, tutup: 5 },
@@ -772,6 +849,79 @@
             };
 
             const products = {
+                bukuStaples: {
+                    name: "Buku / Compro (Jilid Staples / Kawat)",
+                    note: "Jilid Kawat (Saddle Stitch). Halaman Isi disarankan kelipatan 4.",
+                    fields: [
+                        { id: 'p_buku', label: 'Tinggi Buku (cm)', placeholder: '29.7' },
+                        { id: 'l_buku', label: 'Lebar Buku (cm)', placeholder: '21' },
+                        { id: 'hal_isi', label: 'Jumlah Halaman Isi', placeholder: '32' }
+                    ],
+                    calculate: (v, bleed) => {
+                        const pCover = v.p_buku;
+                        const lCover = v.l_buku * 2;
+                        const pIsi = v.p_buku;
+                        const lIsi = v.l_buku * 2;
+                        const spreadIsi = Math.ceil(v.hal_isi / 4);
+                        return {
+                            custom: `Bentangan Cover: <strong>${pCover.toFixed(1)} x ${lCover.toFixed(1)} cm</strong><br>Bentangan Isi (Spread): <strong>${pIsi.toFixed(1)} x ${lIsi.toFixed(1)} cm</strong> (${spreadIsi} lembar spread/buku)`,
+                            sizes: [
+                                { name: 'Bentangan Cover', p: pCover, l: lCover, multiplier: 1, type: 'cover' },
+                                { name: 'Bentangan Isi (Spread)', p: pIsi, l: lIsi, multiplier: spreadIsi, type: 'isi' }
+                            ]
+                        };
+                    }
+                },
+                bukuPerfect: {
+                    name: "Buku / Compro (Jilid Lem Panas / Perfect Binding)",
+                    note: "Jilid Lem Panas. Menghitung Punggung Buku (Spine) otomatis dari gramatur kertas isi yang dipilih.",
+                    fields: [
+                        { id: 'p_buku', label: 'Tinggi Buku (cm)', placeholder: '29.7' },
+                        { id: 'l_buku', label: 'Lebar Buku (cm)', placeholder: '21' },
+                        { id: 'hal_isi', label: 'Jumlah Halaman Isi', placeholder: '64' }
+                    ],
+                    calculate: (v, bleed) => {
+                        const bahanIsiVal = document.getElementById('bahan-kertas-isi')?.value || 'ap120_off';
+                        const gsmIsi = getGsmFromPaperId(bahanIsiVal);
+                        const spineCm = getSpineThickness(v.hal_isi, gsmIsi, bahanIsiVal);
+                        const spineMm = (spineCm * 10).toFixed(1);
+                        const pCover = v.p_buku;
+                        const lCover = (v.l_buku * 2) + spineCm;
+                        const pIsi = v.p_buku;
+                        const lIsi = v.l_buku * 2;
+                        const spreadIsi = Math.ceil(v.hal_isi / 4);
+                        return {
+                            custom: `Tebal Punggung (Spine): <strong>${spineMm} mm (${spineCm.toFixed(2)} cm)</strong> <span class="text-[10px] text-slate-400">(${gsmIsi}gsm)</span><br>Bentangan Cover: <strong>${pCover.toFixed(1)} x ${lCover.toFixed(1)} cm</strong><br>Bentangan Isi: <strong>${pIsi.toFixed(1)} x ${lIsi.toFixed(1)} cm</strong> (${spreadIsi} lembar spread/buku)`,
+                            sizes: [
+                                { name: `Bentangan Cover (Spine ${spineMm}mm)`, p: pCover, l: lCover, multiplier: 1, type: 'cover', spine: spineCm },
+                                { name: 'Bentangan Isi (Spread)', p: pIsi, l: lIsi, multiplier: spreadIsi, type: 'isi' }
+                            ]
+                        };
+                    }
+                },
+                bukuSpiral: {
+                    name: "Buku / Agenda (Jilid Spiral / Wire-O)",
+                    note: "Jilid Ring Spiral Wire-O (Cover Depan & Belakang Terpisah).",
+                    fields: [
+                        { id: 'p_buku', label: 'Tinggi Buku (cm)', placeholder: '29.7' },
+                        { id: 'l_buku', label: 'Lebar Buku (cm)', placeholder: '21' },
+                        { id: 'hal_isi', label: 'Jumlah Halaman Isi', placeholder: '50' }
+                    ],
+                    calculate: (v, bleed) => {
+                        const pCover = v.p_buku;
+                        const lCover = v.l_buku;
+                        const pIsi = v.p_buku;
+                        const lIsi = v.l_buku;
+                        const lembarIsi = Math.ceil(v.hal_isi / 2);
+                        return {
+                            custom: `Cover Depan & Belakang: <strong>${pCover.toFixed(1)} x ${lCover.toFixed(1)} cm</strong> (2 lembar)<br>Lembaran Isi Single: <strong>${pIsi.toFixed(1)} x ${lIsi.toFixed(1)} cm</strong> (${lembarIsi} lembar/buku)`,
+                            sizes: [
+                                { name: 'Cover Depan & Belakang', p: pCover, l: lCover, multiplier: 2, type: 'cover' },
+                                { name: 'Lembaran Isi Single', p: pIsi, l: lIsi, multiplier: lembarIsi, type: 'isi' }
+                            ]
+                        };
+                    }
+                },
                 lunchBox: {
                     name: "Kotak Lunch Box", note: "Menghitung ukuran 1 pcs & 2 pcs gandeng.",
                     fields: [
@@ -1075,6 +1225,17 @@
                 triggerLiveCalculate();
             }
 
+            function handleBukuPresetChange(event) {
+                const key = event.target.value;
+                if (key === 'custom' || !bukuPresets[key]) return;
+                const preset = bukuPresets[key];
+                const inputP = document.getElementById('p_buku');
+                const inputL = document.getElementById('l_buku');
+                if (inputP) inputP.value = preset.p_buku;
+                if (inputL) inputL.value = preset.l_buku;
+                triggerLiveCalculate();
+            }
+
             function handleJenisMesinChange() {
                 const mode = el.jenisMesin.value;
                 const isDigital = mode === 'digital';
@@ -1104,11 +1265,50 @@
             function populateBahanOptions(mode) {
                 el.bahanKertas.innerHTML = '';
                 const isOffset = mode.startsWith('offset');
+                const isBook = el.productSelector.value.startsWith('buku');
+
                 const filtered = JENIS_KERTAS.filter(k => k.mesin.includes(mode) || (isOffset && k.mesin.includes('offset')));
                 filtered.forEach(k => {
                     el.bahanKertas.add(new Option(k.nama, k.id));
                 });
-                populatePlanoOptions(mode, el.bahanKertas.value);
+
+                const coverSelect = document.getElementById('bahan-kertas-cover');
+                const isiSelect = document.getElementById('bahan-kertas-isi');
+
+                if (coverSelect && isiSelect) {
+                    const currentCoverVal = coverSelect.value;
+                    const currentIsiVal = isiSelect.value;
+
+                    coverSelect.innerHTML = '';
+                    isiSelect.innerHTML = '';
+
+                    // Cover items: Art Paper / Carton, Ivory, Duplex, Basetik, Fotopaper
+                    const coverItems = filtered.filter(k => k.id.includes('ap') || k.id.includes('ivory') || k.id.includes('duplex') || k.id.includes('basetik') || k.id.includes('fotopaper'));
+                    coverItems.forEach(k => coverSelect.add(new Option(k.nama, k.id)));
+
+                    // Isi items: Art Paper, HVS, Bookpaper, Matte Paper
+                    const isiItems = filtered.filter(k => k.id.includes('ap120') || k.id.includes('ap150') || k.id.includes('hvs') || k.id.includes('bookpaper') || k.id.includes('matte'));
+                    isiItems.forEach(k => isiSelect.add(new Option(k.nama, k.id)));
+
+                    if (coverSelect.querySelector(`option[value="${currentCoverVal}"]`)) {
+                        coverSelect.value = currentCoverVal;
+                    } else {
+                        const defaultCover = isOffset ? 'ap260_off' : 'ap260_dig';
+                        if (coverSelect.querySelector(`option[value="${defaultCover}"]`)) coverSelect.value = defaultCover;
+                        else if (coverSelect.options.length > 0) coverSelect.selectedIndex = 0;
+                    }
+
+                    if (isiSelect.querySelector(`option[value="${currentIsiVal}"]`)) {
+                        isiSelect.value = currentIsiVal;
+                    } else {
+                        const defaultIsi = isOffset ? 'ap120_off' : 'ap120_dig';
+                        if (isiSelect.querySelector(`option[value="${defaultIsi}"]`)) isiSelect.value = defaultIsi;
+                        else if (isiSelect.options.length > 0) isiSelect.selectedIndex = 0;
+                    }
+                }
+
+                const selectedBahanForPlano = isBook ? (coverSelect?.value || el.bahanKertas.value) : el.bahanKertas.value;
+                populatePlanoOptions(mode, selectedBahanForPlano);
             }
 
             function populatePlanoOptions(mode, bahanId) {
@@ -1222,10 +1422,34 @@
 
                 el.presetBadgeInfo.textContent = product.name;
 
+                // Toggle Section 2 UI for Books vs Standard
+                const isBook = productId.startsWith('buku');
+                const bukuSpecContainer = document.getElementById('buku-spec-container');
+                const singleBahanContainer = document.getElementById('single-bahan-container');
+                const labelSisiCetak = document.getElementById('label-sisi-cetak');
+                const labelLaminasi = document.getElementById('label-laminasi');
+
+                if (bukuSpecContainer && singleBahanContainer) {
+                    if (isBook) {
+                        bukuSpecContainer.classList.remove('hidden');
+                        singleBahanContainer.classList.add('hidden');
+                        if (labelSisiCetak) labelSisiCetak.textContent = "Sisi Cetak Cover:";
+                        if (labelLaminasi) labelLaminasi.textContent = "Laminasi Cover:";
+                    } else {
+                        bukuSpecContainer.classList.add('hidden');
+                        singleBahanContainer.classList.remove('hidden');
+                        if (labelSisiCetak) labelSisiCetak.textContent = "Sisi Cetak:";
+                        if (labelLaminasi) labelLaminasi.textContent = "Laminasi Roll:";
+                    }
+                }
+
                 let presetSelectorHTML = '';
                 let eventListener = null;
 
-                if (productId === 'lunchBox') {
+                if (isBook) {
+                    presetSelectorHTML = `<label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Preset Ukuran Buku Standard:</label><select id="preset-selector" class="form-select text-xs font-medium"><option value="a4" selected>A4 Standard (21 × 29.7 cm)</option><option value="a5">A5 Standard (14.8 × 21 cm)</option><option value="b5">B5 Standard (17.6 × 25 cm)</option><option value="a6">A6 Buku Saku (10.5 × 14.8 cm)</option><option value="sq20">Square Compro (20 × 20 cm)</option><option value="custom">-- Custom Dimensi --</option></select>`;
+                    eventListener = handleBukuPresetChange;
+                } else if (productId === 'lunchBox') {
                     presetSelectorHTML = `<label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Preset Ukuran Standard Lunchbox:</label><select id="preset-selector" class="form-select text-xs font-medium"><option value="custom">-- Custom Dimensi --</option><option value="xs">Size XS (10x10x4.5 cm)</option><option value="s">Size S (13x10x4.5 cm)</option><option value="m" selected>Size M (17.5x10.5x5 cm)</option><option value="l">Size L (20x12x5 cm)</option><option value="corndog">Corndog Box (17x6x5 cm)</option></select>`;
                     eventListener = handleLunchboxSizeChange;
                 } else if (productId === 'riceBox') {
@@ -1256,7 +1480,7 @@
                     presetSelectorHTML = `<label for="preset-selector" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Pilih Preset Ukuran Standard:</label><select id="preset-selector" class="form-select text-xs font-medium">${optionsHTML}</select>`;
                     eventListener = handleCustomFlatSizeChange;
                 } else if (productId === 'kotakSambung') {
-                    presetSelectorHTML = `<label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Preset Ukuran Mailer Box / Dus Sambung:</label><select id="preset-selector" class="form-select text-xs font-medium"><option value="custom">-- Custom Dimensi --</option><option value="pisang_adina">Pisang Adina (16x10x5 cm)</option><option value="dapoer_tj">Dapoer TJ (18x16x7 cm)</option><option value="martabak_leo">Martabak (18x12x5 cm)</option><option value="warung_kediri">Warung Kediri (18x18x5.5 cm)</option><option value="pawon_rasa">Pawon Rasa (19.5x19.5x6 cm)</option><option value="ayam_geprek">Ayam Geprek (14x10.5x6.5 cm)</option><option value="demi_donat_k">Donat Kecil (18x10x8 cm)</option><option value="nats_time">Nats Time (16x12x7 cm)</option><option value="demi_donat_b">Donat Besar (29x20x6 cm)</option><option value="balok_lumer">Balok Lumer (13.5x13.5x4 cm)</option><option value="zaki_donat">Zaki Donat (27x18.5x4.5 cm)</option></select>`;
+                    presetSelectorHTML = `<label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Preset Ukuran Mailer Box / Dus Sambung:</label><select id="preset-selector" class="form-select text-xs font-medium"><option value="custom">-- Custom Dimensi --</option><option value="pisang_adina">Pisang Adina (16x10x5 cm)</option><option value="dapoer_tj">Dapoer TJ (18x16x7 cm)</option><option value="martabak_leo">Martabak (18x12x5 cm)</option><option value="warung_kediri">Warung Kediri (18x18x5.5 cm)</option><option value="pawon_rasa">Pawon Rasa (19.5x19.5x6 cm)</option><option value="ayam_geprek">Ayam Geprek (14x10.5x6.5 cm)</option><option value="demi_donat_k">Donat Kecil (18x10x8 cm)</option><option value="nats_time">Nats Time (16x12x7 cm)</option><option=demi_donat_b">Donat Besar (29x20x6 cm)</option><option value="balok_lumer">Balok Lumer (13.5x13.5x4 cm)</option><option value="zaki_donat">Zaki Donat (27x18.5x4.5 cm)</option></select>`;
                     eventListener = handleKotakSambungSizeChange;
                 }
 
@@ -1284,21 +1508,27 @@
                         grid.appendChild(div);
                     }
                 });
+
                 el.formContainer.appendChild(grid);
+
+                // Populate material choices in Section 2
+                populateBahanOptions(el.jenisMesin.value);
 
                 // Auto select default preset initial values if available
                 const presetSel = document.getElementById('preset-selector');
                 if (presetSel && presetSel.value !== 'custom') {
-                    if (productId === 'lunchBox') handleLunchboxSizeChange({ target: { value: 'm' } });
+                    if (isBook) handleBukuPresetChange({ target: { value: 'a4' } });
+                    else if (productId === 'lunchBox') handleLunchboxSizeChange({ target: { value: 'm' } });
                     else if (productId === 'riceBox') handleRiceboxSizeChange({ target: { value: 'm' } });
                     else if (productId === 'dineIn') handleDineInSizeChange({ target: { value: 'm' } });
                 }
 
                 // Register input change listener for manual typing
-                grid.querySelectorAll('input').forEach(inp => {
+                grid.querySelectorAll('input, select').forEach(inp => {
+                    inp.addEventListener('change', triggerLiveCalculate);
                     inp.addEventListener('input', () => {
                         const dropdown = document.getElementById('preset-selector');
-                        if (dropdown) dropdown.value = 'custom';
+                        if (dropdown && inp.type === 'number') dropdown.value = 'custom';
                         triggerLiveCalculate();
                     });
                 });
@@ -1520,19 +1750,20 @@
             }
 
             // --- 7. PRICING & HPP BREAKDOWN ENGINE ---
-            function calculateBreakdown(sizeP, sizeL, multiplier, customJumlah = null) {
+            function calculateBreakdown(sizeP, sizeL, multiplier, customJumlah = null, customBahan = null, customSisi = null) {
                 const bleed = parseFloat(el.bleedInput.value) || 0;
                 const p = sizeP + (bleed * 2);
                 const l = sizeL + (bleed * 2);
                 const qty = customJumlah !== null ? customJumlah : (parseInt(el.jumlah.value) || 1000);
                 const plano = UKURAN_PLANO.find(u => u.id === el.planoSelector.value) || UKURAN_PLANO[0];
-                const sisiCetak = parseInt(el.sisi.value) || 1;
+                const sisiCetak = customSisi !== null ? customSisi : (parseInt(el.sisi.value) || 1);
+                const bahanKertasId = customBahan || el.bahanKertas.value;
 
                 const layout = findBestLayout(plano.planoP, plano.planoL, p, l);
                 if (layout.total === 0) return { error: "Ukuran terlalu besar untuk sheet ini." };
 
-                const pcsPerPlano = layout.total * multiplier;
-                const totalPlano = Math.ceil(qty / pcsPerPlano);
+                const totalItemsNeeded = qty * multiplier;
+                const totalPlano = Math.ceil(totalItemsNeeded / layout.total);
 
                 let insheet = 0;
                 if (el.jenisMesin.value.startsWith('offset')) {
@@ -1541,15 +1772,18 @@
 
                 let costBahan = 0, costCetak = 0, totalBiayaFinishing = 0;
 
+                const isBook = el.productSelector.value.startsWith('buku');
+
                 if (el.jenisMesin.value === 'digital') {
-                    const price = HARGA_DIGITAL.hargaBahan[el.bahanKertas.value] || 3000;
+                    const price = HARGA_DIGITAL.hargaBahan[bahanKertasId] || 3000;
                     costBahan = totalPlano * price;
-                    costCetak = totalPlano * HARGA_DIGITAL.biayaProduksiPerLembar * sisiCetak;
+                    const printRate = isBook ? (HARGA_DIGITAL.biayaProduksiPerLembar / 2) : HARGA_DIGITAL.biayaProduksiPerLembar;
+                    costCetak = totalPlano * printRate * sisiCetak;
                 } else if (el.jenisMesin.value === 'dtf') {
-                    const price = HARGA_DIGITAL.hargaBahan[el.bahanKertas.value] || 20000;
+                    const price = HARGA_DIGITAL.hargaBahan[bahanKertasId] || 20000;
                     costBahan = totalPlano * price;
                 } else { // Offset
-                    const price = getPaperPrice(el.bahanKertas.value, el.planoSelector.value);
+                    const price = getPaperPrice(bahanKertasId, el.planoSelector.value);
                     costBahan = (totalPlano + insheet) * price;
 
                     const jumlahWarna = parseInt(el.jumlahWarna.value) || 4;
@@ -1569,6 +1803,7 @@
                         }
                     }
                     costCetak *= sisiCetak;
+                    if (isBook) costCetak = costCetak / 2;
                 }
 
                 // Finishing Cost Calculations
@@ -1622,8 +1857,46 @@
 
             function getCombinedBreakdown(qtyOverride = null) {
                 const qty = qtyOverride !== null ? qtyOverride : (parseInt(el.jumlah.value) || 1000);
+                const pid = el.productSelector.value;
 
-                if (el.productSelector.value === 'kotakTutupTerpisah') {
+                if (pid.startsWith('buku')) {
+                    const isDigital = el.jenisMesin.value === 'digital';
+                    const coverSize = availableSizes.find(s => s.type === 'cover') || availableSizes[0];
+                    const isiSize = availableSizes.find(s => s.type === 'isi') || availableSizes[1] || availableSizes[0];
+
+                    if (!coverSize || !isiSize) return null;
+
+                    const bahanCover = document.getElementById('bahan-kertas-cover')?.value || el.bahanKertas.value;
+                    const bahanIsi = document.getElementById('bahan-kertas-isi')?.value || 'ap120_off';
+                    const sisiIsi = parseInt(document.getElementById('sisi-isi')?.value) || 2;
+                    const sisiCover = parseInt(el.sisi.value) || 2;
+
+                    const coverRes = calculateBreakdown(coverSize.p, coverSize.l, coverSize.multiplier, qty, bahanCover, sisiCover);
+                    const isiRes = calculateBreakdown(isiSize.p, isiSize.l, isiSize.multiplier, qty, bahanIsi, sisiIsi);
+
+                    if (coverRes.error) return { error: `Cover: ${coverRes.error}` };
+                    if (isiRes.error) return { error: `Isi: ${isiRes.error}` };
+
+                    let bindingRate = 0;
+                    const halIsi = parseInt(document.getElementById('hal_isi')?.value) || 32;
+                    if (pid === 'bukuStaples') {
+                        bindingRate = isDigital ? 1000 : 750;
+                    } else if (pid === 'bukuPerfect') {
+                        bindingRate = isDigital ? (3500 + halIsi * 30) : (2500 + halIsi * 20);
+                    } else if (pid === 'bukuSpiral') {
+                        bindingRate = isDigital ? 5000 : 4500;
+                    }
+                    const costBinding = qty * bindingRate;
+
+                    const totalModal = coverRes.totalModal + isiRes.totalModal + costBinding;
+                    const totalPlano = coverRes.totalPlano + isiRes.totalPlano;
+                    const insheet = coverRes.insheet + isiRes.insheet;
+                    const biayaBahan = coverRes.biayaBahan + isiRes.biayaBahan;
+                    const biayaCetak = coverRes.biayaCetak + isiRes.biayaCetak;
+                    const totalBiayaFinishing = coverRes.totalBiayaFinishing + isiRes.totalBiayaFinishing + costBinding;
+
+                    return { totalModal, totalPlano, insheet, biayaBahan, biayaCetak, totalBiayaFinishing };
+                } else if (pid === 'kotakTutupTerpisah') {
                     let totalModal = 0; let totalPlano = 0; let totalInsheet = 0; let totalBiayaBahan = 0; let totalBiayaCetak = 0; let totalBiayaFinishing = 0;
                     let hasError = false; let errorMessage = '';
 
@@ -1673,8 +1946,8 @@
                 const l = activeSize.l + (bleed * 2);
                 const plano = UKURAN_PLANO.find(u => u.id === el.planoSelector.value) || UKURAN_PLANO[0];
                 const layout = findBestLayout(plano.planoP, plano.planoL, p, l);
-                const pcsPerPlano = layout.total > 0 ? (layout.total * activeSize.multiplier) : 1;
-                const totalPlano = Math.ceil(qty / pcsPerPlano);
+                const totalItemsNeeded = qty * activeSize.multiplier;
+                const totalPlano = layout.total > 0 ? Math.ceil(totalItemsNeeded / layout.total) : 1;
                 const patternsNeeded = Math.ceil(qty / activeSize.multiplier);
 
                 function setBadge(id, cost) {
@@ -1722,7 +1995,26 @@
 
             function updatePaperInfo(breakdown) {
                 let text = '';
-                if (el.productSelector.value === 'kotakTutupTerpisah') {
+                const pid = el.productSelector.value;
+                if (pid.startsWith('buku')) {
+                    const qty = parseInt(el.jumlah.value) || 1000;
+                    const coverSize = availableSizes.find(s => s.type === 'cover');
+                    const isiSize = availableSizes.find(s => s.type === 'isi');
+                    if (coverSize && isiSize) {
+                        const bahanCover = document.getElementById('bahan-kertas-cover')?.value || el.bahanKertas.value;
+                        const bahanIsi = document.getElementById('bahan-kertas-isi')?.value || 'ap120_off';
+                        const sisiIsi = parseInt(document.getElementById('sisi-isi')?.value) || 2;
+                        const sisiCover = parseInt(el.sisi.value) || 2;
+
+                        const coverRes = calculateBreakdown(coverSize.p, coverSize.l, coverSize.multiplier, qty, bahanCover, sisiCover);
+                        const isiRes = calculateBreakdown(isiSize.p, isiSize.l, isiSize.multiplier, qty, bahanIsi, sisiIsi);
+
+                        if (coverRes && isiRes && !coverRes.error && !isiRes.error) {
+                            const grandTotal = coverRes.totalPlano + isiRes.totalPlano;
+                            text = `Kebutuhan Kertas: <strong>${grandTotal}</strong> lbr <span class="text-[11px] font-normal text-slate-400">(Cover: ${coverRes.totalPlano} lbr A3+, Isi: ${isiRes.totalPlano} lbr A3+)</span>`;
+                        }
+                    }
+                } else if (pid === 'kotakTutupTerpisah') {
                     let details = []; let grandTotal = 0;
                     const qty = parseInt(el.jumlah.value) || 1000;
                     availableSizes.forEach(size => {
@@ -1734,7 +2026,9 @@
                         }
                     });
                     text = `Total Kertas: <strong>${grandTotal}</strong> lbr <span class="text-[11px] font-normal text-slate-400">(${details.join(', ')})</span>`;
-                } else {
+                }
+
+                if (!text) {
                     const total = breakdown.totalPlano + breakdown.insheet;
                     text = `Kebutuhan Kertas: <strong>${total}</strong> lbr <span class="text-[11px] font-normal text-slate-400">(inc. ${breakdown.insheet} insheet)</span>`;
                 }
@@ -1791,9 +2085,17 @@
 
             function generatePenawaran() {
                 const isDigital = el.jenisMesin.value === 'digital' || el.jenisMesin.value === 'dtf';
+                const pid = el.productSelector.value;
                 let polaMsg = '';
 
-                if (el.productSelector.value === 'kotakTutupTerpisah') {
+                if (pid.startsWith('buku')) {
+                    const coverSize = availableSizes.find(s => s.type === 'cover');
+                    const isiSize = availableSizes.find(s => s.type === 'isi');
+                    const bleed = parseFloat(el.bleedInput.value) || 0;
+                    if (coverSize && isiSize) {
+                        polaMsg = `Cover: ${(coverSize.p + bleed * 2).toFixed(1)}x${(coverSize.l + bleed * 2).toFixed(1)} cm, Isi Spread: ${(isiSize.p + bleed * 2).toFixed(1)}x${(isiSize.l + bleed * 2).toFixed(1)} cm`;
+                    }
+                } else if (pid === 'kotakTutupTerpisah') {
                     const parts = [];
                     const bleed = parseFloat(el.bleedInput.value) || 0;
                     availableSizes.forEach(size => {
@@ -1813,8 +2115,13 @@
                 }
 
                 let ukuranDetail = '';
-                const pid = el.productSelector.value;
-                if (pid === 'lunchBox' || pid === 'riceBox') {
+                if (pid.startsWith('buku')) {
+                    const p = document.getElementById('p_buku')?.value || 0;
+                    const l = document.getElementById('l_buku')?.value || 0;
+                    const hal = document.getElementById('hal_isi')?.value || 0;
+                    const spineCm = availableSizes.find(s => s.spine)?.spine;
+                    ukuranDetail = `${l} x ${p} cm (${hal} Halaman Isi${spineCm ? ', Spine ' + (spineCm * 10).toFixed(1) + 'mm' : ''})`;
+                } else if (pid === 'lunchBox' || pid === 'riceBox') {
                     const pA = document.getElementById('p_atas')?.value || 0; const lA = document.getElementById('l_atas')?.value || 0;
                     const pB = document.getElementById('p_bawah')?.value || 0; const lB = document.getElementById('l_bawah')?.value || 0; const t = document.getElementById('t')?.value || 0;
                     ukuranDetail = `Atas: ${pA}x${lA} cm, Bawah: ${pB}x${lB} cm, Tinggi: ${t} cm`;
@@ -1832,13 +2139,22 @@
                     const p = document.getElementById('p')?.value; const l = document.getElementById('l')?.value; ukuranDetail = `${p} x ${l} cm`;
                 }
 
+                let bahanKertasText = el.bahanKertas.options[el.bahanKertas.selectedIndex]?.text || '';
+                if (pid.startsWith('buku')) {
+                    const bahanCoverSel = document.getElementById('bahan-kertas-cover');
+                    const bahanIsiSel = document.getElementById('bahan-kertas-isi');
+                    const coverText = bahanCoverSel ? bahanCoverSel.options[bahanCoverSel.selectedIndex]?.text : '';
+                    const isiText = bahanIsiSel ? bahanIsiSel.options[bahanIsiSel.selectedIndex]?.text : '';
+                    bahanKertasText = `Cover: ${coverText}, Isi: ${isiText}`;
+                }
+
                 const specLines = [
                     `*PENAWARAN HARGA CETAK*`,
                     `----------------------------`,
                     `- Produk: ${el.productSelector.options[el.productSelector.selectedIndex].text}`,
                     `- Dimensi Jadi: ${ukuranDetail}`,
                     `- Pola Potong Bentangan: ${polaMsg}`,
-                    `- Bahan Kertas: ${el.bahanKertas.options[el.bahanKertas.selectedIndex].text}`,
+                    `- Bahan Kertas: ${bahanKertasText}`,
                     `- Spesifikasi Cetak: ${el.sisi.options[el.sisi.selectedIndex].text}`,
                 ];
 
@@ -1868,10 +2184,10 @@
                     penawaranText += `\n• ${requestedQty.toLocaleString('id-ID')} pcs: *${formatRupiah(currentRoundedUnit)} / pcs*`;
                     penawaranText += `\n• Total Order: *${formatRupiah(totalJualDigi)}*`;
                 } else {
-                    const quantities = Array.from(new Set([requestedQty, 1000, 2000, 3000, 5000, 10000])).sort((a, b) => a - b);
+                    const quantities = Array.from(new Set([requestedQty, 100, 300, 500, 1000, 2000, 5000])).sort((a, b) => a - b);
 
                     quantities.forEach(qty => {
-                        let result = (el.productSelector.value === 'kotakTutupTerpisah') ? getCombinedBreakdown(qty) : calculateBreakdown(availableSizes[currentActiveSizeIndex]?.p || 10, availableSizes[currentActiveSizeIndex]?.l || 10, availableSizes[currentActiveSizeIndex]?.multiplier || 1, qty);
+                        let result = (el.productSelector.value === 'kotakTutupTerpisah' || el.productSelector.value.startsWith('buku')) ? getCombinedBreakdown(qty) : calculateBreakdown(availableSizes[currentActiveSizeIndex]?.p || 10, availableSizes[currentActiveSizeIndex]?.l || 10, availableSizes[currentActiveSizeIndex]?.multiplier || 1, qty);
                         if (result && !result.error) {
                             const unitPrice = result.totalModal / qty;
                             const roundedUnitPrice = (qty === requestedQty && currentRoundedUnit > 0) ? currentRoundedUnit : roundToNearest25(unitPrice);
@@ -2113,7 +2429,12 @@
             function getUkuranDetailText() {
                 let ukuranDetail = '';
                 const pid = el.productSelector.value;
-                if (pid === 'lunchBox' || pid === 'riceBox') {
+                if (pid.startsWith('buku')) {
+                    const p = document.getElementById('p_buku')?.value || 0;
+                    const l = document.getElementById('l_buku')?.value || 0;
+                    const hal = document.getElementById('hal_isi')?.value || 0;
+                    ukuranDetail = `${p}x${l} cm (${hal} hal)`;
+                } else if (pid === 'lunchBox' || pid === 'riceBox') {
                     const pA = document.getElementById('p_atas')?.value || 0; const lA = document.getElementById('l_atas')?.value || 0;
                     const pB = document.getElementById('p_bawah')?.value || 0; const lB = document.getElementById('l_bawah')?.value || 0; const t = document.getElementById('t')?.value || 0;
                     ukuranDetail = `${pB}x${lB}x${t} cm`;
@@ -2367,6 +2688,13 @@
             el.jumlahWarna.addEventListener('change', triggerLiveCalculate);
             el.laminasi.addEventListener('change', triggerLiveCalculate);
             el.bleedInput.addEventListener('input', triggerLiveCalculate);
+
+            document.getElementById('bahan-kertas-cover')?.addEventListener('change', () => {
+                populatePlanoOptions(el.jenisMesin.value, document.getElementById('bahan-kertas-cover').value);
+                triggerLiveCalculate();
+            });
+            document.getElementById('bahan-kertas-isi')?.addEventListener('change', triggerLiveCalculate);
+            document.getElementById('sisi-isi')?.addEventListener('change', triggerLiveCalculate);
 
             el.jualSatuanRounded.addEventListener('input', () => {
                 const breakdown = getCombinedBreakdown();
