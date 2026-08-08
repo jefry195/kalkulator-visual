@@ -1,13 +1,15 @@
 # 🖨️ Kalkulator Percetakan Visual Pro
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-indigo?style=for-the-badge&logo=github)](https://jefry195.github.io/kalkulator-visual/)
+[![Portfolio](https://img.shields.io/badge/Portfolio-Jefri%20Orcin-black?style=for-the-badge&logo=vercel)](https://jefri-orcin.vercel.app/)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
 Aplikasi web modern interaktif untuk menghitung estimasi ukuran pola bentangan cetak, visualisasi layout kertas plano (SVG Canvas), kalkulasi HPP (Modal), pengaturan margin keuntungan, serta generator penawaran harga WhatsApp otomatis untuk pemilik usaha percetakan dan estimator cetak.
 
-🌐 **Demo Website**: [https://jefry195.github.io/kalkulator-visual/](https://jefry195.github.io/kalkulator-visual/)
+🌐 **Demo Website**: [https://jefry195.github.io/kalkulator-visual/](https://jefry195.github.io/kalkulator-visual/)  
+👨‍💻 **Developer Portfolio**: [https://jefri-orcin.vercel.app/](https://jefri-orcin.vercel.app/)
 
 ---
 
@@ -37,13 +39,22 @@ Aplikasi web modern interaktif untuk menghitung estimasi ukuran pola bentangan c
   - Slider Margin Profit (%) & input Nominal Profit (Rp) yang mengkalkulasi HPP vs Keuntungan vs Harga Jual Satuan/Total secara otomatis & *real-time*.
   - Dukungan kalkulasi cetak **Mesin Offset Commercial**, **Digital Printing (A3+)**, dan **Sablon Film DTF**.
   - Opsi finishing lengkap: Laminasi (Doff/Glossy 1 & 2 Sisi), Potong Jadi, Lipat Mesin, Spot UV Varnish, Hot Foil / Poly, Kiss Cut Stiker, & Laminating Hard Press.
-- 📲 **Generator Format Penawaran WhatsApp & Tier Pricing Display**:
-  - Membuat format teks penawaran harga cetak yang rapi, mencantumkan spesifikasi lengkap, tiering harga kuantitas pintar:
-    - **Digital Printing / DTF**: Kuantitas kecil-menengah (100, 300, 500, 1.000 pcs) tanpa biaya plat.
+- 📲 **Generator Format Penawaran WhatsApp**:
+  - Format penawaran teks rapi siap kirim ke WhatsApp dengan *tiering* kuantitas otomatis:
+    - **Digital Printing / DTF**: Kuantitas kecil-menengah (100, 300, 500, 1.000 pcs) tanpa beban biaya plat.
     - **Mesin Offset Commercial**: Kuantitas grosir volume besar (1.000, 2.000, 3.000, 5.000, 10.000 pcs) dengan efisiensi biaya plat.
-  - Menampilkan visual interaktif *Tier Pricing Cards* di UI serta tombol penyalin teks WhatsApp otomatis.
 - 📜 **Riwayat Estimasi Tersimpan (`localStorage`)**:
   - Menyimpan estimasi harga cetak secara lokal untuk dibuka atau dibandingkan kembali kapan saja.
+
+---
+
+## 👨‍💻 Profil Pengembang
+
+Proyek ini dikembangkan dan dikelola oleh:
+
+- **Nama**: Jefri
+- 🌐 **Website / Portofolio**: [https://jefri-orcin.vercel.app/](https://jefri-orcin.vercel.app/)
+- 💻 **GitHub**: [@jefry195](https://github.com/jefry195)
 
 ---
 
