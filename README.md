@@ -1,7 +1,7 @@
 # 🖨️ Kalkulator Percetakan Visual Pro
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-indigo?style=for-the-badge&logo=github)](https://jefry195.github.io/kalkulator-visual/)
-[![Portfolio](https://img.shields.io/badge/Portfolio-Jefri%20Orcin-black?style=for-the-badge&logo=vercel)](https://jefri-orcin.vercel.app/)
+[![Portfolio](https://img.shields.io/badge/Portfolio-Jefrianus%20Markus-black?style=for-the-badge&logo=vercel)](https://jefri-orcin.vercel.app/)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -52,7 +52,7 @@ Aplikasi web modern interaktif untuk menghitung estimasi ukuran pola bentangan c
 
 Proyek ini dikembangkan dan dikelola oleh:
 
-- **Nama**: Jefri
+- **Nama**: Jefrianus Markus
 - 🌐 **Website / Portofolio**: [https://jefri-orcin.vercel.app/](https://jefri-orcin.vercel.app/)
 - 💻 **GitHub**: [@jefry195](https://github.com/jefry195)
 
