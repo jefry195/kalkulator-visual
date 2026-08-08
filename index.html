@@ -224,7 +224,8 @@
                                 Produk Kemasan / Cetakan:</label>
                             <select id="product-selector" class="form-select font-medium text-slate-100">
                                 <optgroup label="── Buku, Compro & Majalah ──">
-                                    <option value="bukuStaples">Buku / Compro / Majalah (Jilid Staples / Kawat)</option>
+                                    <option value="bukuStaples">Buku / Compro / Majalah (Jilid Staples Tengah / Biasa)</option>
+                                    <option value="bukuKawat">Buku / Compro / Majalah (Jilid Jahit Kawat / Saddle Stitching)</option>
                                     <option value="bukuPerfect">Buku / Catalog / Majalah (Jilid Lem Panas / Perfect Binding)</option>
                                     <option value="bukuSpiral">Buku / Agenda (Jilid Spiral / Wire-O)</option>
                                 </optgroup>
@@ -672,20 +673,20 @@
                 { id: 'ap120_dig', nama: 'Art Paper 120 gr', jenis: 'kertas', mesin: ['digital'] },
                 { id: 'matte150_dig', nama: 'Matte / Silk Paper 150 gr', jenis: 'kertas', mesin: ['digital'] },
                 { id: 'matte120_dig', nama: 'Matte / Silk Paper 120 gr', jenis: 'kertas', mesin: ['digital'] },
-                { id: 'bookpaper70_dig', nama: 'Bookpaper / Novel 70 gr', jenis: 'kertas', mesin: ['digital'] },
-                { id: 'hvs100_dig', nama: 'HVS 100 gr', jenis: 'kertas', mesin: ['digital'] },
-                { id: 'hvs80_dig', nama: 'HVS 80 gr', jenis: 'kertas', mesin: ['digital'] },
-                { id: 'hvs70_dig', nama: 'HVS 70 gr', jenis: 'kertas', mesin: ['digital'] },
+                { id: 'bookpaper70_dig', nama: 'Bookpaper / Novel 70 gr', jenis: 'kertas', mesin: ['digital'], isBookOnly: true },
+                { id: 'hvs100_dig', nama: 'HVS 100 gr', jenis: 'kertas', mesin: ['digital'], isBookOnly: true },
+                { id: 'hvs80_dig', nama: 'HVS 80 gr', jenis: 'kertas', mesin: ['digital'], isBookOnly: true },
+                { id: 'hvs70_dig', nama: 'HVS 70 gr', jenis: 'kertas', mesin: ['digital'], isBookOnly: true },
                 { id: 'stiker_bontax_dig', nama: 'Stiker Bontax Vinyl', jenis: 'stiker', mesin: ['digital'] },
                 { id: 'stiker_hvs_dig', nama: 'Stiker HVS', jenis: 'stiker', mesin: ['digital'] },
                 { id: 'stiker_quantac_dig', nama: 'Stiker Quantac Transparan', jenis: 'stiker', mesin: ['digital'] },
                 { id: 'dtf_a3', nama: 'DTF Film A3 Sheet', jenis: 'stiker', mesin: ['dtf'] },
                 { id: 'dtf_a4', nama: 'DTF Film A4 Sheet', jenis: 'stiker', mesin: ['dtf'] },
-                { id: 'hvs70_off', nama: 'HVS 70gr (Isi Buku)', jenis: 'kertas', mesin: ['offset'] },
-                { id: 'hvs80_off', nama: 'HVS 80gr (Isi Buku)', jenis: 'kertas', mesin: ['offset'] },
-                { id: 'hvs100_off', nama: 'HVS 100gr (Isi Buku)', jenis: 'kertas', mesin: ['offset'] },
-                { id: 'bookpaper57_off', nama: 'Bookpaper 57gr (Novel)', jenis: 'kertas', mesin: ['offset'] },
-                { id: 'bookpaper70_off', nama: 'Bookpaper 70gr (Novel)', jenis: 'kertas', mesin: ['offset'] },
+                { id: 'hvs70_off', nama: 'HVS 70gr (Isi Buku)', jenis: 'kertas', mesin: ['offset'], isBookOnly: true },
+                { id: 'hvs80_off', nama: 'HVS 80gr (Isi Buku)', jenis: 'kertas', mesin: ['offset'], isBookOnly: true },
+                { id: 'hvs100_off', nama: 'HVS 100gr (Isi Buku)', jenis: 'kertas', mesin: ['offset'], isBookOnly: true },
+                { id: 'bookpaper57_off', nama: 'Bookpaper 57gr (Novel)', jenis: 'kertas', mesin: ['offset'], isBookOnly: true },
+                { id: 'bookpaper70_off', nama: 'Bookpaper 70gr (Novel)', jenis: 'kertas', mesin: ['offset'], isBookOnly: true },
                 { id: 'matte120_off', nama: 'Matte Paper 120gr', jenis: 'kertas', mesin: ['offset'] },
                 { id: 'matte150_off', nama: 'Matte Paper 150gr', jenis: 'kertas', mesin: ['offset'] },
                 { id: 'ap120_off', nama: 'Art Paper 120gr', jenis: 'kertas', mesin: ['offset'] },
@@ -850,8 +851,31 @@
 
             const products = {
                 bukuStaples: {
-                    name: "Buku / Compro (Jilid Staples / Kawat)",
-                    note: "Jilid Kawat (Saddle Stitch). Halaman Isi disarankan kelipatan 4.",
+                    name: "Buku / Compro (Jilid Staples Tengah / Biasa)",
+                    note: "Jilid Staples Biasa (Manual / Booklet). Lebih hemat untuk dokumen, modul & buku tipis (Halaman kelipatan 4). Biaya: Rp 400 - Rp 600/buku.",
+                    fields: [
+                        { id: 'p_buku', label: 'Tinggi Buku (cm)', placeholder: '29.7' },
+                        { id: 'l_buku', label: 'Lebar Buku (cm)', placeholder: '21' },
+                        { id: 'hal_isi', label: 'Jumlah Halaman Isi', placeholder: '32' }
+                    ],
+                    calculate: (v, bleed) => {
+                        const pCover = v.p_buku;
+                        const lCover = v.l_buku * 2;
+                        const pIsi = v.p_buku;
+                        const lIsi = v.l_buku * 2;
+                        const spreadIsi = Math.ceil(v.hal_isi / 4);
+                        return {
+                            custom: `Bentangan Cover: <strong>${pCover.toFixed(1)} x ${lCover.toFixed(1)} cm</strong><br>Bentangan Isi (Spread): <strong>${pIsi.toFixed(1)} x ${lIsi.toFixed(1)} cm</strong> (${spreadIsi} lembar spread/buku)`,
+                            sizes: [
+                                { name: 'Bentangan Cover', p: pCover, l: lCover, multiplier: 1, type: 'cover' },
+                                { name: 'Bentangan Isi (Spread)', p: pIsi, l: lIsi, multiplier: spreadIsi, type: 'isi' }
+                            ]
+                        };
+                    }
+                },
+                bukuKawat: {
+                    name: "Buku / Compro (Jilid Jahit Kawat / Saddle Stitching)",
+                    note: "Jilid Jahit Kawat Mesin (Saddle Stitching Kawat Baja). Lebih kuat, kokoh & rapi untuk majalah, company profile & booklet premium. Rekomendasi ongkos kawat: +Rp 1.000 - Rp 1.350/buku.",
                     fields: [
                         { id: 'p_buku', label: 'Tinggi Buku (cm)', placeholder: '29.7' },
                         { id: 'l_buku', label: 'Lebar Buku (cm)', placeholder: '21' },
@@ -1267,10 +1291,25 @@
                 const isOffset = mode.startsWith('offset');
                 const isBook = el.productSelector.value.startsWith('buku');
 
-                const filtered = JENIS_KERTAS.filter(k => k.mesin.includes(mode) || (isOffset && k.mesin.includes('offset')));
+                const filtered = JENIS_KERTAS.filter(k => {
+                    const matchMachine = k.mesin.includes(mode) || (isOffset && k.mesin.includes('offset'));
+                    if (!matchMachine) return false;
+                    // Sembunyikan bahan khusus isi buku (HVS Isi Buku, Bookpaper Novel, dll) jika produk BUKAN buku
+                    if (!isBook && k.isBookOnly) return false;
+                    return true;
+                });
+
+                const currentVal = el.bahanKertas.value;
                 filtered.forEach(k => {
                     el.bahanKertas.add(new Option(k.nama, k.id));
                 });
+
+                if (el.bahanKertas.querySelector(`option[value="${currentVal}"]`)) {
+                    el.bahanKertas.value = currentVal;
+                } else if (filtered.length > 0) {
+                    const defaultPaper = isOffset ? (filtered.find(f => f.id === 'ivory300_off' || f.id === 'duplex310_off' || f.id === 'ap260_off')?.id || filtered[0].id) : (filtered.find(f => f.id === 'ap260_dig' || f.id === 'ap230_dig')?.id || filtered[0].id);
+                    el.bahanKertas.value = defaultPaper;
+                }
 
                 const coverSelect = document.getElementById('bahan-kertas-cover');
                 const isiSelect = document.getElementById('bahan-kertas-isi');
@@ -1282,12 +1321,14 @@
                     coverSelect.innerHTML = '';
                     isiSelect.innerHTML = '';
 
+                    const allMachinePapers = JENIS_KERTAS.filter(k => k.mesin.includes(mode) || (isOffset && k.mesin.includes('offset')));
+
                     // Cover items: Art Paper / Carton, Ivory, Duplex, Basetik, Fotopaper
-                    const coverItems = filtered.filter(k => k.id.includes('ap') || k.id.includes('ivory') || k.id.includes('duplex') || k.id.includes('basetik') || k.id.includes('fotopaper'));
+                    const coverItems = allMachinePapers.filter(k => k.id.includes('ap') || k.id.includes('ivory') || k.id.includes('duplex') || k.id.includes('basetik') || k.id.includes('fotopaper'));
                     coverItems.forEach(k => coverSelect.add(new Option(k.nama, k.id)));
 
                     // Isi items: Art Paper, HVS, Bookpaper, Matte Paper
-                    const isiItems = filtered.filter(k => k.id.includes('ap120') || k.id.includes('ap150') || k.id.includes('hvs') || k.id.includes('bookpaper') || k.id.includes('matte'));
+                    const isiItems = allMachinePapers.filter(k => k.id.includes('ap120') || k.id.includes('ap150') || k.id.includes('hvs') || k.id.includes('bookpaper') || k.id.includes('matte'));
                     isiItems.forEach(k => isiSelect.add(new Option(k.nama, k.id)));
 
                     if (coverSelect.querySelector(`option[value="${currentCoverVal}"]`)) {
@@ -1880,7 +1921,9 @@
                     let bindingRate = 0;
                     const halIsi = parseInt(document.getElementById('hal_isi')?.value) || 32;
                     if (pid === 'bukuStaples') {
-                        bindingRate = isDigital ? 1000 : 750;
+                        bindingRate = isDigital ? 600 : 400; // Staples manual/tengah standar
+                    } else if (pid === 'bukuKawat') {
+                        bindingRate = isDigital ? 1350 : 1000; // Jahit kawat mesin / saddle stitcher
                     } else if (pid === 'bukuPerfect') {
                         bindingRate = isDigital ? (3500 + halIsi * 30) : (2500 + halIsi * 20);
                     } else if (pid === 'bukuSpiral') {
@@ -2178,22 +2221,50 @@
 
                 const requestedQty = parseInt(el.jumlah.value) || 1000;
                 const currentRoundedUnit = parseFloat(el.jualSatuanRounded.value) || 0;
+                const unitLabel = pid === 'kotakTutupTerpisah' ? 'set' : 'pcs';
 
                 if (isDigital) {
-                    const totalJualDigi = currentRoundedUnit * requestedQty;
-                    penawaranText += `\n• ${requestedQty.toLocaleString('id-ID')} pcs: *${formatRupiah(currentRoundedUnit)} / pcs*`;
-                    penawaranText += `\n• Total Order: *${formatRupiah(totalJualDigi)}*`;
-                } else {
-                    const quantities = Array.from(new Set([requestedQty, 100, 300, 500, 1000, 2000, 5000])).sort((a, b) => a - b);
+                    // Digital Printing / DTF: Tiers kuantitas kecil-menengah (100, 300, 500, 1.000 pcs)
+                    const digitalBaseQuantities = [100, 300, 500, 1000];
+                    const quantities = Array.from(new Set([
+                        ...(requestedQty > 0 && requestedQty <= 2000 ? [requestedQty] : []),
+                        ...digitalBaseQuantities
+                    ])).sort((a, b) => a - b);
 
                     quantities.forEach(qty => {
-                        let result = (el.productSelector.value === 'kotakTutupTerpisah' || el.productSelector.value.startsWith('buku')) ? getCombinedBreakdown(qty) : calculateBreakdown(availableSizes[currentActiveSizeIndex]?.p || 10, availableSizes[currentActiveSizeIndex]?.l || 10, availableSizes[currentActiveSizeIndex]?.multiplier || 1, qty);
+                        let result = (pid === 'kotakTutupTerpisah' || pid.startsWith('buku')) 
+                            ? getCombinedBreakdown(qty) 
+                            : calculateBreakdown(availableSizes[currentActiveSizeIndex]?.p || 10, availableSizes[currentActiveSizeIndex]?.l || 10, availableSizes[currentActiveSizeIndex]?.multiplier || 1, qty);
+
+                        if (result && !result.error) {
+                            const biayaSettingDigital = 25000;
+                            const totalModalDigi = result.totalModal + biayaSettingDigital;
+                            const unitPrice = totalModalDigi / qty;
+                            const roundedUnitPrice = (qty === requestedQty && currentRoundedUnit > 0) ? currentRoundedUnit : Math.ceil(unitPrice);
+                            const totalHargaTier = roundedUnitPrice * qty;
+
+                            penawaranText += `\n• ${qty.toLocaleString('id-ID')} pcs: *${formatRupiah(roundedUnitPrice)} / ${unitLabel}* (Total: ${formatRupiah(totalHargaTier)})`;
+                        }
+                    });
+                } else {
+                    // Offset Printing: Tiers kuantitas besar (diatas / mulai 1.000 pcs)
+                    const offsetBaseQuantities = [1000, 2000, 3000, 5000, 10000];
+                    const quantities = Array.from(new Set([
+                        ...(requestedQty >= 1000 ? [requestedQty] : []),
+                        ...offsetBaseQuantities
+                    ])).sort((a, b) => a - b);
+
+                    quantities.forEach(qty => {
+                        let result = (pid === 'kotakTutupTerpisah' || pid.startsWith('buku')) 
+                            ? getCombinedBreakdown(qty) 
+                            : calculateBreakdown(availableSizes[currentActiveSizeIndex]?.p || 10, availableSizes[currentActiveSizeIndex]?.l || 10, availableSizes[currentActiveSizeIndex]?.multiplier || 1, qty);
+
                         if (result && !result.error) {
                             const unitPrice = result.totalModal / qty;
                             const roundedUnitPrice = (qty === requestedQty && currentRoundedUnit > 0) ? currentRoundedUnit : roundToNearest25(unitPrice);
                             const totalHargaTier = roundedUnitPrice * qty;
 
-                            penawaranText += `\n• ${qty.toLocaleString('id-ID')} pcs: *${formatRupiah(roundedUnitPrice)} / ${el.productSelector.value === 'kotakTutupTerpisah' ? 'set' : 'pcs'}* (Total: ${formatRupiah(totalHargaTier)})`;
+                            penawaranText += `\n• ${qty.toLocaleString('id-ID')} pcs: *${formatRupiah(roundedUnitPrice)} / ${unitLabel}* (Total: ${formatRupiah(totalHargaTier)})`;
                         }
                     });
                 }

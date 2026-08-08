@@ -13,7 +13,10 @@ Aplikasi web modern interaktif untuk menghitung estimasi ukuran pola bentangan c
 
 ## 🚀 Fitur Utama
 
-- 📦 **Spesifikasi Produk Kemasan & Cetak Datar**:
+- 📦 **Spesifikasi Produk Kemasan, Buku & Cetak Datar**:
+  - Buku / Compro (Jilid Staples Tengah / Manual) & (Jilid Jahit Kawat Mesin / Saddle Stitching)
+  - Buku / Catalog (Jilid Lem Panas / Perfect Binding)
+  - Buku / Agenda (Jilid Spiral / Wire-O)
   - Dus Lunch Box (1 pcs & 2 pcs gandeng)
   - Rice Box
   - Dine In Tray
@@ -34,8 +37,11 @@ Aplikasi web modern interaktif untuk menghitung estimasi ukuran pola bentangan c
   - Slider Margin Profit (%) & input Nominal Profit (Rp) yang mengkalkulasi HPP vs Keuntungan vs Harga Jual Satuan/Total secara otomatis & *real-time*.
   - Dukungan kalkulasi cetak **Mesin Offset Commercial**, **Digital Printing (A3+)**, dan **Sablon Film DTF**.
   - Opsi finishing lengkap: Laminasi (Doff/Glossy 1 & 2 Sisi), Potong Jadi, Lipat Mesin, Spot UV Varnish, Hot Foil / Poly, Kiss Cut Stiker, & Laminating Hard Press.
-- 📲 **Generator Format Penawaran WhatsApp**:
-  - Membuat format teks penawaran harga cetak yang rapi, mencantumkan spesifikasi lengkap, tiering harga quantity (1.000, 2.000, 3.000, 5.000, 10.000 pcs), dan tombol penyalin otomatis dengan notifikasi toast.
+- 📲 **Generator Format Penawaran WhatsApp & Tier Pricing Display**:
+  - Membuat format teks penawaran harga cetak yang rapi, mencantumkan spesifikasi lengkap, tiering harga kuantitas pintar:
+    - **Digital Printing / DTF**: Kuantitas kecil-menengah (100, 300, 500, 1.000 pcs) tanpa biaya plat.
+    - **Mesin Offset Commercial**: Kuantitas grosir volume besar (1.000, 2.000, 3.000, 5.000, 10.000 pcs) dengan efisiensi biaya plat.
+  - Menampilkan visual interaktif *Tier Pricing Cards* di UI serta tombol penyalin teks WhatsApp otomatis.
 - 📜 **Riwayat Estimasi Tersimpan (`localStorage`)**:
   - Menyimpan estimasi harga cetak secara lokal untuk dibuka atau dibandingkan kembali kapan saja.
 
