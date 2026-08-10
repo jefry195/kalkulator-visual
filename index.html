@@ -310,13 +310,15 @@
                         </div>
                         <div id="jumlah-warna-container">
                             <label for="jumlah-warna"
-                                class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Jumlah
-                                Warna Cetak:</label>
-                            <select id="jumlah-warna" class="form-select font-medium">
-                                <option value="1">1 Warna (Monochrome)</option>
-                                <option value="2">2 Warna</option>
-                                <option value="3">3 Warna</option>
-                                <option value="4" selected>4 Warna (Full Color CMYK)</option>
+                                class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                                <span>Jumlah Warna Cetak:</span>
+                                <span class="text-[10px] text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded border border-cyan-500/20">Plat / CMYK</span>
+                            </label>
+                            <select id="jumlah-warna" class="form-select font-medium text-slate-100">
+                                <option value="1">1 Warna (Monochrome / 1 Plat)</option>
+                                <option value="2">2 Warna (2 Plat)</option>
+                                <option value="3">3 Warna (3 Plat)</option>
+                                <option value="4" selected>4 Warna (Full Color CMYK / 4 Plat)</option>
                             </select>
                         </div>
                         <div id="single-bahan-container">
@@ -712,6 +714,7 @@
                     dtf_a3: 35000, dtf_a4: 20000
                 },
                 biayaProduksiPerLembar: 4000,
+                biayaProduksiPerLembarBW: 1500,
                 finishing: {
                     laminasiPerLembar: 3000, laminatingKakuPerLembar: 5000,
                     cuttingStiker: { bawah5: 9000, atas5: 6000 }, potongJadi: 50000
@@ -1266,8 +1269,24 @@
                 const isDTF = mode === 'dtf';
                 const isOffset = mode.startsWith('offset');
 
-                el.jumlahWarnaContainer.classList.toggle('hidden', !isOffset);
+                // Sembunyikan hanya jika DTF (karena sablon DTF full color cetak per lembar film)
+                el.jumlahWarnaContainer.classList.toggle('hidden', isDTF);
                 el.jualPerLembarContainer.classList.toggle('hidden', !isDigital);
+
+                const currentWarnaVal = el.jumlahWarna.value || '4';
+                if (isDigital) {
+                    el.jumlahWarna.innerHTML = `
+                        <option value="1" ${currentWarnaVal === '1' ? 'selected' : ''}>1 Warna (Hitam Putih / Monochrome)</option>
+                        <option value="4" ${currentWarnaVal !== '1' ? 'selected' : ''}>4 Warna (Full Color CMYK)</option>
+                    `;
+                } else if (isOffset) {
+                    el.jumlahWarna.innerHTML = `
+                        <option value="1" ${currentWarnaVal === '1' ? 'selected' : ''}>1 Warna (Monochrome / 1 Plat)</option>
+                        <option value="2" ${currentWarnaVal === '2' ? 'selected' : ''}>2 Warna (2 Plat)</option>
+                        <option value="3" ${currentWarnaVal === '3' ? 'selected' : ''}>3 Warna (3 Plat)</option>
+                        <option value="4" ${['4', ''].includes(currentWarnaVal) || !['1', '2', '3'].includes(currentWarnaVal) ? 'selected' : ''}>4 Warna (Full Color CMYK / 4 Plat)</option>
+                    `;
+                }
 
                 if (isDTF) {
                     el.laminasiContainer.classList.add('hidden');
@@ -1818,7 +1837,9 @@
                 if (el.jenisMesin.value === 'digital') {
                     const price = HARGA_DIGITAL.hargaBahan[bahanKertasId] || 3000;
                     costBahan = totalPlano * price;
-                    const printRate = isBook ? (HARGA_DIGITAL.biayaProduksiPerLembar / 2) : HARGA_DIGITAL.biayaProduksiPerLembar;
+                    const jWarna = parseInt(el.jumlahWarna?.value) || 4;
+                    const baseClick = (jWarna === 1) ? (HARGA_DIGITAL.biayaProduksiPerLembarBW || 1500) : HARGA_DIGITAL.biayaProduksiPerLembar;
+                    const printRate = isBook ? (baseClick / 2) : baseClick;
                     costCetak = totalPlano * printRate * sisiCetak;
                 } else if (el.jenisMesin.value === 'dtf') {
                     const price = HARGA_DIGITAL.hargaBahan[bahanKertasId] || 20000;
@@ -2636,10 +2657,25 @@
                     const mode = item.jenisMesin;
                     const isDigital = mode === 'digital';
                     const isDTF = mode === 'dtf';
-                    const isOffset = mode === 'offset';
+                    const isOffset = mode.startsWith('offset');
 
-                    el.jumlahWarnaContainer.classList.toggle('hidden', !isOffset);
+                    el.jumlahWarnaContainer.classList.toggle('hidden', isDTF);
                     el.jualPerLembarContainer.classList.toggle('hidden', !isDigital);
+
+                    const currWarna = (item.jumlahWarna !== undefined) ? String(item.jumlahWarna) : (el.jumlahWarna.value || '4');
+                    if (isDigital) {
+                        el.jumlahWarna.innerHTML = `
+                            <option value="1" ${currWarna === '1' ? 'selected' : ''}>1 Warna (Hitam Putih / Monochrome)</option>
+                            <option value="4" ${currWarna !== '1' ? 'selected' : ''}>4 Warna (Full Color CMYK)</option>
+                        `;
+                    } else if (isOffset) {
+                        el.jumlahWarna.innerHTML = `
+                            <option value="1" ${currWarna === '1' ? 'selected' : ''}>1 Warna (Monochrome / 1 Plat)</option>
+                            <option value="2" ${currWarna === '2' ? 'selected' : ''}>2 Warna (2 Plat)</option>
+                            <option value="3" ${currWarna === '3' ? 'selected' : ''}>3 Warna (3 Plat)</option>
+                            <option value="4" ${['4', ''].includes(currWarna) || !['1', '2', '3'].includes(currWarna) ? 'selected' : ''}>4 Warna (Full Color CMYK / 4 Plat)</option>
+                        `;
+                    }
 
                     if (isDTF) {
                         el.laminasiContainer.classList.add('hidden');
