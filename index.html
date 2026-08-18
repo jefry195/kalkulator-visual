@@ -1385,13 +1385,25 @@
                 opts.forEach(p => el.planoSelector.add(new Option(p.nama, p.id)));
             }
 
+            let customFinishings = [];
+
+            function escapeHtml(str) {
+                if (!str) return '';
+                return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+            }
+
             function setupFinishingOptions() {
                 el.finishingOptions.innerHTML = `
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     <div class="flex items-center justify-between bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
                         <div class="flex items-center gap-2">
                             <input type="checkbox" id="finishing-potong" data-key="potong" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
-                            <label for="finishing-potong" class="text-xs font-medium text-slate-300">Potong Jadi (Cutting)</label>
+                            <label for="finishing-potong" class="text-xs font-medium text-slate-300 cursor-pointer">Potong Jadi (Cutting)</label>
                         </div>
                         <span id="badge-cost-potong" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 hidden"></span>
                     </div>
@@ -1399,7 +1411,7 @@
                         <div class="flex items-center justify-between gap-2">
                             <div class="flex items-center gap-2">
                                 <input type="checkbox" id="finishing-lipat" data-key="lipat" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
-                                <label for="finishing-lipat" class="text-xs font-medium text-slate-300">Lipat Mesin</label>
+                                <label for="finishing-lipat" class="text-xs font-medium text-slate-300 cursor-pointer">Lipat Mesin</label>
                             </div>
                             <span id="badge-cost-lipat" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 hidden"></span>
                         </div>
@@ -1410,7 +1422,7 @@
                     <div class="flex items-center justify-between bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
                         <div class="flex items-center gap-2">
                             <input type="checkbox" id="finishing-spotuv" data-key="spotuv" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
-                            <label for="finishing-spotuv" class="text-xs font-medium text-slate-300">Spot UV (Varnish)</label>
+                            <label for="finishing-spotuv" class="text-xs font-medium text-slate-300 cursor-pointer">Spot UV (Varnish)</label>
                         </div>
                         <span id="badge-cost-spotuv" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 hidden"></span>
                     </div>
@@ -1419,7 +1431,7 @@
                     <div class="flex items-center justify-between gap-2">
                         <div class="flex items-center gap-2">
                             <input type="checkbox" id="finishing-hotfoil" data-key="hotfoil" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
-                            <label for="finishing-hotfoil" class="text-xs font-semibold text-slate-200">Hot Foil / Poly Emas/Perak</label>
+                            <label for="finishing-hotfoil" class="text-xs font-semibold text-slate-200 cursor-pointer">Hot Foil / Poly Emas/Perak</label>
                         </div>
                         <span id="badge-cost-hotfoil" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 hidden"></span>
                     </div>
@@ -1437,7 +1449,7 @@
                     <div class="flex items-center justify-between gap-2" id="sticker-cutting-section">
                         <div class="flex items-center gap-2">
                             <input type="checkbox" id="finishing-stickercut" data-key="stickercut" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
-                            <label for="finishing-stickercut" class="text-xs font-medium text-slate-200">+ Kiss Cut Stiker</label>
+                            <label for="finishing-stickercut" class="text-xs font-medium text-slate-200 cursor-pointer">+ Kiss Cut Stiker</label>
                         </div>
                         <span id="badge-cost-stickercut" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 hidden"></span>
                     </div>
@@ -1450,9 +1462,45 @@
                     <div class="flex items-center justify-between gap-2 mt-3" id="laminating-kaku-section">
                         <div class="flex items-center gap-2">
                             <input type="checkbox" id="finishing-laminatingkaku" data-key="laminatingkaku" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
-                            <label for="finishing-laminatingkaku" class="text-xs font-medium text-slate-200">Laminating Hard Press / Kaku</label>
+                            <label for="finishing-laminatingkaku" class="text-xs font-medium text-slate-200 cursor-pointer">Laminating Hard Press / Kaku</label>
                         </div>
                         <span id="badge-cost-laminatingkaku" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 hidden"></span>
+                    </div>
+                </div>
+
+                <!-- Custom Finishing Section -->
+                <div class="border-t border-slate-800/80 pt-4 mt-4" id="custom-finishing-section">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-xs font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-1.5">
+                                <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                                </svg>
+                                Finishing Kustom (Bisa Tambah Sendiri):
+                            </span>
+                        </div>
+                        <button type="button" id="add-custom-finishing-btn" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 rounded-lg shadow-sm transition">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            + Tambah Finishing
+                        </button>
+                    </div>
+
+                    <!-- Quick Suggestions Chips -->
+                    <div class="flex flex-wrap items-center gap-1.5 mb-3 text-[11px]">
+                        <span class="text-slate-400 font-medium mr-1">Rekomendasi Cepat:</span>
+                        <button type="button" class="quick-chip-btn bg-slate-800/90 hover:bg-indigo-950 hover:border-indigo-500/60 text-slate-300 hover:text-indigo-200 border border-slate-700/60 px-2 py-0.5 rounded-md transition" data-name="Pond / Die Cut Custom" data-type="total" data-price="150000">+ Pond / Die Cut</button>
+                        <button type="button" class="quick-chip-btn bg-slate-800/90 hover:bg-indigo-950 hover:border-indigo-500/60 text-slate-300 hover:text-indigo-200 border border-slate-700/60 px-2 py-0.5 rounded-md transition" data-name="Emboss / Deboss" data-type="pcs" data-price="350">+ Emboss / Deboss</button>
+                        <button type="button" class="quick-chip-btn bg-slate-800/90 hover:bg-indigo-950 hover:border-indigo-500/60 text-slate-300 hover:text-indigo-200 border border-slate-700/60 px-2 py-0.5 rounded-md transition" data-name="Lem Samping / Lipat Manual" data-type="pcs" data-price="200">+ Lem Manual</button>
+                        <button type="button" class="quick-chip-btn bg-slate-800/90 hover:bg-indigo-950 hover:border-indigo-500/60 text-slate-300 hover:text-indigo-200 border border-slate-700/60 px-2 py-0.5 rounded-md transition" data-name="Pasang Mata Ayam / Eyelet" data-type="pcs" data-price="250">+ Mata Ayam</button>
+                        <button type="button" class="quick-chip-btn bg-slate-800/90 hover:bg-indigo-950 hover:border-indigo-500/60 text-slate-300 hover:text-indigo-200 border border-slate-700/60 px-2 py-0.5 rounded-md transition" data-name="Nomorator / Barcode" data-type="pcs" data-price="150">+ Nomorator</button>
+                        <button type="button" class="quick-chip-btn bg-slate-800/90 hover:bg-indigo-950 hover:border-indigo-500/60 text-slate-300 hover:text-indigo-200 border border-slate-700/60 px-2 py-0.5 rounded-md transition" data-name="Sablon Tambahan Khusus" data-type="total" data-price="120000">+ Sablon Khusus</button>
+                        <button type="button" class="quick-chip-btn bg-slate-800/90 hover:bg-indigo-950 hover:border-indigo-500/60 text-slate-300 hover:text-indigo-200 border border-slate-700/60 px-2 py-0.5 rounded-md transition" data-name="Pasang Pita / Tali Kur" data-type="pcs" data-price="500">+ Tali / Pita</button>
+                    </div>
+
+                    <!-- Custom Finishing List Container -->
+                    <div id="custom-finishing-list" class="space-y-2.5">
                     </div>
                 </div>`;
 
@@ -1468,8 +1516,168 @@
                     document.getElementById('sticker-cutting-container').classList.toggle('hidden', !e.target.checked);
                     triggerLiveCalculate();
                 });
-                document.querySelectorAll('#finishing-options input, #finishing-options select').forEach(i => {
+                document.querySelectorAll('#finishing-options input[data-key], #finishing-options select:not(.cf-type)').forEach(i => {
                     i.addEventListener('change', triggerLiveCalculate);
+                });
+
+                document.getElementById('add-custom-finishing-btn').addEventListener('click', () => {
+                    addCustomFinishing('', 'total', 0);
+                });
+
+                document.querySelectorAll('.quick-chip-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const name = btn.dataset.name || '';
+                        const type = btn.dataset.type || 'pcs';
+                        const price = parseFloat(btn.dataset.price) || 0;
+                        addCustomFinishing(name, type, price);
+                    });
+                });
+
+                renderCustomFinishingList();
+            }
+
+            function renderCustomFinishingList() {
+                const listEl = document.getElementById('custom-finishing-list');
+                if (!listEl) return;
+
+                if (customFinishings.length === 0) {
+                    listEl.innerHTML = `
+                        <div id="cf-empty-state" class="text-center py-3.5 px-4 bg-slate-950/40 rounded-xl border border-dashed border-slate-800 text-xs text-slate-400">
+                            <p>Belum ada finishing kustom. Klik tombol <span class="text-indigo-400 font-semibold">+ Tambah Finishing</span> atau pilih salah satu rekomendasi cepat di atas.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                listEl.innerHTML = customFinishings.map(item => `
+                    <div class="custom-finishing-item bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 hover:border-slate-700 transition" data-id="${item.id}">
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center">
+                            <div class="sm:col-span-5 flex items-center gap-2">
+                                <input type="checkbox" class="cf-active w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700 focus:ring-indigo-500 shrink-0 cursor-pointer" ${item.active ? 'checked' : ''} title="Aktifkan finishing ini">
+                                <input type="text" class="cf-name form-input text-xs py-1.5 px-2.5 font-medium placeholder:text-slate-500" value="${escapeHtml(item.name)}" placeholder="Nama finishing (cth: Pond, Emboss)">
+                            </div>
+                            <div class="sm:col-span-3">
+                                <select class="cf-type form-select text-xs py-1.5 px-2 font-medium text-slate-200">
+                                    <option value="total" ${item.priceType === 'total' ? 'selected' : ''}>💰 Harga Total (Flat)</option>
+                                    <option value="pcs" ${item.priceType === 'pcs' ? 'selected' : ''}>🏷️ Harga / Pcs (Satuan)</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-3 relative flex items-center">
+                                <span class="absolute left-2.5 text-xs text-slate-400 font-semibold pointer-events-none">Rp</span>
+                                <input type="number" class="cf-price form-input text-xs py-1.5 pl-8 pr-2 font-semibold text-emerald-400" min="0" step="100" value="${item.price || 0}" placeholder="0">
+                            </div>
+                            <div class="sm:col-span-1 flex justify-end">
+                                <button type="button" class="cf-delete p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition" title="Hapus finishing ini">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between mt-2 pt-1.5 border-t border-slate-800/60 text-[11px]">
+                            <span class="text-slate-400 cf-type-desc">${item.priceType === 'total' ? '⚡ Biaya tetap keseluruhan order' : '📦 Biaya dihitung per pcs/buah'}</span>
+                            <span class="cf-subtotal-badge font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Subtotal: Rp 0</span>
+                        </div>
+                    </div>
+                `).join('');
+
+                listEl.querySelectorAll('.custom-finishing-item').forEach(itemEl => {
+                    const id = itemEl.dataset.id;
+                    const item = customFinishings.find(cf => cf.id === id);
+                    if (!item) return;
+
+                    const activeInp = itemEl.querySelector('.cf-active');
+                    const nameInp = itemEl.querySelector('.cf-name');
+                    const typeSelect = itemEl.querySelector('.cf-type');
+                    const priceInp = itemEl.querySelector('.cf-price');
+                    const deleteBtn = itemEl.querySelector('.cf-delete');
+                    const typeDesc = itemEl.querySelector('.cf-type-desc');
+
+                    activeInp?.addEventListener('change', (e) => {
+                        item.active = e.target.checked;
+                        triggerLiveCalculate();
+                    });
+
+                    nameInp?.addEventListener('input', (e) => {
+                        item.name = e.target.value;
+                        triggerLiveCalculate();
+                    });
+
+                    typeSelect?.addEventListener('change', (e) => {
+                        item.priceType = e.target.value;
+                        if (typeDesc) {
+                            typeDesc.textContent = item.priceType === 'total' ? '⚡ Biaya tetap keseluruhan order' : '📦 Biaya dihitung per pcs/buah';
+                        }
+                        triggerLiveCalculate();
+                    });
+
+                    priceInp?.addEventListener('input', (e) => {
+                        item.price = parseFloat(e.target.value) || 0;
+                        triggerLiveCalculate();
+                    });
+
+                    deleteBtn?.addEventListener('click', () => {
+                        customFinishings = customFinishings.filter(cf => cf.id !== id);
+                        renderCustomFinishingList();
+                        triggerLiveCalculate();
+                    });
+                });
+
+                updateCustomFinishingSubtotals();
+            }
+
+            function addCustomFinishing(name = '', priceType = 'pcs', price = 0) {
+                const newItem = {
+                    id: 'cf_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+                    name: name,
+                    priceType: priceType, // 'total' | 'pcs'
+                    price: price,
+                    active: true
+                };
+                customFinishings.push(newItem);
+                renderCustomFinishingList();
+                triggerLiveCalculate();
+            }
+
+            function getCustomFinishingCost(qty) {
+                let total = 0;
+                const currentQty = qty !== undefined && qty !== null ? qty : (parseInt(el.jumlah.value) || 1000);
+                customFinishings.forEach(item => {
+                    if (!item.active || !item.price || item.price <= 0) return;
+                    if (item.priceType === 'pcs') {
+                        total += item.price * currentQty;
+                    } else { // 'total'
+                        total += item.price;
+                    }
+                });
+                return total;
+            }
+
+            function updateCustomFinishingSubtotals() {
+                const qty = parseInt(el.jumlah.value) || 1000;
+                const listEl = document.getElementById('custom-finishing-list');
+                if (!listEl) return;
+
+                listEl.querySelectorAll('.custom-finishing-item').forEach(itemEl => {
+                    const id = itemEl.dataset.id;
+                    const item = customFinishings.find(cf => cf.id === id);
+                    if (!item) return;
+
+                    const badge = itemEl.querySelector('.cf-subtotal-badge');
+                    if (badge) {
+                        if (!item.active) {
+                            badge.textContent = 'Non-aktif';
+                            badge.className = 'cf-subtotal-badge font-medium text-slate-500 bg-slate-800/40 px-2 py-0.5 rounded border border-slate-700/40';
+                        } else if (!item.price || item.price <= 0) {
+                            badge.textContent = 'Rp 0';
+                            badge.className = 'cf-subtotal-badge font-bold text-slate-400 bg-slate-800/40 px-2 py-0.5 rounded border border-slate-700/40';
+                        } else {
+                            const subtotal = item.priceType === 'pcs' ? (item.price * qty) : item.price;
+                            const note = item.priceType === 'pcs' ? ` (@${formatRupiah(item.price)} x ${qty.toLocaleString('id-ID')})` : ' (Flat)';
+                            badge.textContent = `+${formatRupiah(subtotal)}${note}`;
+                            badge.className = 'cf-subtotal-badge font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20';
+                        }
+                    }
                 });
             }
 
@@ -1918,6 +2126,8 @@
             function getCombinedBreakdown(qtyOverride = null) {
                 const qty = qtyOverride !== null ? qtyOverride : (parseInt(el.jumlah.value) || 1000);
                 const pid = el.productSelector.value;
+                const isDTF = el.jenisMesin.value === 'dtf';
+                const customFinishingCost = isDTF ? 0 : getCustomFinishingCost(qty);
 
                 if (pid.startsWith('buku')) {
                     const isDigital = el.jenisMesin.value === 'digital';
@@ -1950,12 +2160,12 @@
                     }
                     const costBinding = qty * bindingRate;
 
-                    const totalModal = coverRes.totalModal + isiRes.totalModal + costBinding;
+                    const totalModal = coverRes.totalModal + isiRes.totalModal + costBinding + customFinishingCost;
                     const totalPlano = coverRes.totalPlano + isiRes.totalPlano;
                     const insheet = coverRes.insheet + isiRes.insheet;
                     const biayaBahan = coverRes.biayaBahan + isiRes.biayaBahan;
                     const biayaCetak = coverRes.biayaCetak + isiRes.biayaCetak;
-                    const totalBiayaFinishing = coverRes.totalBiayaFinishing + isiRes.totalBiayaFinishing + costBinding;
+                    const totalBiayaFinishing = coverRes.totalBiayaFinishing + isiRes.totalBiayaFinishing + costBinding + customFinishingCost;
 
                     return { totalModal, totalPlano, insheet, biayaBahan, biayaCetak, totalBiayaFinishing };
                 } else if (pid === 'kotakTutupTerpisah') {
@@ -1971,11 +2181,21 @@
                         }
                     }
                     if (hasError) return { error: errorMessage };
+                    totalModal += customFinishingCost;
+                    totalBiayaFinishing += customFinishingCost;
                     return { totalModal, totalPlano, insheet: totalInsheet, biayaBahan: totalBiayaBahan, biayaCetak: totalBiayaCetak, totalBiayaFinishing: totalBiayaFinishing };
                 } else {
                     const activeSize = availableSizes[currentActiveSizeIndex] || availableSizes[0];
                     if (!activeSize) return null;
-                    return calculateBreakdown(activeSize.p, activeSize.l, activeSize.multiplier, qty);
+                    const res = calculateBreakdown(activeSize.p, activeSize.l, activeSize.multiplier, qty);
+                    if (res && !res.error) {
+                        return {
+                            ...res,
+                            totalModal: res.totalModal + customFinishingCost,
+                            totalBiayaFinishing: res.totalBiayaFinishing + customFinishingCost
+                        };
+                    }
+                    return res;
                 }
             }
 
@@ -1994,6 +2214,8 @@
                 const isDTF = el.jenisMesin.value === 'dtf';
                 const sisiCetak = parseInt(el.sisi.value) || 1;
                 const bleed = parseFloat(el.bleedInput.value) || 0;
+
+                updateCustomFinishingSubtotals();
 
                 if (isDTF || availableSizes.length === 0) {
                     ['badge-cost-potong', 'badge-cost-lipat', 'badge-cost-spotuv', 'badge-cost-hotfoil', 'badge-cost-stickercut', 'badge-cost-laminatingkaku'].forEach(id => {
@@ -2227,10 +2449,21 @@
                 const finishingDetails = [];
                 const laminasiPilihan = el.laminasi.options[el.laminasi.selectedIndex].text;
                 if (laminasiPilihan !== 'Tanpa Laminasi') finishingDetails.push(laminasiPilihan);
-                document.querySelectorAll('#finishing-options input[type="checkbox"]:checked').forEach(cb => {
-                    const label = cb.nextElementSibling.textContent;
-                    finishingDetails.push(label);
+                document.querySelectorAll('#finishing-options input[type="checkbox"][data-key]:checked').forEach(cb => {
+                    const label = cb.nextElementSibling ? cb.nextElementSibling.textContent.trim() : '';
+                    if (label) finishingDetails.push(label);
                 });
+
+                if (el.jenisMesin.value !== 'dtf') {
+                    customFinishings.forEach(item => {
+                        if (item.active && item.name && item.name.trim() !== '') {
+                            const priceInfo = item.price > 0 
+                                ? (item.priceType === 'pcs' ? `(+${formatRupiah(item.price)}/pcs)` : `(+${formatRupiah(item.price)} Total)`)
+                                : '';
+                            finishingDetails.push(`${item.name.trim()}${priceInfo ? ' ' + priceInfo : ''}`);
+                        }
+                    });
+                }
 
                 if (finishingDetails.length > 0) {
                     specLines.push(`- Finishing: ${finishingDetails.join(', ')}`);
@@ -2251,9 +2484,7 @@
                     ])).sort((a, b) => a - b);
 
                     quantities.forEach(qty => {
-                        let result = (pid === 'kotakTutupTerpisah' || pid.startsWith('buku')) 
-                            ? getCombinedBreakdown(qty) 
-                            : calculateBreakdown(availableSizes[currentActiveSizeIndex]?.p || 10, availableSizes[currentActiveSizeIndex]?.l || 10, availableSizes[currentActiveSizeIndex]?.multiplier || 1, qty);
+                        let result = getCombinedBreakdown(qty);
 
                         if (result && !result.error) {
                             const biayaSettingDigital = 25000;
@@ -2274,9 +2505,7 @@
                     ])).sort((a, b) => a - b);
 
                     quantities.forEach(qty => {
-                        let result = (pid === 'kotakTutupTerpisah' || pid.startsWith('buku')) 
-                            ? getCombinedBreakdown(qty) 
-                            : calculateBreakdown(availableSizes[currentActiveSizeIndex]?.p || 10, availableSizes[currentActiveSizeIndex]?.l || 10, availableSizes[currentActiveSizeIndex]?.multiplier || 1, qty);
+                        let result = getCombinedBreakdown(qty);
 
                         if (result && !result.error) {
                             const unitPrice = result.totalModal / qty;
@@ -2575,7 +2804,7 @@
 
                 // Collect checked finishing dataset keys
                 const checkedFinishing = [];
-                document.querySelectorAll('#finishing-options input[type="checkbox"]:checked').forEach(cb => {
+                document.querySelectorAll('#finishing-options input[type="checkbox"][data-key]:checked').forEach(cb => {
                     if (cb.dataset.key) checkedFinishing.push(cb.dataset.key);
                 });
 
@@ -2602,6 +2831,13 @@
                     planoSelector: el.planoSelector.value,
                     laminasi: el.laminasi.value,
                     checkedFinishing: checkedFinishing,
+                    customFinishings: customFinishings.map(cf => ({
+                        id: cf.id,
+                        name: cf.name,
+                        price: cf.price,
+                        priceType: cf.priceType,
+                        active: cf.active
+                    })),
                     jualSatuanRounded: el.jualSatuanRounded.value
                 };
 
@@ -2699,12 +2935,26 @@
 
                 // 5. Set Finishing Options
                 if (item.checkedFinishing && Array.isArray(item.checkedFinishing)) {
-                    document.querySelectorAll('#finishing-options input[type="checkbox"]').forEach(cb => {
+                    document.querySelectorAll('#finishing-options input[type="checkbox"][data-key]').forEach(cb => {
                         const isChecked = item.checkedFinishing.includes(cb.dataset.key);
                         cb.checked = isChecked;
                         cb.dispatchEvent(new Event('change'));
                     });
                 }
+
+                // 5b. Set Custom Finishing Options
+                if (item.customFinishings && Array.isArray(item.customFinishings)) {
+                    customFinishings = item.customFinishings.map(cf => ({
+                        id: cf.id || ('cf_' + Date.now() + '_' + Math.floor(Math.random() * 1000)),
+                        name: cf.name || '',
+                        price: parseFloat(cf.price) || 0,
+                        priceType: cf.priceType || 'pcs',
+                        active: cf.active !== false
+                    }));
+                } else {
+                    customFinishings = [];
+                }
+                renderCustomFinishingList();
 
                 // 6. Calculate & Render
                 calculateAll();
@@ -2757,6 +3007,8 @@
             el.quickResetBtn.addEventListener('click', () => {
                 if (confirm("Reset semua input form ke awal?")) {
                     generateForm(el.productSelector.value);
+                    customFinishings = [];
+                    renderCustomFinishingList();
                     el.jumlah.value = "1000";
                     el.resultContainer.classList.add('hidden');
                     el.visualizationSection.classList.add('hidden');
