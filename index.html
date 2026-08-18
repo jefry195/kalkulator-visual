@@ -2083,7 +2083,7 @@
                         totalBiayaFinishing += (totalPlano * hargaLaminasiPerLembar * sisiLaminasi);
                     }
 
-                    document.querySelectorAll('#finishing-options input[type="checkbox"]:checked').forEach(cb => {
+                    document.querySelectorAll('#finishing-options input[type="checkbox"][data-key]:checked').forEach(cb => {
                         const key = cb.dataset.key;
                         const isDigital = el.jenisMesin.value === 'digital';
                         if ((isDigital && ['spotuv', 'hotfoil', 'lipat'].includes(key)) || (!isDigital && ['stickercut', 'laminatingkaku'].includes(key))) return;
@@ -2294,8 +2294,12 @@
                         const isiRes = calculateBreakdown(isiSize.p, isiSize.l, isiSize.multiplier, qty, bahanIsi, sisiIsi);
 
                         if (coverRes && isiRes && !coverRes.error && !isiRes.error) {
+                            const isDigital = el.jenisMesin.value === 'digital';
+                            const unitSheet = isDigital ? 'lbr A3+' : 'lbr Plano';
                             const grandTotal = coverRes.totalPlano + isiRes.totalPlano;
-                            text = `Kebutuhan Kertas: <strong>${grandTotal}</strong> lbr <span class="text-[11px] font-normal text-slate-400">(Cover: ${coverRes.totalPlano} lbr A3+, Isi: ${isiRes.totalPlano} lbr A3+)</span>`;
+                            const totalInsheet = coverRes.insheet + isiRes.insheet;
+                            const insheetText = (!isDigital && totalInsheet > 0) ? `, inc. ${totalInsheet} insheet` : '';
+                            text = `Kebutuhan Kertas: <strong>${grandTotal}</strong> ${unitSheet} <span class="text-[11px] font-normal text-slate-400">(Cover: ${coverRes.totalPlano} ${unitSheet}, Isi: ${isiRes.totalPlano} ${unitSheet}${insheetText})</span>`;
                         }
                     }
                 } else if (pid === 'kotakTutupTerpisah') {
