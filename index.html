@@ -2014,6 +2014,114 @@
                 updateVisualization(sizes[currentActiveSizeIndex] || sizes[0]);
             }
 
+            function calculateDimensionRecommendations(product, currentValues, bleed, activeSizeIndex, mesin) {
+                const recommendations = [];
+                if (!product || !product.fields) return recommendations;
+                const fields = product.fields.filter(f => f.type !== 'separator');
+                if (fields.length === 0) return recommendations;
+
+                const maxP = mesin.maxP;
+                const maxL = mesin.maxL;
+
+                function checkFits(testValues) {
+                    try {
+                        const res = product.calculate(testValues, bleed);
+                        const size = res.sizes[activeSizeIndex] || res.sizes[0];
+                        if (!size) return false;
+                        const p_flat = size.p + (bleed * 2);
+                        const l_flat = size.l + (bleed * 2);
+                        return (p_flat <= maxP && l_flat <= maxL) || (p_flat <= maxL && l_flat <= maxP);
+                    } catch (e) {
+                        return false;
+                    }
+                }
+
+                // 1. Single field reduction search
+                fields.forEach(field => {
+                    const val = currentValues[field.id];
+                    if (typeof val !== 'number' || val <= 0.5) return;
+
+                    if (!checkFits({ ...currentValues, [field.id]: 0.5 })) {
+                        return; // Can't fit by only changing this single field
+                    }
+
+                    let low = 0.5;
+                    let high = val;
+                    let bestVal = null;
+
+                    for (let iter = 0; iter < 24; iter++) {
+                        const mid = (low + high) / 2;
+                        const roundedMid = Math.floor(mid * 10) / 10;
+                        if (checkFits({ ...currentValues, [field.id]: roundedMid })) {
+                            bestVal = roundedMid;
+                            low = mid;
+                        } else {
+                            high = mid;
+                        }
+                    }
+
+                    if (bestVal !== null && bestVal < val) {
+                        const reduction = parseFloat((val - bestVal).toFixed(1));
+                        if (reduction >= 0.1) {
+                            recommendations.push({
+                                type: 'single',
+                                fieldId: field.id,
+                                fieldLabel: field.label.replace(/\s*\(cm\)/i, '').replace(/\s*\(.*?\)/g, '').trim(),
+                                originalVal: val,
+                                recommendedVal: bestVal,
+                                reduction: reduction,
+                                applyValues: { ...currentValues, [field.id]: bestVal }
+                            });
+                        }
+                    }
+                });
+
+                // 2. Proportional multi-field reduction
+                if (recommendations.length === 0 && fields.length > 0) {
+                    let lowScale = 0.1;
+                    let highScale = 1.0;
+                    let bestScale = null;
+
+                    for (let iter = 0; iter < 24; iter++) {
+                        const midScale = (lowScale + highScale) / 2;
+                        const testVals = {};
+                        fields.forEach(f => {
+                            testVals[f.id] = Math.floor(currentValues[f.id] * midScale * 10) / 10;
+                        });
+
+                        if (checkFits(testVals)) {
+                            bestScale = midScale;
+                            lowScale = midScale;
+                        } else {
+                            highScale = midScale;
+                        }
+                    }
+
+                    if (bestScale !== null && bestScale < 0.99) {
+                        const scaledApplyValues = {};
+                        const descParts = [];
+                        fields.forEach(f => {
+                            const orig = currentValues[f.id];
+                            const rec = Math.floor(orig * bestScale * 10) / 10;
+                            scaledApplyValues[f.id] = rec;
+                            const red = parseFloat((orig - rec).toFixed(1));
+                            const cleanLabel = f.label.replace(/\s*\(cm\)/i, '').replace(/\s*\(.*?\)/g, '').trim();
+                            descParts.push(`${cleanLabel}: ${rec} cm (-${red} cm)`);
+                        });
+
+                        recommendations.push({
+                            type: 'multi',
+                            fieldLabel: 'Semua Dimensi (Proporsional)',
+                            description: descParts.join(', '),
+                            reductionPercent: Math.round((1 - bestScale) * 100),
+                            applyValues: scaledApplyValues
+                        });
+                    }
+                }
+
+                return recommendations;
+            }
+
             function updateMachineCompatibility(size, plano, layout) {
                 if (!el.machineCompatibilityBox) return;
                 if (!size || !plano) {
@@ -2034,37 +2142,83 @@
                 const isLayoutEmpty = !layout || layout.total === 0;
 
                 let warningHtml = '';
-                let bannerWarning = '';
+                let hasOversizeWarning = false;
 
                 if (!fitsPatternInMachine) {
-                    // Pola Melebihi Batas Maksimal Mesin
-                    const alternativeMachine = (mode === 'offset_sprint') 
-                        ? 'Gunakan mesin lebih besar seperti Komori Lithrone (52 x 72 cm)' 
-                        : (mode === 'digital' || mode === 'dtf')
-                            ? 'Gunakan Mesin Cetak Offset Commercial untuk format besar'
-                            : 'Sesuaikan atau perkecil dimensi pola bentangan produk';
+                    hasOversizeWarning = true;
+                    const product = products[el.productSelector.value];
+                    const currentValues = {};
+                    if (product && product.fields) {
+                        product.fields.forEach(f => {
+                            if (f.type !== 'separator') {
+                                const inp = document.getElementById(f.id);
+                                currentValues[f.id] = parseFloat(inp ? inp.value : 0) || 0;
+                            }
+                        });
+                    }
 
-                    bannerWarning = `Peringatan: Ukuran pola bentangan (${p_size.toFixed(1)} x ${l_size.toFixed(1)} cm) melebihi batas area cetak mesin ${mesin.nama} (${mesin.labelDimensi}).`;
-                    
+                    const recs = calculateDimensionRecommendations(product, currentValues, bleed, currentActiveSizeIndex, mesin);
+
+                    let recsHtml = '';
+                    if (recs.length > 0) {
+                        recsHtml = `
+                            <div class="mt-2.5 pt-2.5 border-t border-rose-500/20">
+                                <div class="flex items-center gap-1.5 text-[11px] font-bold text-amber-300 mb-2">
+                                    <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    <span>Rekomendasi Pengurangan Ukuran Agar Muat:</span>
+                                </div>
+                                <div class="space-y-1.5">
+                        `;
+
+                        recs.forEach((rec, idx) => {
+                            if (rec.type === 'single') {
+                                recsHtml += `
+                                    <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-slate-900/90 border border-slate-800 hover:border-indigo-500/40 text-[11px] transition">
+                                        <div class="text-slate-200">
+                                            Kurangi <strong>${rec.fieldLabel}</strong> sebesar <span class="text-amber-400 font-bold">-${rec.reduction} cm</span> (menjadi <strong>${rec.recommendedVal} cm</strong>)
+                                        </div>
+                                        <button type="button" class="apply-dim-rec-btn px-2.5 py-1 text-[10px] font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-md transition shadow-sm shrink-0 flex items-center gap-1" data-rec-idx="${idx}">
+                                            Terapkan
+                                        </button>
+                                    </div>
+                                `;
+                            } else {
+                                recsHtml += `
+                                    <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-slate-900/90 border border-slate-800 hover:border-indigo-500/40 text-[11px] transition">
+                                        <div class="text-slate-200">
+                                            Perkecil proporsional (<span class="text-amber-400 font-bold">-${rec.reductionPercent}%</span>): ${rec.description}
+                                        </div>
+                                        <button type="button" class="apply-dim-rec-btn px-2.5 py-1 text-[10px] font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-md transition shadow-sm shrink-0 flex items-center gap-1" data-rec-idx="${idx}">
+                                            Terapkan
+                                        </button>
+                                    </div>
+                                `;
+                            }
+                        });
+
+                        recsHtml += `
+                                </div>
+                            </div>
+                        `;
+                    }
+
                     warningHtml = `
                         <div class="mt-2.5 text-left p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs animate-fadeIn shadow-sm">
                             <div class="flex items-center gap-2 font-bold text-rose-400 mb-1">
                                 <svg class="w-4 h-4 shrink-0 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                                 </svg>
-                                <span class="text-xs uppercase tracking-wider font-extrabold">⚠️ Tidak Masuk Ukuran Mesin Cetak</span>
+                                <span class="text-xs uppercase tracking-wider font-extrabold">⚠️ Pola Bentangan Melebihi Ukuran Mesin</span>
                             </div>
-                            <p class="text-[11px] leading-relaxed text-rose-200/90">
-                                Ukuran pola bentangan (<strong>${p_size.toFixed(1)} x ${l_size.toFixed(1)} cm</strong>) melebihi batas kapasitas area cetak <strong>${mesin.nama}</strong> (maks <strong>${mesin.labelDimensi}</strong>).
+                            <p class="text-[11px] leading-relaxed text-slate-300">
+                                Bentangan pola (<strong>${p_size.toFixed(1)} x ${l_size.toFixed(1)} cm</strong>) tidak muat di mesin <strong>${mesin.nama}</strong> (maks <strong>${mesin.labelDimensi}</strong>).
                             </p>
-                            <p class="text-[10px] text-rose-300/90 mt-1.5 font-medium bg-rose-950/50 p-2 rounded-lg border border-rose-500/20 flex items-center gap-1.5">
-                                <span>💡 <strong>Solusi:</strong> ${alternativeMachine} atau sesuaikan ukuran produk.</span>
-                            </p>
+                            ${recsHtml}
                         </div>
                     `;
                 } else if (isLayoutEmpty) {
-                    // Pola tidak muat pada sheet yang dipilih
-                    bannerWarning = `Perhatian: Pola (${p_size.toFixed(1)} x ${l_size.toFixed(1)} cm) tidak muat pada sheet ${plano.nama}.`;
                     warningHtml = `
                         <div class="mt-2.5 text-left p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs animate-fadeIn shadow-sm">
                             <div class="flex items-center gap-2 font-bold text-rose-400 mb-1">
@@ -2073,11 +2227,11 @@
                                 </svg>
                                 <span class="text-xs uppercase tracking-wider font-extrabold">❌ Pola Tidak Muat Pada Sheet Ini</span>
                             </div>
-                            <p class="text-[11px] leading-relaxed text-rose-200/90">
+                            <p class="text-[11px] leading-relaxed text-slate-300">
                                 Ukuran bentangan pola (<strong>${p_size.toFixed(1)} x ${l_size.toFixed(1)} cm</strong>) lebih besar dari ukuran sheet <strong>${plano.nama}</strong> (${plano.planoL} x ${plano.planoP} cm).
                             </p>
-                            <p class="text-[10px] text-rose-300/90 mt-1.5 font-medium bg-rose-950/50 p-2 rounded-lg border border-rose-500/20 flex items-center gap-1.5">
-                                <span>💡 <strong>Solusi:</strong> Pilih ukuran sheet atau pecahan plano yang lebih luas pada dropdown di atas.</span>
+                            <p class="text-[10px] text-amber-300/90 mt-1.5 font-medium bg-amber-950/40 p-2 rounded-lg border border-amber-500/20">
+                                💡 <strong>Solusi:</strong> Pilih ukuran sheet atau pecahan plano yang lebih luas pada dropdown di atas.
                             </p>
                         </div>
                     `;
@@ -2091,11 +2245,11 @@
                                 </svg>
                                 <span class="text-xs uppercase tracking-wider font-extrabold">ℹ️ Sheet Plano Melebihi Masuk Mesin</span>
                             </div>
-                            <p class="text-[11px] leading-relaxed text-amber-200/90">
-                                Ukuran sheet <strong>${plano.nama}</strong> (${plano.planoL} x ${plano.planoP} cm) melebihi kapasitas masuk mesin <strong>${mesin.nama}</strong> (maks <strong>${mesin.labelDimensi}</strong>).
+                            <p class="text-[11px] leading-relaxed text-slate-300">
+                                Sheet <strong>${plano.nama}</strong> (${plano.planoL} x ${plano.planoP} cm) melebihi kapasitas masuk <strong>${mesin.nama}</strong> (maks <strong>${mesin.labelDimensi}</strong>).
                             </p>
-                            <p class="text-[10px] text-amber-300/90 mt-1.5 font-medium bg-amber-950/50 p-2 rounded-lg border border-amber-500/20 flex items-center gap-1.5">
-                                <span>✂️ <strong>Info Produksi:</strong> Kertas plano utuh perlu dipotong menjadi pecahan (misal 1/2, 1/3, 1/4 Plano) agar dapat dicetak pada mesin ini.</span>
+                            <p class="text-[10px] text-amber-300/90 mt-1.5 font-medium bg-amber-950/40 p-2 rounded-lg border border-amber-500/20">
+                                ✂️ <strong>Info Produksi:</strong> Kertas plano utuh perlu dipotong menjadi pecahan (1/2, 1/3, 1/4 Plano) agar dapat dicetak pada mesin ini.
                             </p>
                         </div>
                     `;
@@ -2113,8 +2267,38 @@
 
                 el.machineCompatibilityBox.innerHTML = warningHtml;
 
-                if (bannerWarning) {
-                    el.sizeWarningText.textContent = bannerWarning;
+                // Bind recommendation apply buttons
+                if (!fitsPatternInMachine) {
+                    const product = products[el.productSelector.value];
+                    const currentValues = {};
+                    if (product && product.fields) {
+                        product.fields.forEach(f => {
+                            if (f.type !== 'separator') {
+                                const inp = document.getElementById(f.id);
+                                currentValues[f.id] = parseFloat(inp ? inp.value : 0) || 0;
+                            }
+                        });
+                    }
+                    const recs = calculateDimensionRecommendations(product, currentValues, bleed, currentActiveSizeIndex, mesin);
+
+                    el.machineCompatibilityBox.querySelectorAll('.apply-dim-rec-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const idx = parseInt(e.currentTarget.dataset.recIdx);
+                            const rec = recs[idx];
+                            if (rec && rec.applyValues) {
+                                for (const [key, value] of Object.entries(rec.applyValues)) {
+                                    const inp = document.getElementById(key);
+                                    if (inp) inp.value = value;
+                                }
+                                calculateAll();
+                            }
+                        });
+                    });
+                }
+
+                // Banner alert at top result text
+                if (hasOversizeWarning) {
+                    el.sizeWarningText.innerHTML = `⚠️ Melebihi Batas Mesin Cetak (Lihat Rekomendasi di Bawah)`;
                     el.sizeWarningText.classList.remove('hidden');
                 } else {
                     el.sizeWarningText.classList.add('hidden');
