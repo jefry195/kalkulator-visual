@@ -155,6 +155,22 @@
         .badge-recommend {
             animation: pulse-glow 2.5s infinite ease-in-out;
         }
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
     </style>
 </head>
 
@@ -493,6 +509,8 @@
                                 <span class="text-slate-600">•</span>
                                 <span id="paper-info-text" class="hidden"></span>
                             </div>
+                            <!-- Machine Compatibility Status & Notes -->
+                            <div id="machine-compatibility-box" class="pt-1"></div>
                         </div>
                     </section>
 
@@ -661,6 +679,41 @@
                 { id: 'plano_90_120_per_4', nama: '1/4 Plano Jumbo (60 x 45 cm)', planoP: 60.0, planoL: 45.0, factor: 4 },
                 { id: 'plano_90_120_per_6', nama: '1/6 Plano Jumbo (45 x 40 cm)', planoP: 45.0, planoL: 40.0, factor: 6 },
             ];
+
+            const SPESIFIKASI_MESIN = {
+                offset_sprint: {
+                    id: 'offset_sprint',
+                    nama: 'Komori Sprint L 225 B',
+                    maxP: 66.0,
+                    maxL: 48.0,
+                    labelDimensi: '48 x 66 cm',
+                    tipe: 'offset'
+                },
+                offset_lithrone: {
+                    id: 'offset_lithrone',
+                    nama: 'Komori Lithrone L28',
+                    maxP: 72.0,
+                    maxL: 52.0,
+                    labelDimensi: '52 x 72 cm',
+                    tipe: 'offset'
+                },
+                digital: {
+                    id: 'digital',
+                    nama: 'Digital Printing (A3+)',
+                    maxP: 48.3,
+                    maxL: 32.9,
+                    labelDimensi: '32.9 x 48.3 cm (A3+)',
+                    tipe: 'digital'
+                },
+                dtf: {
+                    id: 'dtf',
+                    nama: 'Sablon Film DTF',
+                    maxP: 42.0,
+                    maxL: 29.7,
+                    labelDimensi: '29.7 x 42.0 cm (A3)',
+                    tipe: 'dtf'
+                }
+            };
 
             const JENIS_KERTAS = [
                 { id: 'fotopaper_dig', nama: 'Fotopaper Premium', jenis: 'kertas', mesin: ['digital'] },
@@ -1119,6 +1172,7 @@
                 layoutResultText: document.getElementById('layout-result-text'),
                 wasteResultText: document.getElementById('waste-result-text'),
                 paperInfoText: document.getElementById('paper-info-text'),
+                machineCompatibilityBox: document.getElementById('machine-compatibility-box'),
                 visualizationToggleContainer: document.getElementById('visualization-toggle-container'),
                 visualizationToggles: document.getElementById('visualization-toggles'),
                 priceResultsSection: document.getElementById('price-results-section'),
@@ -1919,8 +1973,15 @@
                 svgHTML += `</svg>`;
                 el.planoContainer.innerHTML = svgHTML;
 
-                const totalPcs = layout.total * multiplier;
-                el.layoutResultText.innerHTML = `Layout: <strong>${layout.name}</strong> • Total: <span class="text-indigo-400 font-extrabold">${totalPcs} pcs</span> <span class="text-xs text-slate-400">(${layout.total} pola x ${multiplier} pcs)</span>`;
+                const isBook = el.productSelector.value.startsWith('buku');
+                if (isBook) {
+                    el.layoutResultText.innerHTML = `Layout: <strong>${layout.name}</strong> • Total: <span class="text-indigo-400 font-extrabold">${layout.total} spread/sheet</span> <span class="text-xs text-slate-400">(${multiplier} spread/buku)</span>`;
+                } else if (multiplier > 1) {
+                    const totalPcs = layout.total * multiplier;
+                    el.layoutResultText.innerHTML = `Layout: <strong>${layout.name}</strong> • Total: <span class="text-indigo-400 font-extrabold">${totalPcs} pcs/sheet</span> <span class="text-xs text-slate-400">(${layout.total} pola x ${multiplier} pcs gandeng)</span>`;
+                } else {
+                    el.layoutResultText.innerHTML = `Layout: <strong>${layout.name}</strong> • Total: <span class="text-indigo-400 font-extrabold">${layout.total} pcs/sheet</span> <span class="text-xs text-slate-400">(${layout.total} pola x 1 pcs)</span>`;
+                }
                 el.wasteResultText.textContent = `Sisa Sheet Kertas: ${layout.wastePercentage.toFixed(1)}%`;
                 el.wasteResultText.classList.remove('hidden');
             }
@@ -1953,31 +2014,124 @@
                 updateVisualization(sizes[currentActiveSizeIndex] || sizes[0]);
             }
 
+            function updateMachineCompatibility(size, plano, layout) {
+                if (!el.machineCompatibilityBox) return;
+                if (!size || !plano) {
+                    el.machineCompatibilityBox.innerHTML = '';
+                    return;
+                }
+
+                const bleed = parseFloat(el.bleedInput.value) || 0;
+                const p_size = size.p + (bleed * 2);
+                const l_size = size.l + (bleed * 2);
+                const mode = el.jenisMesin.value;
+                const mesin = SPESIFIKASI_MESIN[mode] || SPESIFIKASI_MESIN.offset_sprint;
+
+                // Pola muat di mesin (bisa posisi vertikal atau horizontal)
+                const fitsPatternInMachine = (p_size <= mesin.maxP && l_size <= mesin.maxL) || (p_size <= mesin.maxL && l_size <= mesin.maxP);
+                // Sheet muat di feeder/gripper mesin
+                const fitsSheetInMachine = (plano.planoP <= mesin.maxP && plano.planoL <= mesin.maxL) || (plano.planoL <= mesin.maxP && plano.planoP <= mesin.maxL);
+                const isLayoutEmpty = !layout || layout.total === 0;
+
+                let warningHtml = '';
+                let bannerWarning = '';
+
+                if (!fitsPatternInMachine) {
+                    // Pola Melebihi Batas Maksimal Mesin
+                    const alternativeMachine = (mode === 'offset_sprint') 
+                        ? 'Gunakan mesin lebih besar seperti Komori Lithrone (52 x 72 cm)' 
+                        : (mode === 'digital' || mode === 'dtf')
+                            ? 'Gunakan Mesin Cetak Offset Commercial untuk format besar'
+                            : 'Sesuaikan atau perkecil dimensi pola bentangan produk';
+
+                    bannerWarning = `Peringatan: Ukuran pola bentangan (${p_size.toFixed(1)} x ${l_size.toFixed(1)} cm) melebihi batas area cetak mesin ${mesin.nama} (${mesin.labelDimensi}).`;
+                    
+                    warningHtml = `
+                        <div class="mt-2.5 text-left p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs animate-fadeIn shadow-sm">
+                            <div class="flex items-center gap-2 font-bold text-rose-400 mb-1">
+                                <svg class="w-4 h-4 shrink-0 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                </svg>
+                                <span class="text-xs uppercase tracking-wider font-extrabold">⚠️ Tidak Masuk Ukuran Mesin Cetak</span>
+                            </div>
+                            <p class="text-[11px] leading-relaxed text-rose-200/90">
+                                Ukuran pola bentangan (<strong>${p_size.toFixed(1)} x ${l_size.toFixed(1)} cm</strong>) melebihi batas kapasitas area cetak <strong>${mesin.nama}</strong> (maks <strong>${mesin.labelDimensi}</strong>).
+                            </p>
+                            <p class="text-[10px] text-rose-300/90 mt-1.5 font-medium bg-rose-950/50 p-2 rounded-lg border border-rose-500/20 flex items-center gap-1.5">
+                                <span>💡 <strong>Solusi:</strong> ${alternativeMachine} atau sesuaikan ukuran produk.</span>
+                            </p>
+                        </div>
+                    `;
+                } else if (isLayoutEmpty) {
+                    // Pola tidak muat pada sheet yang dipilih
+                    bannerWarning = `Perhatian: Pola (${p_size.toFixed(1)} x ${l_size.toFixed(1)} cm) tidak muat pada sheet ${plano.nama}.`;
+                    warningHtml = `
+                        <div class="mt-2.5 text-left p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs animate-fadeIn shadow-sm">
+                            <div class="flex items-center gap-2 font-bold text-rose-400 mb-1">
+                                <svg class="w-4 h-4 shrink-0 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span class="text-xs uppercase tracking-wider font-extrabold">❌ Pola Tidak Muat Pada Sheet Ini</span>
+                            </div>
+                            <p class="text-[11px] leading-relaxed text-rose-200/90">
+                                Ukuran bentangan pola (<strong>${p_size.toFixed(1)} x ${l_size.toFixed(1)} cm</strong>) lebih besar dari ukuran sheet <strong>${plano.nama}</strong> (${plano.planoL} x ${plano.planoP} cm).
+                            </p>
+                            <p class="text-[10px] text-rose-300/90 mt-1.5 font-medium bg-rose-950/50 p-2 rounded-lg border border-rose-500/20 flex items-center gap-1.5">
+                                <span>💡 <strong>Solusi:</strong> Pilih ukuran sheet atau pecahan plano yang lebih luas pada dropdown di atas.</span>
+                            </p>
+                        </div>
+                    `;
+                } else if (!fitsSheetInMachine && mesin.tipe === 'offset') {
+                    // Sheet Utuh Melebihi Mesin Offset (perlu dipotong ke pecahan plano)
+                    warningHtml = `
+                        <div class="mt-2.5 text-left p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs animate-fadeIn shadow-sm">
+                            <div class="flex items-center gap-2 font-bold text-amber-400 mb-1">
+                                <svg class="w-4 h-4 shrink-0 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span class="text-xs uppercase tracking-wider font-extrabold">ℹ️ Sheet Plano Melebihi Masuk Mesin</span>
+                            </div>
+                            <p class="text-[11px] leading-relaxed text-amber-200/90">
+                                Ukuran sheet <strong>${plano.nama}</strong> (${plano.planoL} x ${plano.planoP} cm) melebihi kapasitas masuk mesin <strong>${mesin.nama}</strong> (maks <strong>${mesin.labelDimensi}</strong>).
+                            </p>
+                            <p class="text-[10px] text-amber-300/90 mt-1.5 font-medium bg-amber-950/50 p-2 rounded-lg border border-amber-500/20 flex items-center gap-1.5">
+                                <span>✂️ <strong>Info Produksi:</strong> Kertas plano utuh perlu dipotong menjadi pecahan (misal 1/2, 1/3, 1/4 Plano) agar dapat dicetak pada mesin ini.</span>
+                            </p>
+                        </div>
+                    `;
+                } else {
+                    // Masuk & Sesuai dengan ukuran mesin
+                    warningHtml = `
+                        <div class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[11px] font-medium animate-fadeIn">
+                            <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <span>Masuk ukuran mesin: <strong>${mesin.nama} (${mesin.labelDimensi})</strong></span>
+                        </div>
+                    `;
+                }
+
+                el.machineCompatibilityBox.innerHTML = warningHtml;
+
+                if (bannerWarning) {
+                    el.sizeWarningText.textContent = bannerWarning;
+                    el.sizeWarningText.classList.remove('hidden');
+                } else {
+                    el.sizeWarningText.classList.add('hidden');
+                }
+            }
+
             function updateVisualization(size) {
                 if (!size) return;
                 const bleed = parseFloat(el.bleedInput.value) || 0;
                 const p_size = size.p + (bleed * 2);
                 const l_size = size.l + (bleed * 2);
 
-                const mode = el.jenisMesin.value;
-                let maxP = 72, maxL = 52;
-                if (mode === 'offset_sprint') { maxP = 66; maxL = 48; }
-                else if (mode === 'offset_lithrone') { maxP = 72; maxL = 52; }
-
-                const isOversize = (p_size > maxP || l_size > maxL) && (l_size > maxP || p_size > maxL);
-
-                if (isOversize) {
-                    const machineName = mode === 'offset_sprint' ? 'Komori Sprint L 225 B (48x66 cm)' : 'Komori Lithrone L28 (52x72 cm)';
-                    el.sizeWarningText.textContent = `Peringatan: Ukuran melebihi batas area cetak mesin ${machineName}.`;
-                    el.sizeWarningText.classList.remove('hidden');
-                } else {
-                    el.sizeWarningText.classList.add('hidden');
-                }
-
                 const plano = UKURAN_PLANO.find(p => p.id === el.planoSelector.value) || UKURAN_PLANO[0];
                 const layout = findBestLayout(plano.planoP, plano.planoL, p_size, l_size);
                 drawLayoutSVG(layout, plano, size.multiplier);
 
+                updateMachineCompatibility(size, plano, layout);
                 checkBestPaperRecommendation(size);
             }
 
@@ -2028,8 +2182,11 @@
                 const layout = findBestLayout(plano.planoP, plano.planoL, p, l);
                 if (layout.total === 0) return { error: "Ukuran terlalu besar untuk sheet ini." };
 
-                const totalItemsNeeded = qty * multiplier;
-                const totalPlano = Math.ceil(totalItemsNeeded / layout.total);
+                const isBook = el.productSelector.value.startsWith('buku');
+                // Untuk buku: multiplier adalah jumlah lembar spread/isi per 1 buku (misal 8 spread/buku -> butuh 1000 * 8 = 8000 spread)
+                // Untuk kemasan/flat: multiplier adalah jumlah pcs per 1 pola cetak (misal 2 pcs gandeng -> butuh 1000 / 2 = 500 pola cetak)
+                const patternsNeeded = isBook ? Math.ceil(qty * (multiplier || 1)) : Math.ceil(qty / (multiplier || 1));
+                const totalPlano = Math.ceil(patternsNeeded / layout.total);
 
                 let insheet = 0;
                 if (el.jenisMesin.value.startsWith('offset')) {
@@ -2037,8 +2194,6 @@
                 }
 
                 let costBahan = 0, costCetak = 0, totalBiayaFinishing = 0;
-
-                const isBook = el.productSelector.value.startsWith('buku');
 
                 if (el.jenisMesin.value === 'digital') {
                     const price = HARGA_DIGITAL.hargaBahan[bahanKertasId] || 3000;
@@ -2092,7 +2247,6 @@
                         if (!costRule) return;
 
                         let biayaItem = 0;
-                        const patternsNeeded = Math.ceil(qty * multiplier);
                         if (key === 'potong') {
                             biayaItem = isDigital ? HARGA_DIGITAL.finishing.potongJadi : Math.max(costRule.min, qty * costRule.per_pcs);
                         } else if (key === 'lipat') {
@@ -2230,9 +2384,9 @@
                 const l = activeSize.l + (bleed * 2);
                 const plano = UKURAN_PLANO.find(u => u.id === el.planoSelector.value) || UKURAN_PLANO[0];
                 const layout = findBestLayout(plano.planoP, plano.planoL, p, l);
-                const totalItemsNeeded = qty * activeSize.multiplier;
-                const totalPlano = layout.total > 0 ? Math.ceil(totalItemsNeeded / layout.total) : 1;
-                const patternsNeeded = Math.ceil(qty * activeSize.multiplier);
+                const isBook = el.productSelector.value.startsWith('buku');
+                const patternsNeeded = isBook ? Math.ceil(qty * (activeSize.multiplier || 1)) : Math.ceil(qty / (activeSize.multiplier || 1));
+                const totalPlano = layout.total > 0 ? Math.ceil(patternsNeeded / layout.total) : 1;
 
                 function setBadge(id, cost) {
                     const badge = document.getElementById(id);
@@ -3019,6 +3173,7 @@
                     el.priceResultsSection.classList.add('hidden');
                     el.penawaranCard.classList.add('hidden');
                     el.optimizationSection.classList.add('hidden');
+                    if (el.machineCompatibilityBox) el.machineCompatibilityBox.innerHTML = '';
                 }
             });
 
