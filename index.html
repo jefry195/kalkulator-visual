@@ -162,6 +162,7 @@
                 opacity: 0;
                 transform: translateY(4px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -197,11 +198,24 @@
                     <p class="text-xs text-slate-400">Estimasi Ukuran Pola, Layout Plano, HPP & Harga Jual Cetak</p>
                 </div>
             </div>
-            <div class="flex items-center gap-3 text-xs">
+            <div class="flex items-center gap-2.5 text-xs">
                 <span
-                    class="px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-medium flex items-center gap-1.5">
+                    class="hidden sm:flex px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-medium items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Mode Pintar Aktif
                 </span>
+                <button id="open-admin-btn" type="button"
+                    class="px-3 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/35 text-indigo-300 border border-indigo-500/40 transition font-semibold flex items-center gap-1.5"
+                    title="Atur Harga Bahan, Ongkos Cetak, Margin, Finishing & Rumusan">
+                    <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Admin Setting</span>
+                    <span id="admin-custom-dot" class="hidden w-2 h-2 rounded-full bg-amber-400" title="Pengaturan kustom aktif"></span>
+                </button>
                 <button id="quick-reset-btn"
                     class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition font-medium flex items-center gap-1">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -240,9 +254,12 @@
                                 Produk Kemasan / Cetakan:</label>
                             <select id="product-selector" class="form-select font-medium text-slate-100">
                                 <optgroup label="── Buku, Compro & Majalah ──">
-                                    <option value="bukuStaples">Buku / Compro / Majalah (Jilid Staples Tengah / Biasa)</option>
-                                    <option value="bukuKawat">Buku / Compro / Majalah (Jilid Jahit Kawat / Saddle Stitching)</option>
-                                    <option value="bukuPerfect">Buku / Catalog / Majalah (Jilid Lem Panas / Perfect Binding)</option>
+                                    <option value="bukuStaples">Buku / Compro / Majalah (Jilid Staples Tengah / Biasa)
+                                    </option>
+                                    <option value="bukuKawat">Buku / Compro / Majalah (Jilid Jahit Kawat / Saddle
+                                        Stitching)</option>
+                                    <option value="bukuPerfect">Buku / Catalog / Majalah (Jilid Lem Panas / Perfect
+                                        Binding)</option>
                                     <option value="bukuSpiral">Buku / Agenda (Jilid Spiral / Wire-O)</option>
                                 </optgroup>
                                 <optgroup label="── Cetak Kemasan & Dus ──">
@@ -257,7 +274,8 @@
                                     <option value="burger">Kotak Burger (Clamshell)</option>
                                 </optgroup>
                                 <optgroup label="── Cetak Datar / Flat ──">
-                                    <option value="customFlat" selected>Custom Ukuran Datar (Brosur/Kartu/Stiker/Flyer)</option>
+                                    <option value="customFlat" selected>Custom Ukuran Datar (Brosur/Kartu/Stiker/Flyer)
+                                    </option>
                                 </optgroup>
                             </select>
                         </div>
@@ -355,20 +373,24 @@
                         </div>
 
                         <!-- Dynamic Book Spec Container (Appears under Section 2 for Books) -->
-                        <div id="buku-spec-container" class="col-span-full grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t border-slate-800 hidden">
+                        <div id="buku-spec-container"
+                            class="col-span-full grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t border-slate-800 hidden">
                             <div>
                                 <label for="bahan-kertas-cover"
-                                    class="block text-xs font-semibold text-indigo-300 uppercase tracking-wider mb-1.5">Bahan Kertas Cover:</label>
+                                    class="block text-xs font-semibold text-indigo-300 uppercase tracking-wider mb-1.5">Bahan
+                                    Kertas Cover:</label>
                                 <select id="bahan-kertas-cover" class="form-select font-medium text-slate-100"></select>
                             </div>
                             <div>
                                 <label for="bahan-kertas-isi"
-                                    class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1.5">Bahan Kertas Isi:</label>
+                                    class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-1.5">Bahan
+                                    Kertas Isi:</label>
                                 <select id="bahan-kertas-isi" class="form-select font-medium text-slate-100"></select>
                             </div>
                             <div>
                                 <label for="sisi-isi"
-                                    class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Cetak Halaman Isi:</label>
+                                    class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Cetak
+                                    Halaman Isi:</label>
                                 <select id="sisi-isi" class="form-select font-medium">
                                     <option value="2" selected>2 Sisi Full Color (4/4)</option>
                                     <option value="1">2 Sisi Hitam Putih (1/1)</option>
@@ -518,11 +540,16 @@
                     <section id="price-results-section" class="space-y-4 hidden">
                         <div id="harga-jual-card" class="glass-card rounded-2xl p-6 border border-indigo-500/20">
                             <h3
-                                class="text-base font-bold text-white mb-4 border-b border-slate-800 pb-3 flex justify-between items-center">
+                                class="text-base font-bold text-white mb-4 border-b border-slate-800 pb-3 flex justify-between items-center gap-2">
                                 <span>Rincian HPP & Harga Jual</span>
-                                <span
-                                    class="text-xs font-semibold px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Akurat
-                                    & Terukur</span>
+                                <div class="flex items-center gap-2">
+                                    <button type="button" id="open-admin-inline-btn"
+                                        class="text-[11px] font-semibold px-2 py-1 rounded-md bg-slate-800 hover:bg-indigo-600/30 text-slate-300 hover:text-indigo-300 border border-slate-700 hover:border-indigo-500/40 transition"
+                                        title="Ubah harga bahan, margin, atau rumusan">⚙️ Atur Harga</button>
+                                    <span
+                                        class="text-xs font-semibold px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Akurat
+                                        & Terukur</span>
+                                </div>
                             </h3>
 
                             <!-- HPP Cost Breakdown Details -->
@@ -553,7 +580,10 @@
                                 <div id="profit-container"
                                     class="p-3 bg-emerald-950/40 rounded-xl border border-emerald-500/30">
                                     <div class="flex justify-between items-center">
-                                        <span class="text-xs font-bold text-emerald-400">Estimasi Total Profit:</span>
+                                        <div>
+                                            <span class="text-xs font-bold text-emerald-400 block">Estimasi Total Profit:</span>
+                                            <span id="profit-formula-note" class="text-[10px] text-emerald-300/70"></span>
+                                        </div>
                                         <span id="profit-val" class="font-extrabold text-base text-emerald-400">Rp
                                             0</span>
                                     </div>
@@ -644,28 +674,96 @@
     </main>
 
     <!-- FOOTER SECTION -->
-    <footer class="border-t border-slate-800/80 bg-slate-950/80 py-3 text-center text-[11px] text-slate-400 w-full mt-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
+    <footer
+        class="border-t border-slate-800/80 bg-slate-950/80 py-3 text-center text-[11px] text-slate-400 w-full mt-6">
+        <div
+            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
             <p class="text-slate-400">
                 © 2026 Kalkulator Percetakan Visual Pro
             </p>
             <p class="flex items-center gap-1 font-medium text-slate-300">
                 <span>Created with</span>
                 <svg class="w-3.5 h-3.5 text-rose-500 fill-current animate-pulse inline-block" viewBox="0 0 24 24">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    <path
+                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                 </svg>
                 <span>by</span>
-                <a href="https://jefri-orcin.vercel.app/" target="_blank" rel="noopener noreferrer" class="font-bold text-indigo-400 hover:text-cyan-400 transition underline underline-offset-2 decoration-indigo-500/40 hover:decoration-cyan-400">Jefrianus Markus</a>
+                <a href="https://jefri-orcin.vercel.app/" target="_blank" rel="noopener noreferrer"
+                    class="font-bold text-indigo-400 hover:text-cyan-400 transition underline underline-offset-2 decoration-indigo-500/40 hover:decoration-cyan-400">Jefrianus
+                    Markus</a>
             </p>
         </div>
     </footer>
+
+    <!-- ADMIN SETTING MODAL -->
+    <div id="admin-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-2 sm:p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div class="glass-card w-full max-w-5xl max-h-[92vh] rounded-2xl border border-indigo-500/30 flex flex-col overflow-hidden shadow-2xl animate-fadeIn">
+            <!-- Modal Header -->
+            <div class="px-5 py-4 border-b border-slate-800 bg-slate-900/95 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
+                            Admin Setting Harga, Pengaturan & Rumusan
+                        </h2>
+                        <p class="text-[11px] text-slate-400">Kelola harga bahan, ongkos cetak, tier offset, finishing, margin, mesin, & rumusan pola secara lokal</p>
+                    </div>
+                </div>
+                <button type="button" id="close-admin-btn" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition" title="Tutup">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="px-5 py-2.5 border-b border-slate-800 bg-slate-900/70 flex flex-wrap gap-1.5 shrink-0" id="admin-tabs-nav">
+                <button type="button" data-admin-tab="bahan" class="admin-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-indigo-600 text-white">💰 Harga Bahan & Kertas</button>
+                <button type="button" data-admin-tab="cetak" class="admin-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-slate-800 text-slate-300 hover:bg-slate-700">🖨️ Ongkos Cetak & Tier Offset</button>
+                <button type="button" data-admin-tab="finishing" class="admin-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-slate-800 text-slate-300 hover:bg-slate-700">✨ Finishing & Jilid Buku</button>
+                <button type="button" data-admin-tab="lainnya" class="admin-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-slate-800 text-slate-300 hover:bg-slate-700">⚙️ Margin, Mesin, Plano & WA</button>
+                <button type="button" data-admin-tab="rumusan" class="admin-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-slate-800 text-slate-300 hover:bg-slate-700">📐 Rumusan & Formula</button>
+            </div>
+
+            <!-- Modal Body -->
+            <div id="admin-tab-body" class="p-5 overflow-y-auto flex-1 space-y-5 bg-slate-950/60 text-xs">
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-5 py-3.5 border-t border-slate-800 bg-slate-900/95 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                <div class="flex flex-wrap items-center gap-2">
+                    <button type="button" id="admin-export-btn" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-semibold transition">⬇️ Export JSON</button>
+                    <label class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-semibold transition cursor-pointer">
+                        ⬆️ Import JSON
+                        <input type="file" id="admin-import-input" accept=".json,application/json" class="hidden">
+                    </label>
+                    <button type="button" id="admin-reset-btn" class="px-3 py-1.5 rounded-lg bg-rose-950/60 hover:bg-rose-900/60 text-rose-300 border border-rose-500/30 text-xs font-semibold transition">↺ Reset Default</button>
+                </div>
+                <div class="flex items-center gap-2.5">
+                    <span id="admin-save-status" class="text-xs text-emerald-400 font-semibold hidden">✓ Tersimpan & Diterapkan!</span>
+                    <button type="button" id="admin-cancel-btn" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">Batal</button>
+                    <button type="button" id="admin-save-btn" class="px-5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition">💾 Simpan & Terapkan</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- SCRIPT APPLICATION CORE LOGIC -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
 
-            // --- 1. DATA CONSTANTS & SCHEMAS ---
-            const UKURAN_PLANO = [
+            // --- 1. DATA CONSTANTS, ADMIN SETTINGS & FORMULA SCHEMAS ---
+            const ADMIN_STORAGE_KEY = 'percetakan_admin_settings_v1';
+
+            const DEFAULT_UKURAN_PLANO = [
                 { id: 'a3plus', nama: 'A3+ Sheet (32.9 x 48.3 cm)', planoP: 48.3, planoL: 32.9, factor: 1 },
                 { id: 'a3', nama: 'A3 Sheet (29.7 x 42.0 cm)', planoP: 42.0, planoL: 29.7, factor: 1 },
                 { id: 'a4', nama: 'A4 Sheet (21.0 x 29.7 cm)', planoP: 29.7, planoL: 21.0, factor: 1 },
@@ -680,7 +778,7 @@
                 { id: 'plano_90_120_per_6', nama: '1/6 Plano Jumbo (45 x 40 cm)', planoP: 45.0, planoL: 40.0, factor: 6 },
             ];
 
-            const SPESIFIKASI_MESIN = {
+            const DEFAULT_SPESIFIKASI_MESIN = {
                 offset_sprint: {
                     id: 'offset_sprint',
                     nama: 'Komori Sprint L 225 B',
@@ -715,7 +813,7 @@
                 }
             };
 
-            const JENIS_KERTAS = [
+            const DEFAULT_JENIS_KERTAS = [
                 { id: 'fotopaper_dig', nama: 'Fotopaper Premium', jenis: 'kertas', mesin: ['digital'] },
                 { id: 'basetik_dig', nama: 'Basetik / BC Premium', jenis: 'kertas', mesin: ['digital'] },
                 { id: 'ap310_dig', nama: 'Art Paper 310 gr', jenis: 'kertas', mesin: ['digital'] },
@@ -757,7 +855,7 @@
                 { id: 'kraft290_off', nama: 'Kraft 290gr', jenis: 'kertas', mesin: ['offset'] },
             ];
 
-            const HARGA_DIGITAL = {
+            const DEFAULT_HARGA_DIGITAL = {
                 hargaBahan: {
                     fotopaper_dig: 5000, basetik_dig: 3800, ap310_dig: 4000, ap260_dig: 3300, ap230_dig: 3100,
                     ap210_dig: 2900, ap150_dig: 2700, ap120_dig: 2500, matte150_dig: 3000, matte120_dig: 2800,
@@ -773,7 +871,7 @@
                 }
             };
 
-            const HARGA_OFFSET_TIERED_4_WARNA = [
+            const DEFAULT_HARGA_OFFSET_TIERED_4_WARNA = [
                 { minQty: 1, maxQty: 1000, baseCost: 850000, clickCost: 850000 },
                 { minQty: 1001, maxQty: 2000, baseCost: 850000, clickCost: 1300000 },
                 { minQty: 2001, maxQty: 3000, baseCost: 850000, clickCost: 1500000 },
@@ -783,7 +881,7 @@
                 { minQty: 10001, maxQty: Infinity, baseCost: 3300000, clickCost: 4400000 },
             ];
 
-            const HARGA_OFFSET_TIERED_1_WARNA = [
+            const DEFAULT_HARGA_OFFSET_TIERED_1_WARNA = [
                 { minQty: 1, maxQty: 1000, baseCost: 500000, clickCost: 750000 },
                 { minQty: 1001, maxQty: 2000, baseCost: 750000, clickCost: 1000000 },
                 { minQty: 2001, maxQty: 3000, baseCost: 850000, clickCost: 1250000 },
@@ -793,7 +891,7 @@
                 { minQty: 9001, maxQty: Infinity, baseCost: 1600000, clickCost: 2800000 },
             ];
 
-            const HARGA_OFFSET_FINISHING = {
+            const DEFAULT_HARGA_OFFSET_FINISHING = {
                 laminasiPerPlano: 4000,
                 potong: { nama: 'Potong Jadi', min: 15000, per_pcs: 25 },
                 lipat: { nama: 'Lipat Mesin', min: 50000, per_lipatan_pcs: 50 },
@@ -801,7 +899,7 @@
                 hotfoil: { nama: 'Hot Foil', min: 100000, per_cm2: 150 },
             };
 
-            const HARGA_BAHAN_OFFSET = {
+            const DEFAULT_HARGA_BAHAN_OFFSET = {
                 'hvs70_off': { 'plano_79_109': 1800, 'plano_65_100': 1350, 'plano_79_109_per_4': 450, 'plano_79_109_per_5': 360, 'plano_79_109_per_6_custom': 300, 'plano_79_109_per_3': 600 },
                 'hvs80_off': { 'plano_79_109': 2200, 'plano_65_100': 1650, 'plano_79_109_per_4': 550, 'plano_79_109_per_5': 440, 'plano_79_109_per_6_custom': 367, 'plano_79_109_per_3': 733 },
                 'hvs100_off': { 'plano_79_109': 2800, 'plano_65_100': 2100, 'plano_79_109_per_4': 700, 'plano_79_109_per_5': 560, 'plano_79_109_per_6_custom': 467, 'plano_79_109_per_3': 933 },
@@ -824,6 +922,353 @@
                 'kraft290_off': { 'plano_90_120': 4750, 'plano_90_120_per_4': 1188, 'plano_90_120_per_6': 792 },
             };
 
+            const DEFAULT_CUSTOM_FINISHING_PRESETS = [
+                { name: 'Pond / Die Cut Custom', label: '+ Pond / Die Cut', type: 'total', price: 150000 },
+                { name: 'Emboss / Deboss', label: '+ Emboss / Deboss', type: 'pcs', price: 350 },
+                { name: 'Lem Samping / Lipat Manual', label: '+ Lem Manual', type: 'pcs', price: 200 },
+                { name: 'Pasang Mata Ayam / Eyelet', label: '+ Mata Ayam', type: 'pcs', price: 250 },
+                { name: 'Nomorator / Barcode', label: '+ Nomorator', type: 'pcs', price: 150 },
+                { name: 'Sablon Tambahan Khusus', label: '+ Sablon Khusus', type: 'total', price: 120000 },
+                { name: 'Pasang Pita / Tali Kur', label: '+ Tali / Pita', type: 'pcs', price: 500 },
+            ];
+
+            const PRODUCT_FORMULA_DEFS = {
+                bukuStaples: {
+                    vars: ['p_buku', 'l_buku', 'hal_isi'],
+                    sample: { p_buku: 29.7, l_buku: 21, hal_isi: 32 },
+                    sizes: [
+                        { name: 'Bentangan Cover', type: 'cover', pExpr: 'p_buku', lExpr: 'l_buku * 2', multExpr: '1' },
+                        { name: 'Bentangan Isi (Spread)', type: 'isi', pExpr: 'p_buku', lExpr: 'l_buku * 2', multExpr: 'Math.ceil(hal_isi / 4)' }
+                    ]
+                },
+                bukuKawat: {
+                    vars: ['p_buku', 'l_buku', 'hal_isi'],
+                    sample: { p_buku: 29.7, l_buku: 21, hal_isi: 32 },
+                    sizes: [
+                        { name: 'Bentangan Cover', type: 'cover', pExpr: 'p_buku', lExpr: 'l_buku * 2', multExpr: '1' },
+                        { name: 'Bentangan Isi (Spread)', type: 'isi', pExpr: 'p_buku', lExpr: 'l_buku * 2', multExpr: 'Math.ceil(hal_isi / 4)' }
+                    ]
+                },
+                bukuPerfect: {
+                    vars: ['p_buku', 'l_buku', 'hal_isi', 'spine'],
+                    sample: { p_buku: 29.7, l_buku: 21, hal_isi: 64, spine: 0.36 },
+                    sizes: [
+                        { name: 'Bentangan Cover', type: 'cover', pExpr: 'p_buku', lExpr: '(l_buku * 2) + spine', multExpr: '1' },
+                        { name: 'Bentangan Isi (Spread)', type: 'isi', pExpr: 'p_buku', lExpr: 'l_buku * 2', multExpr: 'Math.ceil(hal_isi / 4)' }
+                    ]
+                },
+                bukuSpiral: {
+                    vars: ['p_buku', 'l_buku', 'hal_isi'],
+                    sample: { p_buku: 29.7, l_buku: 21, hal_isi: 50 },
+                    sizes: [
+                        { name: 'Cover Depan & Belakang', type: 'cover', pExpr: 'p_buku', lExpr: 'l_buku', multExpr: '2' },
+                        { name: 'Lembaran Isi Single', type: 'isi', pExpr: 'p_buku', lExpr: 'l_buku', multExpr: 'Math.ceil(hal_isi / 2)' }
+                    ]
+                },
+                lunchBox: {
+                    vars: ['p_atas', 'l_atas', 'p_bawah', 'l_bawah', 't', 'tutup'],
+                    sample: { p_atas: 17.5, l_atas: 10.5, p_bawah: 16, l_bawah: 9, t: 5, tutup: 2.5 },
+                    sizes: [
+                        { name: '1 pcs', pExpr: 'l_atas + l_bawah + (2 * t) + tutup', lExpr: 'p_bawah + (2 * t)', multExpr: '1' },
+                        { name: '2 pcs Gandeng', pExpr: 'l_atas + l_bawah + (2 * t) + tutup', lExpr: 't + p_bawah + t + tutup + p_atas + tutup + (t - tutup - ((p_atas - p_bawah) / 2))', multExpr: '2' }
+                    ]
+                },
+                riceBox: {
+                    vars: ['p_atas', 'l_atas', 'p_bawah', 'l_bawah', 't', 'tutup'],
+                    sample: { p_atas: 9.5, l_atas: 8, p_bawah: 8, l_bawah: 6.5, t: 10, tutup: 3 },
+                    sizes: [
+                        { name: '1 pcs', pExpr: 'l_atas + l_bawah + (2 * t) + tutup', lExpr: 'p_bawah + (2 * t)', multExpr: '1' },
+                        { name: '2 pcs Gandeng', pExpr: 'l_atas + l_bawah + (2 * t) + tutup', lExpr: 't + p_bawah + t + tutup + p_atas + tutup + (t - tutup - ((p_atas - p_bawah) / 2))', multExpr: '2' }
+                    ]
+                },
+                dineIn: {
+                    vars: ['p', 'l', 't'],
+                    sample: { p: 16, l: 9, t: 4 },
+                    sizes: [
+                        { name: '1 pcs', pExpr: 'p + (2 * t)', lExpr: 'l + (2 * t)', multExpr: '1' },
+                        { name: '2 pcs', pExpr: 'p + (2 * t)', lExpr: '(l + (2 * t)) * 2', multExpr: '2' },
+                        { name: '4 pcs', pExpr: '(p + (2 * t)) * 2', lExpr: '(l + (2 * t)) * 2', multExpr: '4' }
+                    ]
+                },
+                kotakTutupTerpisah: {
+                    vars: ['p_bawah', 'l_bawah', 't_bawah', 'p_atas', 'l_atas', 't_atas'],
+                    sample: { p_bawah: 23, l_bawah: 33, t_bawah: 5, p_atas: 23.5, l_atas: 33.5, t_atas: 3 },
+                    sizes: [
+                        { name: 'Bawah', pExpr: 'p_bawah + (2 * t_bawah)', lExpr: 'l_bawah + (2 * t_bawah)', multExpr: '1' },
+                        { name: 'Atas', pExpr: 'p_atas + (2 * t_atas)', lExpr: 'l_atas + (2 * t_atas)', multExpr: '1' }
+                    ]
+                },
+                kotakSambung: {
+                    vars: ['p', 'l', 't', 'tutup'],
+                    sample: { p: 14, l: 10.5, t: 6.5, tutup: 3.5 },
+                    sizes: [
+                        { name: '1 pcs', pExpr: '(l * 2) + (t * 2) + tutup', lExpr: '(t * 2) + p', multExpr: '1' },
+                        { name: '2 pcs', pExpr: '(l * 2) + (t * 2) + tutup', lExpr: '(p * 2) + (t * 2) + (tutup * 2) + (t - tutup)', multExpr: '2' },
+                        { name: '4 pcs', pExpr: '((l * 2) + (t * 2) + tutup) * 2', lExpr: '(p * 2) + (t * 2) + (tutup * 2) + (t - tutup)', multExpr: '4' }
+                    ]
+                },
+                straightTuckEnd: {
+                    vars: ['p', 'l', 't', 'lem'],
+                    sample: { p: 10, l: 5, t: 15, lem: 1.5 },
+                    sizes: [
+                        { name: '1 pcs', pExpr: '(p * 2) + (l * 2) + lem', lExpr: 't + (l * 2)', multExpr: '1' },
+                        { name: '2 pcs', pExpr: '(p * 2) + (l * 2) + lem', lExpr: '(t + (l * 2)) * 2', multExpr: '2' },
+                        { name: '4 pcs', pExpr: '((p * 2) + (l * 2) + lem) * 2', lExpr: '(t + (l * 2)) * 2', multExpr: '4' }
+                    ]
+                },
+                kebab: {
+                    vars: ['p', 'l', 'lem'],
+                    sample: { p: 26, l: 9, lem: 1.5 },
+                    sizes: [
+                        { name: '1 pcs', pExpr: 'p', lExpr: '(l * 2) + lem', multExpr: '1' },
+                        { name: '2 pcs', pExpr: 'p', lExpr: '((l * 2) + lem) * 2', multExpr: '2' }
+                    ]
+                },
+                kotakMug: {
+                    vars: ['p', 'l', 't', 'lem', 'kunci_bawah'],
+                    sample: { p: 8, l: 11, t: 10, lem: 1.3, kunci_bawah: 8 },
+                    sizes: [
+                        { name: '1 pcs', pExpr: '2 * (p + l) + lem', lExpr: 't + l + kunci_bawah', multExpr: '1' },
+                        { name: '2 pcs', pExpr: '2 * (p + l) + lem', lExpr: '(t + l + kunci_bawah) * 2', multExpr: '2' }
+                    ]
+                },
+                burger: {
+                    vars: ['p', 'l', 't_bawah', 't_krkn', 't_tutup'],
+                    sample: { p: 10, l: 10, t_bawah: 4, t_krkn: 5, t_tutup: 5 },
+                    sizes: [
+                        { name: '1 pcs', pExpr: '(l * 2) + (t_bawah * 3) + t_tutup', lExpr: '(t_krkn * 2) + p', multExpr: '1' }
+                    ]
+                },
+                customFlat: {
+                    vars: ['p', 'l'],
+                    sample: { p: 21, l: 15 },
+                    sizes: [
+                        { name: 'Default', pExpr: 'p', lExpr: 'l', multExpr: '1' }
+                    ]
+                }
+            };
+
+            function cloneDefaultSettings() {
+                const raw = JSON.parse(JSON.stringify({
+                    general: {
+                        shopName: "Dooren'z Percetakan",
+                        waTitle: "*PENAWARAN HARGA CETAK*",
+                        waFooterNote: "_Catatan: Harga dapat berubah sewaktu-waktu sesuai kestabilan bahan._",
+                        defaultBleed: 0.75,
+                        insheetBase: 25,
+                        waTiersDigital: "100, 300, 500, 1000",
+                        waTiersOffset: "1000, 2000, 3000, 5000, 10000"
+                    },
+                    pricing: {
+                        biayaSettingDigital: 25000,
+                        marginDigitalPercent: 0,
+                        marginOffsetPercent: 0,
+                        marginBasis: 'modal',
+                        roundingDigital: 1,
+                        roundingOffset: 25,
+                        bookPrintDivisorDigital: 2,
+                        bookPrintDivisorOffset: 2
+                    },
+                    spine: {
+                        minSpineCm: 0.15,
+                        bulking: {
+                            bookpaper: 0.0014,
+                            hvs: 0.0011,
+                            artpaper: 0.00095,
+                            matte: 0.00105,
+                            default: 0.0010
+                        }
+                    },
+                    bindingRates: {
+                        bukuStaples: { digital: 600, offset: 400 },
+                        bukuKawat: { digital: 1350, offset: 1000 },
+                        bukuPerfect: { digitalBase: 3500, digitalPerHal: 30, offsetBase: 2500, offsetPerHal: 20 },
+                        bukuSpiral: { digital: 5000, offset: 4500 }
+                    },
+                    ukuranPlano: DEFAULT_UKURAN_PLANO,
+                    mesin: DEFAULT_SPESIFIKASI_MESIN,
+                    jenisKertas: DEFAULT_JENIS_KERTAS,
+                    hargaDigital: DEFAULT_HARGA_DIGITAL,
+                    hargaOffsetTiered4Warna: DEFAULT_HARGA_OFFSET_TIERED_4_WARNA,
+                    hargaOffsetTiered1Warna: DEFAULT_HARGA_OFFSET_TIERED_1_WARNA,
+                    hargaOffsetFinishing: DEFAULT_HARGA_OFFSET_FINISHING,
+                    hargaBahanOffset: DEFAULT_HARGA_BAHAN_OFFSET,
+                    customFinishingPresets: DEFAULT_CUSTOM_FINISHING_PRESETS,
+                    productFormulas: {}
+                }));
+                return normalizeSettings(raw);
+            }
+
+            function normalizeTierList(tiers, fallback) {
+                if (!Array.isArray(tiers) || tiers.length === 0) return fallback.map(t => ({ ...t }));
+                return tiers.map(t => ({
+                    minQty: Math.max(1, parseInt(t.minQty) || 1),
+                    maxQty: (t.maxQty === null || t.maxQty === undefined || t.maxQty === '' || !Number.isFinite(Number(t.maxQty))) ? Infinity : Number(t.maxQty),
+                    baseCost: Math.max(0, Number(t.baseCost) || 0),
+                    clickCost: Math.max(0, Number(t.clickCost) || 0)
+                }));
+            }
+
+            function normalizeSettings(raw) {
+                const base = {
+                    general: {
+                        shopName: "Dooren'z Percetakan",
+                        waTitle: "*PENAWARAN HARGA CETAK*",
+                        waFooterNote: "_Catatan: Harga dapat berubah sewaktu-waktu sesuai kestabilan bahan._",
+                        defaultBleed: 0.75,
+                        insheetBase: 25,
+                        waTiersDigital: "100, 300, 500, 1000",
+                        waTiersOffset: "1000, 2000, 3000, 5000, 10000"
+                    },
+                    pricing: {
+                        biayaSettingDigital: 25000,
+                        marginDigitalPercent: 0,
+                        marginOffsetPercent: 0,
+                        marginBasis: 'modal',
+                        roundingDigital: 1,
+                        roundingOffset: 25,
+                        bookPrintDivisorDigital: 2,
+                        bookPrintDivisorOffset: 2
+                    },
+                    spine: {
+                        minSpineCm: 0.15,
+                        bulking: { bookpaper: 0.0014, hvs: 0.0011, artpaper: 0.00095, matte: 0.00105, default: 0.0010 }
+                    },
+                    bindingRates: {
+                        bukuStaples: { digital: 600, offset: 400 },
+                        bukuKawat: { digital: 1350, offset: 1000 },
+                        bukuPerfect: { digitalBase: 3500, digitalPerHal: 30, offsetBase: 2500, offsetPerHal: 20 },
+                        bukuSpiral: { digital: 5000, offset: 4500 }
+                    },
+                    ukuranPlano: JSON.parse(JSON.stringify(DEFAULT_UKURAN_PLANO)),
+                    mesin: JSON.parse(JSON.stringify(DEFAULT_SPESIFIKASI_MESIN)),
+                    jenisKertas: JSON.parse(JSON.stringify(DEFAULT_JENIS_KERTAS)),
+                    hargaDigital: JSON.parse(JSON.stringify(DEFAULT_HARGA_DIGITAL)),
+                    hargaOffsetTiered4Warna: DEFAULT_HARGA_OFFSET_TIERED_4_WARNA.map(t => ({ ...t })),
+                    hargaOffsetTiered1Warna: DEFAULT_HARGA_OFFSET_TIERED_1_WARNA.map(t => ({ ...t })),
+                    hargaOffsetFinishing: JSON.parse(JSON.stringify(DEFAULT_HARGA_OFFSET_FINISHING)),
+                    hargaBahanOffset: JSON.parse(JSON.stringify(DEFAULT_HARGA_BAHAN_OFFSET)),
+                    customFinishingPresets: JSON.parse(JSON.stringify(DEFAULT_CUSTOM_FINISHING_PRESETS)),
+                    productFormulas: {}
+                };
+
+                if (!raw || typeof raw !== 'object') return base;
+
+                Object.assign(base.general, raw.general || {});
+                Object.assign(base.pricing, raw.pricing || {});
+                if (raw.spine) {
+                    if (raw.spine.minSpineCm !== undefined) base.spine.minSpineCm = Number(raw.spine.minSpineCm) || 0.15;
+                    Object.assign(base.spine.bulking, raw.spine.bulking || {});
+                }
+                if (raw.bindingRates) {
+                    ['bukuStaples', 'bukuKawat', 'bukuPerfect', 'bukuSpiral'].forEach(k => {
+                        if (raw.bindingRates[k]) Object.assign(base.bindingRates[k], raw.bindingRates[k]);
+                    });
+                }
+                if (Array.isArray(raw.ukuranPlano) && raw.ukuranPlano.length > 0) base.ukuranPlano = raw.ukuranPlano;
+                if (raw.mesin && typeof raw.mesin === 'object') {
+                    Object.keys(base.mesin).forEach(k => {
+                        if (raw.mesin[k]) Object.assign(base.mesin[k], raw.mesin[k]);
+                    });
+                }
+                if (Array.isArray(raw.jenisKertas) && raw.jenisKertas.length > 0) base.jenisKertas = raw.jenisKertas;
+                if (raw.hargaDigital) {
+                    if (raw.hargaDigital.hargaBahan) Object.assign(base.hargaDigital.hargaBahan, raw.hargaDigital.hargaBahan);
+                    if (raw.hargaDigital.biayaProduksiPerLembar !== undefined) base.hargaDigital.biayaProduksiPerLembar = Number(raw.hargaDigital.biayaProduksiPerLembar) || 0;
+                    if (raw.hargaDigital.biayaProduksiPerLembarBW !== undefined) base.hargaDigital.biayaProduksiPerLembarBW = Number(raw.hargaDigital.biayaProduksiPerLembarBW) || 0;
+                    if (raw.hargaDigital.finishing) {
+                        Object.assign(base.hargaDigital.finishing, raw.hargaDigital.finishing);
+                        if (raw.hargaDigital.finishing.cuttingStiker) {
+                            base.hargaDigital.finishing.cuttingStiker = Object.assign({}, DEFAULT_HARGA_DIGITAL.finishing.cuttingStiker, raw.hargaDigital.finishing.cuttingStiker);
+                        }
+                    }
+                }
+                base.hargaOffsetTiered4Warna = normalizeTierList(raw.hargaOffsetTiered4Warna, DEFAULT_HARGA_OFFSET_TIERED_4_WARNA);
+                base.hargaOffsetTiered1Warna = normalizeTierList(raw.hargaOffsetTiered1Warna, DEFAULT_HARGA_OFFSET_TIERED_1_WARNA);
+                if (raw.hargaOffsetFinishing) {
+                    if (raw.hargaOffsetFinishing.laminasiPerPlano !== undefined) base.hargaOffsetFinishing.laminasiPerPlano = Number(raw.hargaOffsetFinishing.laminasiPerPlano) || 0;
+                    ['potong', 'lipat', 'spotuv', 'hotfoil'].forEach(k => {
+                        if (raw.hargaOffsetFinishing[k]) Object.assign(base.hargaOffsetFinishing[k], raw.hargaOffsetFinishing[k]);
+                    });
+                }
+                if (raw.hargaBahanOffset && typeof raw.hargaBahanOffset === 'object') {
+                    Object.keys(raw.hargaBahanOffset).forEach(k => {
+                        base.hargaBahanOffset[k] = Object.assign({}, base.hargaBahanOffset[k] || {}, raw.hargaBahanOffset[k]);
+                    });
+                }
+                if (Array.isArray(raw.customFinishingPresets)) base.customFinishingPresets = raw.customFinishingPresets;
+                if (raw.productFormulas && typeof raw.productFormulas === 'object') base.productFormulas = raw.productFormulas;
+
+                return base;
+            }
+
+            function loadSettings() {
+                try {
+                    const saved = localStorage.getItem(ADMIN_STORAGE_KEY);
+                    if (!saved) return cloneDefaultSettings();
+                    return normalizeSettings(JSON.parse(saved));
+                } catch (e) {
+                    return cloneDefaultSettings();
+                }
+            }
+
+            let SETTINGS = loadSettings();
+
+            function safeEvalMath(expr, vars = {}) {
+                if (typeof expr !== 'string') return NaN;
+                const trimmed = expr.trim();
+                if (!trimmed) return NaN;
+                // Strict character & identifier allowlist to prevent unsafe evaluation
+                if (!/^[0-9a-zA-Z_+\-*/().,\s]+$/.test(trimmed)) return NaN;
+                const allowedMath = new Set(['Math', 'ceil', 'floor', 'round', 'max', 'min', 'abs']);
+                const varNames = Object.keys(vars);
+                const tokens = trimmed.match(/[a-zA-Z_][a-zA-Z0-9_]*/g) || [];
+                for (const tok of tokens) {
+                    if (!varNames.includes(tok) && !allowedMath.has(tok)) return NaN;
+                }
+                try {
+                    const fn = new Function(...varNames, `"use strict"; return (${trimmed});`);
+                    const res = fn(...varNames.map(k => Number(vars[k]) || 0));
+                    return (typeof res === 'number' && Number.isFinite(res) && res >= 0) ? res : NaN;
+                } catch (e) {
+                    return NaN;
+                }
+            }
+
+            function evaluateProductSizes(productId, v, bleed) {
+                const def = PRODUCT_FORMULA_DEFS[productId];
+                if (!def) return [];
+                const override = SETTINGS.productFormulas?.[productId] || {};
+                const extraP = parseFloat(override.extraP) || 0;
+                const extraL = parseFloat(override.extraL) || 0;
+                let spineCm = 0;
+                if (productId === 'bukuPerfect') {
+                    const bahanIsiVal = document.getElementById('bahan-kertas-isi')?.value || 'ap120_off';
+                    const gsmIsi = getGsmFromPaperId(bahanIsiVal);
+                    spineCm = getSpineThickness(v.hal_isi, gsmIsi, bahanIsiVal);
+                }
+                const vars = { ...v, bleed: bleed || 0, spine: spineCm };
+
+                return def.sizes.map((sDef, idx) => {
+                    const ovSize = override.sizes?.[idx] || {};
+                    const pVal = safeEvalMath(ovSize.pExpr || sDef.pExpr, vars);
+                    const lVal = safeEvalMath(ovSize.lExpr || sDef.lExpr, vars);
+                    const fallbackP = safeEvalMath(sDef.pExpr, vars);
+                    const fallbackL = safeEvalMath(sDef.lExpr, vars);
+                    const multVal = safeEvalMath(sDef.multExpr, vars);
+
+                    const p = Math.max(0.1, (Number.isFinite(pVal) ? pVal : fallbackP) + extraP);
+                    const l = Math.max(0.1, (Number.isFinite(lVal) ? lVal : fallbackL) + extraL);
+                    const multiplier = Math.max(1, Number.isFinite(multVal) ? multVal : 1);
+
+                    let name = sDef.name;
+                    if (productId === 'bukuPerfect' && sDef.type === 'cover') {
+                        name = `Bentangan Cover (Spine ${(spineCm * 10).toFixed(1)}mm)`;
+                    }
+                    return { name, p, l, multiplier, type: sDef.type, spine: sDef.type === 'cover' && productId === 'bukuPerfect' ? spineCm : undefined };
+                });
+            }
+
             const bukuPresets = {
                 a4: { p_buku: 29.7, l_buku: 21, label: 'A4 Standard (21 × 29.7 cm)' },
                 a5: { p_buku: 21, l_buku: 14.8, label: 'A5 Standard (14.8 × 21 cm)' },
@@ -841,13 +1286,14 @@
             function getSpineThickness(halIsi, gsmIsi, jenisKertasId) {
                 const lembarIsi = Math.ceil((halIsi || 32) / 2);
                 const gsm = gsmIsi || getGsmFromPaperId(jenisKertasId);
-                let bulking = 0.0010;
-                if (jenisKertasId && jenisKertasId.includes('bookpaper')) bulking = 0.0014;
-                else if (jenisKertasId && jenisKertasId.includes('hvs')) bulking = 0.0011;
-                else if (jenisKertasId && (jenisKertasId.includes('ap') || jenisKertasId.includes('art'))) bulking = 0.00095;
-                else if (jenisKertasId && jenisKertasId.includes('matte')) bulking = 0.00105;
+                const blk = SETTINGS.spine.bulking;
+                let bulking = blk.default ?? 0.0010;
+                if (jenisKertasId && jenisKertasId.includes('bookpaper')) bulking = blk.bookpaper ?? 0.0014;
+                else if (jenisKertasId && jenisKertasId.includes('hvs')) bulking = blk.hvs ?? 0.0011;
+                else if (jenisKertasId && (jenisKertasId.includes('ap') || jenisKertasId.includes('art'))) bulking = blk.artpaper ?? 0.00095;
+                else if (jenisKertasId && jenisKertasId.includes('matte')) bulking = blk.matte ?? 0.00105;
                 const spineCm = (lembarIsi * gsm * bulking) / 10;
-                return Math.max(0.15, parseFloat(spineCm.toFixed(2)));
+                return Math.max(SETTINGS.spine.minSpineCm ?? 0.15, parseFloat(spineCm.toFixed(2)));
             }
 
             const kotakSambungPresets = {
@@ -905,51 +1351,48 @@
                 banner_60: { p: 60.0, l: 160.0, label: 'Banner 60 × 160 cm' }, banner_90: { p: 90.0, l: 60.0, label: 'Spanduk 90 × 60 cm' },
             };
 
+            function formatProductSummary(productId, sizes) {
+                if (productId === 'customFlat') return undefined;
+                if (productId === 'bukuStaples' || productId === 'bukuKawat') {
+                    return `Bentangan Cover: <strong>${sizes[0].p.toFixed(1)} x ${sizes[0].l.toFixed(1)} cm</strong><br>Bentangan Isi (Spread): <strong>${sizes[1].p.toFixed(1)} x ${sizes[1].l.toFixed(1)} cm</strong> (${sizes[1].multiplier} lembar spread/buku)`;
+                }
+                if (productId === 'bukuPerfect') {
+                    const spineCm = sizes[0].spine || 0;
+                    const bahanIsiVal = document.getElementById('bahan-kertas-isi')?.value || 'ap120_off';
+                    const gsmIsi = getGsmFromPaperId(bahanIsiVal);
+                    return `Tebal Punggung (Spine): <strong>${(spineCm * 10).toFixed(1)} mm (${spineCm.toFixed(2)} cm)</strong> <span class="text-[10px] text-slate-400">(${gsmIsi}gsm)</span><br>Bentangan Cover: <strong>${sizes[0].p.toFixed(1)} x ${sizes[0].l.toFixed(1)} cm</strong><br>Bentangan Isi: <strong>${sizes[1].p.toFixed(1)} x ${sizes[1].l.toFixed(1)} cm</strong> (${sizes[1].multiplier} lembar spread/buku)`;
+                }
+                if (productId === 'bukuSpiral') {
+                    return `Cover Depan & Belakang: <strong>${sizes[0].p.toFixed(1)} x ${sizes[0].l.toFixed(1)} cm</strong> (2 lembar)<br>Lembaran Isi Single: <strong>${sizes[1].p.toFixed(1)} x ${sizes[1].l.toFixed(1)} cm</strong> (${sizes[1].multiplier} lembar/buku)`;
+                }
+                return sizes.map(s => `${s.name}: <strong>${s.p.toFixed(1)} x ${s.l.toFixed(1)} cm</strong>`).join('<br>');
+            }
+
             const products = {
                 bukuStaples: {
                     name: "Buku / Compro (Jilid Staples Tengah / Biasa)",
-                    note: "Jilid Staples Biasa (Manual / Booklet). Lebih hemat untuk dokumen, modul & buku tipis (Halaman kelipatan 4). Biaya: Rp 400 - Rp 600/buku.",
+                    note: "Jilid Staples Biasa (Manual / Booklet). Lebih hemat untuk dokumen, modul & buku tipis (Halaman kelipatan 4).",
                     fields: [
                         { id: 'p_buku', label: 'Tinggi Buku (cm)', placeholder: '29.7' },
                         { id: 'l_buku', label: 'Lebar Buku (cm)', placeholder: '21' },
                         { id: 'hal_isi', label: 'Jumlah Halaman Isi', placeholder: '32' }
                     ],
                     calculate: (v, bleed) => {
-                        const pCover = v.p_buku;
-                        const lCover = v.l_buku * 2;
-                        const pIsi = v.p_buku;
-                        const lIsi = v.l_buku * 2;
-                        const spreadIsi = Math.ceil(v.hal_isi / 4);
-                        return {
-                            custom: `Bentangan Cover: <strong>${pCover.toFixed(1)} x ${lCover.toFixed(1)} cm</strong><br>Bentangan Isi (Spread): <strong>${pIsi.toFixed(1)} x ${lIsi.toFixed(1)} cm</strong> (${spreadIsi} lembar spread/buku)`,
-                            sizes: [
-                                { name: 'Bentangan Cover', p: pCover, l: lCover, multiplier: 1, type: 'cover' },
-                                { name: 'Bentangan Isi (Spread)', p: pIsi, l: lIsi, multiplier: spreadIsi, type: 'isi' }
-                            ]
-                        };
+                        const sizes = evaluateProductSizes('bukuStaples', v, bleed);
+                        return { custom: formatProductSummary('bukuStaples', sizes), sizes };
                     }
                 },
                 bukuKawat: {
                     name: "Buku / Compro (Jilid Jahit Kawat / Saddle Stitching)",
-                    note: "Jilid Jahit Kawat Mesin (Saddle Stitching Kawat Baja). Lebih kuat, kokoh & rapi untuk majalah, company profile & booklet premium. Rekomendasi ongkos kawat: +Rp 1.000 - Rp 1.350/buku.",
+                    note: "Jilid Jahit Kawat Mesin (Saddle Stitching Kawat Baja). Lebih kuat, kokoh & rapi untuk majalah, company profile & booklet premium.",
                     fields: [
                         { id: 'p_buku', label: 'Tinggi Buku (cm)', placeholder: '29.7' },
                         { id: 'l_buku', label: 'Lebar Buku (cm)', placeholder: '21' },
                         { id: 'hal_isi', label: 'Jumlah Halaman Isi', placeholder: '32' }
                     ],
                     calculate: (v, bleed) => {
-                        const pCover = v.p_buku;
-                        const lCover = v.l_buku * 2;
-                        const pIsi = v.p_buku;
-                        const lIsi = v.l_buku * 2;
-                        const spreadIsi = Math.ceil(v.hal_isi / 4);
-                        return {
-                            custom: `Bentangan Cover: <strong>${pCover.toFixed(1)} x ${lCover.toFixed(1)} cm</strong><br>Bentangan Isi (Spread): <strong>${pIsi.toFixed(1)} x ${lIsi.toFixed(1)} cm</strong> (${spreadIsi} lembar spread/buku)`,
-                            sizes: [
-                                { name: 'Bentangan Cover', p: pCover, l: lCover, multiplier: 1, type: 'cover' },
-                                { name: 'Bentangan Isi (Spread)', p: pIsi, l: lIsi, multiplier: spreadIsi, type: 'isi' }
-                            ]
-                        };
+                        const sizes = evaluateProductSizes('bukuKawat', v, bleed);
+                        return { custom: formatProductSummary('bukuKawat', sizes), sizes };
                     }
                 },
                 bukuPerfect: {
@@ -961,22 +1404,8 @@
                         { id: 'hal_isi', label: 'Jumlah Halaman Isi', placeholder: '64' }
                     ],
                     calculate: (v, bleed) => {
-                        const bahanIsiVal = document.getElementById('bahan-kertas-isi')?.value || 'ap120_off';
-                        const gsmIsi = getGsmFromPaperId(bahanIsiVal);
-                        const spineCm = getSpineThickness(v.hal_isi, gsmIsi, bahanIsiVal);
-                        const spineMm = (spineCm * 10).toFixed(1);
-                        const pCover = v.p_buku;
-                        const lCover = (v.l_buku * 2) + spineCm;
-                        const pIsi = v.p_buku;
-                        const lIsi = v.l_buku * 2;
-                        const spreadIsi = Math.ceil(v.hal_isi / 4);
-                        return {
-                            custom: `Tebal Punggung (Spine): <strong>${spineMm} mm (${spineCm.toFixed(2)} cm)</strong> <span class="text-[10px] text-slate-400">(${gsmIsi}gsm)</span><br>Bentangan Cover: <strong>${pCover.toFixed(1)} x ${lCover.toFixed(1)} cm</strong><br>Bentangan Isi: <strong>${pIsi.toFixed(1)} x ${lIsi.toFixed(1)} cm</strong> (${spreadIsi} lembar spread/buku)`,
-                            sizes: [
-                                { name: `Bentangan Cover (Spine ${spineMm}mm)`, p: pCover, l: lCover, multiplier: 1, type: 'cover', spine: spineCm },
-                                { name: 'Bentangan Isi (Spread)', p: pIsi, l: lIsi, multiplier: spreadIsi, type: 'isi' }
-                            ]
-                        };
+                        const sizes = evaluateProductSizes('bukuPerfect', v, bleed);
+                        return { custom: formatProductSummary('bukuPerfect', sizes), sizes };
                     }
                 },
                 bukuSpiral: {
@@ -988,18 +1417,8 @@
                         { id: 'hal_isi', label: 'Jumlah Halaman Isi', placeholder: '50' }
                     ],
                     calculate: (v, bleed) => {
-                        const pCover = v.p_buku;
-                        const lCover = v.l_buku;
-                        const pIsi = v.p_buku;
-                        const lIsi = v.l_buku;
-                        const lembarIsi = Math.ceil(v.hal_isi / 2);
-                        return {
-                            custom: `Cover Depan & Belakang: <strong>${pCover.toFixed(1)} x ${lCover.toFixed(1)} cm</strong> (2 lembar)<br>Lembaran Isi Single: <strong>${pIsi.toFixed(1)} x ${lIsi.toFixed(1)} cm</strong> (${lembarIsi} lembar/buku)`,
-                            sizes: [
-                                { name: 'Cover Depan & Belakang', p: pCover, l: lCover, multiplier: 2, type: 'cover' },
-                                { name: 'Lembaran Isi Single', p: pIsi, l: lIsi, multiplier: lembarIsi, type: 'isi' }
-                            ]
-                        };
+                        const sizes = evaluateProductSizes('bukuSpiral', v, bleed);
+                        return { custom: formatProductSummary('bukuSpiral', sizes), sizes };
                     }
                 },
                 lunchBox: {
@@ -1010,14 +1429,8 @@
                         { id: 't', label: 'Tinggi (cm)', placeholder: '5' }, { id: 'tutup', label: 'Tutup (cm)', placeholder: '2.5' }
                     ],
                     calculate: (v, bleed) => {
-                        const p_flat_1 = v.l_atas + v.l_bawah + (2 * v.t) + v.tutup;
-                        const l_flat_1 = v.p_bawah + (2 * v.t);
-                        const p_flat_2 = p_flat_1;
-                        const l_flat_2 = v.t + v.p_bawah + v.t + v.tutup + v.p_atas + v.tutup + (v.t - v.tutup - ((v.p_atas - v.p_bawah) / 2));
-                        return {
-                            custom: `1 pcs: <strong>${p_flat_1.toFixed(1)} x ${l_flat_1.toFixed(1)} cm</strong><br>2 pcs Gandeng: <strong>${p_flat_2.toFixed(1)} x ${l_flat_2.toFixed(1)} cm</strong>`,
-                            sizes: [{ name: '1 pcs', p: p_flat_1, l: l_flat_1, multiplier: 1 }, { name: '2 pcs Gandeng', p: p_flat_2, l: l_flat_2, multiplier: 2 }]
-                        };
+                        const sizes = evaluateProductSizes('lunchBox', v, bleed);
+                        return { custom: formatProductSummary('lunchBox', sizes), sizes };
                     }
                 },
                 riceBox: {
@@ -1028,25 +1441,16 @@
                         { id: 't', label: 'Tinggi (cm)', placeholder: '10' }, { id: 'tutup', label: 'Tutup (cm)', placeholder: '3' }
                     ],
                     calculate: (v, bleed) => {
-                        const p_flat_1 = v.l_atas + v.l_bawah + (2 * v.t) + v.tutup;
-                        const l_flat_1 = v.p_bawah + (2 * v.t);
-                        const p_flat_2 = p_flat_1;
-                        const l_flat_2 = v.t + v.p_bawah + v.t + v.tutup + v.p_atas + v.tutup + (v.t - v.tutup - ((v.p_atas - v.p_bawah) / 2));
-                        return {
-                            custom: `1 pcs: <strong>${p_flat_1.toFixed(1)} x ${l_flat_1.toFixed(1)} cm</strong><br>2 pcs Gandeng: <strong>${p_flat_2.toFixed(1)} x ${l_flat_2.toFixed(1)} cm</strong>`,
-                            sizes: [{ name: '1 pcs', p: p_flat_1, l: l_flat_1, multiplier: 1 }, { name: '2 pcs Gandeng', p: p_flat_2, l: l_flat_2, multiplier: 2 }]
-                        };
+                        const sizes = evaluateProductSizes('riceBox', v, bleed);
+                        return { custom: formatProductSummary('riceBox', sizes), sizes };
                     }
                 },
                 dineIn: {
                     name: "Dine In Tray", note: "Menghitung ukuran 1, 2, dan 4 pcs gandeng.",
                     fields: [{ id: 'p', label: 'Panjang (cm)', placeholder: '18' }, { id: 'l', label: 'Lebar (cm)', placeholder: '10' }, { id: 't', label: 'Tinggi (cm)', placeholder: '4' }],
                     calculate: (v, bleed) => {
-                        const p1 = v.p + (2 * v.t); const l1 = v.l + (2 * v.t);
-                        return {
-                            custom: `1 pcs: <strong>${p1.toFixed(1)} x ${l1.toFixed(1)} cm</strong><br>2 pcs: <strong>${p1.toFixed(1)} x ${(l1 * 2).toFixed(1)} cm</strong><br>4 pcs: <strong>${(p1 * 2).toFixed(1)} x ${(l1 * 2).toFixed(1)} cm</strong>`,
-                            sizes: [{ name: '1 pcs', p: p1, l: l1, multiplier: 1 }, { name: '2 pcs', p: p1, l: l1 * 2, multiplier: 2 }, { name: '4 pcs', p: p1 * 2, l: l1 * 2, multiplier: 4 }]
-                        };
+                        const sizes = evaluateProductSizes('dineIn', v, bleed);
+                        return { custom: formatProductSummary('dineIn', sizes), sizes };
                     }
                 },
                 kotakTutupTerpisah: {
@@ -1058,32 +1462,16 @@
                         { id: 'p_atas', label: 'P Atas (cm)', placeholder: '23.5' }, { id: 'l_atas', label: 'L Atas (cm)', placeholder: '33.5' }, { id: 't_atas', label: 'T Atas (cm)', placeholder: '3' }
                     ],
                     calculate: (v, bleed) => {
-                        const pB = v.p_bawah + (2 * v.t_bawah); const lB = v.l_bawah + (2 * v.t_bawah);
-                        const pA = v.p_atas + (2 * v.t_atas); const lA = v.l_atas + (2 * v.t_atas);
-                        return {
-                            custom: `Bawah: <strong>${pB.toFixed(1)} x ${lB.toFixed(1)} cm</strong><br>Tutup Atas: <strong>${pA.toFixed(1)} x ${lA.toFixed(1)} cm</strong>`,
-                            sizes: [{ name: 'Bawah', p: pB, l: lB, multiplier: 1 }, { name: 'Atas', p: pA, l: lA, multiplier: 1 }]
-                        };
+                        const sizes = evaluateProductSizes('kotakTutupTerpisah', v, bleed);
+                        return { custom: formatProductSummary('kotakTutupTerpisah', sizes), sizes };
                     }
                 },
                 kotakSambung: {
                     name: "Kotak Sambung / Mailer", note: "Menghitung ukuran 1, 2, dan 4 pcs gandeng.",
                     fields: [{ id: 'p', label: 'Panjang (cm)', placeholder: '14' }, { id: 'l', label: 'Lebar (cm)', placeholder: '10.5' }, { id: 't', label: 'Tinggi (cm)', placeholder: '6.5' }, { id: 'tutup', label: 'Tutup (cm)', placeholder: '3.5' }],
                     calculate: (v, bleed) => {
-                        const p1 = (v.l * 2) + (v.t * 2) + v.tutup;
-                        const l1 = (v.t * 2) + v.p;
-                        const p2 = p1;
-                        const l2 = (v.p * 2) + (v.t * 2) + (v.tutup * 2) + (v.t - v.tutup);
-                        const p4 = p1 * 2;
-                        const l4 = l2;
-                        return {
-                            custom: `1 pcs: <strong>${p1.toFixed(1)} x ${l1.toFixed(1)} cm</strong><br>2 pcs: <strong>${p2.toFixed(1)} x ${l2.toFixed(1)} cm</strong><br>4 pcs: <strong>${p4.toFixed(1)} x ${l4.toFixed(1)} cm</strong>`,
-                            sizes: [
-                                { name: '1 pcs', p: p1, l: l1, multiplier: 1 },
-                                { name: '2 pcs', p: p2, l: l2, multiplier: 2 },
-                                { name: '4 pcs', p: p4, l: l4, multiplier: 4 }
-                            ]
-                        };
+                        const sizes = evaluateProductSizes('kotakSambung', v, bleed);
+                        return { custom: formatProductSummary('kotakSambung', sizes), sizes };
                     }
                 },
                 straightTuckEnd: {
@@ -1091,38 +1479,24 @@
                     note: "Menghitung 1, 2, dan 4 pcs (Tutup Atas & Bawah lengkap).",
                     fields: [{ id: 'p', label: 'Panjang (cm)', placeholder: '10' }, { id: 'l', label: 'Lebar (cm)', placeholder: '5' }, { id: 't', label: 'Tinggi (cm)', placeholder: '15' }, { id: 'lem', label: 'Kuping Lem (cm)', placeholder: '1.5' }],
                     calculate: (v, bleed) => {
-                        const p1 = (v.p * 2) + (v.l * 2) + v.lem;
-                        const l1 = v.t + (v.l * 2); // FIXED: both top & bottom flaps
-                        return {
-                            custom: `1 pcs: <strong>${p1.toFixed(1)} x ${l1.toFixed(1)} cm</strong><br>2 pcs: <strong>${p1.toFixed(1)} x ${(l1 * 2).toFixed(1)} cm</strong><br>4 pcs: <strong>${(p1 * 2).toFixed(1)} x ${(l1 * 2).toFixed(1)} cm</strong>`,
-                            sizes: [
-                                { name: '1 pcs', p: p1, l: l1, multiplier: 1 },
-                                { name: '2 pcs', p: p1, l: l1 * 2, multiplier: 2 },
-                                { name: '4 pcs', p: p1 * 2, l: l1 * 2, multiplier: 4 }
-                            ]
-                        };
+                        const sizes = evaluateProductSizes('straightTuckEnd', v, bleed);
+                        return { custom: formatProductSummary('straightTuckEnd', sizes), sizes };
                     }
                 },
                 kebab: {
                     name: "Kebab Sleeve", note: "Menghitung 1 pcs dan 2 pcs gandeng.",
                     fields: [{ id: 'p', label: 'Panjang (cm)', placeholder: '26' }, { id: 'l', label: 'Lebar (cm)', placeholder: '9' }, { id: 'lem', label: 'Lidah Lem (cm)', placeholder: '1.5' }],
                     calculate: (v, bleed) => {
-                        const p1 = v.p; const l1 = (v.l * 2) + v.lem;
-                        return {
-                            custom: `1 pcs: <strong>${p1.toFixed(1)} x ${l1.toFixed(1)} cm</strong><br>2 pcs: <strong>${p1.toFixed(1)} x ${(l1 * 2).toFixed(1)} cm</strong>`,
-                            sizes: [{ name: '1 pcs', p: p1, l: l1, multiplier: 1 }, { name: '2 pcs', p: p1, l: l1 * 2, multiplier: 2 }]
-                        };
+                        const sizes = evaluateProductSizes('kebab', v, bleed);
+                        return { custom: formatProductSummary('kebab', sizes), sizes };
                     }
                 },
                 kotakMug: {
                     name: "Kotak Mug Standard", note: "Menghitung 1 pcs dan 2 pcs gandeng.",
                     fields: [{ id: 'p', label: 'Panjang (cm)', placeholder: '8' }, { id: 'l', label: 'Lebar (cm)', placeholder: '11' }, { id: 't', label: 'Tinggi (cm)', placeholder: '10' }, { id: 'lem', label: 'Lidah Lem (cm)', placeholder: '1.3' }, { id: 'kunci_bawah', label: 'Kunci Bawah (cm)', placeholder: '8' }],
                     calculate: (v, bleed) => {
-                        const p1 = (2 * (v.p + v.l) + v.lem); const l1 = (v.t + v.l + v.kunci_bawah);
-                        return {
-                            custom: `1 pcs: <strong>${p1.toFixed(1)} x ${l1.toFixed(1)} cm</strong><br>2 pcs: <strong>${p1.toFixed(1)} x ${(l1 * 2).toFixed(1)} cm</strong>`,
-                            sizes: [{ name: '1 pcs', p: p1, l: l1, multiplier: 1 }, { name: '2 pcs', p: p1, l: l1 * 2, multiplier: 2 }]
-                        };
+                        const sizes = evaluateProductSizes('kotakMug', v, bleed);
+                        return { custom: formatProductSummary('kotakMug', sizes), sizes };
                     }
                 },
                 burger: {
@@ -1133,18 +1507,14 @@
                         { id: 't_tutup', label: 'Tinggi Tutup (cm)', placeholder: '5' }
                     ],
                     calculate: (v, bleed) => {
-                        const p_pola = (v.l * 2) + (v.t_bawah * 3) + v.t_tutup;
-                        const l_pola = (v.t_krkn * 2) + v.p;
-                        return {
-                            custom: `1 pcs: <strong>${p_pola.toFixed(1)} x ${l_pola.toFixed(1)} cm</strong>`,
-                            sizes: [{ name: '1 pcs', p: p_pola, l: l_pola, multiplier: 1 }]
-                        };
+                        const sizes = evaluateProductSizes('burger', v, bleed);
+                        return { custom: formatProductSummary('burger', sizes), sizes };
                     }
                 },
                 customFlat: {
                     name: "Custom Ukuran Datar", note: "Ukuran potong jadi (brosur, kartu, stiker, dll).",
                     fields: [{ id: 'p', label: 'Panjang Jadi (cm)', placeholder: '21' }, { id: 'l', label: 'Lebar Jadi (cm)', placeholder: '15' }],
-                    calculate: (v, bleed) => ({ sizes: [{ name: 'Default', p: v.p, l: v.l, multiplier: 1 }] })
+                    calculate: (v, bleed) => ({ sizes: evaluateProductSizes('customFlat', v, bleed) })
                 }
             };
 
@@ -1191,6 +1561,7 @@
                 hargaJualCard: document.getElementById('harga-jual-card'),
                 modalTotal: document.getElementById('modal-total'),
                 profitVal: document.getElementById('profit-val'),
+                profitFormulaNote: document.getElementById('profit-formula-note'),
                 profitContainer: document.getElementById('profit-container'),
                 jualSatuanAktual: document.getElementById('jual-satuan-aktual'),
                 jualPerLembarContainer: document.getElementById('jual-per-lembar-container'),
@@ -1216,8 +1587,48 @@
             function formatRupiah(angka) {
                 return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Math.round(angka || 0));
             }
+            function roundToStep(num, step = 25) {
+                const s = Number(step) || 1;
+                if (s <= 1) return Math.ceil(num || 0);
+                return Math.ceil((num || 0) / s) * s;
+            }
             function roundToNearest25(num) {
-                return Math.ceil((num || 0) / 25) * 25;
+                return roundToStep(num, SETTINGS.pricing.roundingOffset || 25);
+            }
+            function parseTierQuantities(str, fallback) {
+                if (typeof str !== 'string') return fallback;
+                const nums = str.split(/[,\s;]+/).map(s => parseInt(s.trim(), 10)).filter(n => Number.isFinite(n) && n > 0);
+                return nums.length > 0 ? Array.from(new Set(nums)).sort((a, b) => a - b) : fallback;
+            }
+            function computeSellingSummary(totalModal, totalPlano, qty, jenisMesin) {
+                const isDigitalOrDtf = jenisMesin === 'digital' || jenisMesin === 'dtf';
+                const biayaSetting = isDigitalOrDtf ? (Number(SETTINGS.pricing.biayaSettingDigital) || 0) : 0;
+                const marginPercent = isDigitalOrDtf
+                    ? (Number(SETTINGS.pricing.marginDigitalPercent) || 0)
+                    : (Number(SETTINGS.pricing.marginOffsetPercent) || 0);
+                const basis = SETTINGS.pricing.marginBasis === 'modal_plus_setting'
+                    ? (totalModal + biayaSetting)
+                    : totalModal;
+                const marginAmount = basis * (marginPercent / 100);
+                const totalJual = totalModal + biayaSetting + marginAmount;
+                const hargaSatuanAktual = qty > 0 ? totalJual / qty : 0;
+                const hargaPerLembar = totalPlano > 0 ? totalJual / totalPlano : 0;
+                const step = isDigitalOrDtf
+                    ? (Number(SETTINGS.pricing.roundingDigital) || 1)
+                    : (Number(SETTINGS.pricing.roundingOffset) || 25);
+                const roundedSatuan = roundToStep(hargaSatuanAktual, step);
+                return {
+                    isDigitalOrDtf,
+                    biayaSetting,
+                    marginPercent,
+                    marginAmount,
+                    totalJual,
+                    profit: totalJual - totalModal,
+                    hargaSatuanAktual,
+                    hargaPerLembar,
+                    roundingStep: step,
+                    roundedSatuan
+                };
             }
             function debounce(func, wait) {
                 let timeout;
@@ -1228,14 +1639,31 @@
             }
 
             function getPaperPrice(bahanId, planoId) {
-                const bahanObj = HARGA_BAHAN_OFFSET[bahanId];
+                const bahanObj = SETTINGS.hargaBahanOffset[bahanId];
                 if (!bahanObj) return 0;
-                if (bahanObj[planoId] !== undefined) return bahanObj[planoId];
+                if (bahanObj[planoId] !== undefined) return Number(bahanObj[planoId]) || 0;
 
-                const planoObj = UKURAN_PLANO.find(p => p.id === planoId);
+                const planoObj = SETTINGS.ukuranPlano.find(p => p.id === planoId);
                 const factor = planoObj ? (planoObj.factor || 1) : 1;
                 let basePrice = bahanObj['plano_79_109'] || bahanObj['plano_90_120'] || bahanObj['plano_65_100'] || 0;
-                return Math.round(basePrice / factor);
+                return Math.round((Number(basePrice) || 0) / factor);
+            }
+
+            function populateMesinOptions() {
+                if (!el.jenisMesin) return;
+                const current = el.jenisMesin.value || 'offset_sprint';
+                const order = ['offset_sprint', 'offset_lithrone', 'digital', 'dtf'];
+                el.jenisMesin.innerHTML = '';
+                order.forEach(id => {
+                    const m = SETTINGS.mesin[id];
+                    if (!m) return;
+                    const label = m.tipe === 'offset'
+                        ? `${m.nama} (${m.labelDimensi})`
+                        : m.nama;
+                    const opt = new Option(label, m.id);
+                    if (m.id === current) opt.selected = true;
+                    el.jenisMesin.add(opt);
+                });
             }
 
             function copyToClipboard() {
@@ -1360,11 +1788,12 @@
             }
 
             function populateBahanOptions(mode) {
+                const currentVal = el.bahanKertas.value;
                 el.bahanKertas.innerHTML = '';
                 const isOffset = mode.startsWith('offset');
                 const isBook = el.productSelector.value.startsWith('buku');
 
-                const filtered = JENIS_KERTAS.filter(k => {
+                const filtered = SETTINGS.jenisKertas.filter(k => {
                     const matchMachine = k.mesin.includes(mode) || (isOffset && k.mesin.includes('offset'));
                     if (!matchMachine) return false;
                     // Sembunyikan bahan khusus isi buku (HVS Isi Buku, Bookpaper Novel, dll) jika produk BUKAN buku
@@ -1372,7 +1801,6 @@
                     return true;
                 });
 
-                const currentVal = el.bahanKertas.value;
                 filtered.forEach(k => {
                     el.bahanKertas.add(new Option(k.nama, k.id));
                 });
@@ -1394,14 +1822,14 @@
                     coverSelect.innerHTML = '';
                     isiSelect.innerHTML = '';
 
-                    const allMachinePapers = JENIS_KERTAS.filter(k => k.mesin.includes(mode) || (isOffset && k.mesin.includes('offset')));
+                    const allMachinePapers = SETTINGS.jenisKertas.filter(k => k.mesin.includes(mode) || (isOffset && k.mesin.includes('offset')));
 
-                    // Cover items: Art Paper / Carton, Ivory, Duplex, Basetik, Fotopaper
-                    const coverItems = allMachinePapers.filter(k => k.id.includes('ap') || k.id.includes('ivory') || k.id.includes('duplex') || k.id.includes('basetik') || k.id.includes('fotopaper'));
+                    // Cover items: Art Paper / Carton, Ivory, Duplex, Basetik, Fotopaper, or custom bookRole
+                    const coverItems = allMachinePapers.filter(k => k.id.includes('ap') || k.id.includes('ivory') || k.id.includes('duplex') || k.id.includes('basetik') || k.id.includes('fotopaper') || k.bookRole === 'cover' || k.bookRole === 'both');
                     coverItems.forEach(k => coverSelect.add(new Option(k.nama, k.id)));
 
-                    // Isi items: Art Paper, HVS, Bookpaper, Matte Paper
-                    const isiItems = allMachinePapers.filter(k => k.id.includes('ap120') || k.id.includes('ap150') || k.id.includes('hvs') || k.id.includes('bookpaper') || k.id.includes('matte'));
+                    // Isi items: Art Paper, HVS, Bookpaper, Matte Paper, or custom bookRole
+                    const isiItems = allMachinePapers.filter(k => k.id.includes('ap120') || k.id.includes('ap150') || k.id.includes('hvs') || k.id.includes('bookpaper') || k.id.includes('matte') || k.bookRole === 'isi' || k.bookRole === 'both');
                     isiItems.forEach(k => isiSelect.add(new Option(k.nama, k.id)));
 
                     if (coverSelect.querySelector(`option[value="${currentCoverVal}"]`)) {
@@ -1426,19 +1854,23 @@
             }
 
             function populatePlanoOptions(mode, bahanId) {
+                const prevPlano = el.planoSelector.value;
                 el.planoSelector.innerHTML = '';
                 let opts = [];
-                if (mode === 'digital') opts = UKURAN_PLANO.filter(p => p.id.startsWith('a3'));
-                else if (mode === 'dtf') opts = UKURAN_PLANO.filter(p => p.id.startsWith('a3') || p.id === 'a4');
+                if (mode === 'digital') opts = SETTINGS.ukuranPlano.filter(p => p.id.startsWith('a3'));
+                else if (mode === 'dtf') opts = SETTINGS.ukuranPlano.filter(p => p.id.startsWith('a3') || p.id === 'a4');
                 else {
-                    const bahan = JENIS_KERTAS.find(k => k.id === bahanId);
-                    if (bahan && bahan.id.startsWith('kraft')) {
-                        opts = UKURAN_PLANO.filter(p => p.id.startsWith('plano_90_120'));
+                    const bahan = SETTINGS.jenisKertas.find(k => k.id === bahanId);
+                    if (bahan && (bahan.id.startsWith('kraft') || bahan.planoGroup === 'jumbo')) {
+                        opts = SETTINGS.ukuranPlano.filter(p => p.id.startsWith('plano_90_120'));
                     } else {
-                        opts = UKURAN_PLANO.filter(p => p.id.startsWith('plano_79_109') || p.id === 'plano_65_100');
+                        opts = SETTINGS.ukuranPlano.filter(p => p.id.startsWith('plano_79_109') || p.id === 'plano_65_100');
                     }
                 }
                 opts.forEach(p => el.planoSelector.add(new Option(p.nama, p.id)));
+                if (prevPlano && el.planoSelector.querySelector(`option[value="${prevPlano}"]`)) {
+                    el.planoSelector.value = prevPlano;
+                }
             }
 
             let customFinishings = [];
@@ -1453,7 +1885,22 @@
                     .replace(/>/g, '&gt;');
             }
 
-            function setupFinishingOptions() {
+            function setupFinishingOptions(preserveState = false) {
+                let savedState = null;
+                if (preserveState) {
+                    savedState = {
+                        checked: Array.from(document.querySelectorAll('#finishing-options input[type="checkbox"][data-key]:checked')).map(c => c.dataset.key),
+                        jmlLipatan: document.getElementById('jumlah-lipatan')?.value,
+                        foilP: document.getElementById('hotfoil-panjang')?.value,
+                        foilL: document.getElementById('hotfoil-lebar')?.value,
+                        stickerType: document.getElementById('sticker-cutting-type')?.value
+                    };
+                }
+
+                const chipsHtml = (SETTINGS.customFinishingPresets || []).map(ch => `
+                    <button type="button" class="quick-chip-btn bg-slate-800/90 hover:bg-indigo-950 hover:border-indigo-500/60 text-slate-300 hover:text-indigo-200 border border-slate-700/60 px-2 py-0.5 rounded-md transition" data-name="${escapeHtml(ch.name)}" data-type="${escapeHtml(ch.type)}" data-price="${Number(ch.price) || 0}">${escapeHtml(ch.label || ('+ ' + ch.name))}</button>
+                `).join('');
+
                 el.finishingOptions.innerHTML = `
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     <div class="flex items-center justify-between bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
@@ -1501,7 +1948,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="digital-only-finishing" class="border-t border-slate-800/80 pt-3 mt-3 hidden">
+                <div id="digital-only-finishing" class="border-t border-slate-800/80 pt-3 mt-3 ${el.jenisMesin.value === 'digital' ? '' : 'hidden'}">
                     <div class="flex items-center justify-between gap-2" id="sticker-cutting-section">
                         <div class="flex items-center gap-2">
                             <input type="checkbox" id="finishing-stickercut" data-key="stickercut" class="w-4 h-4 text-indigo-600 rounded bg-slate-900 border-slate-700">
@@ -1546,13 +1993,7 @@
                     <!-- Quick Suggestions Chips -->
                     <div class="flex flex-wrap items-center gap-1.5 mb-3 text-[11px]">
                         <span class="text-slate-400 font-medium mr-1">Rekomendasi Cepat:</span>
-                        <button type="button" class="quick-chip-btn bg-slate-800/90 hover:bg-indigo-950 hover:border-indigo-500/60 text-slate-300 hover:text-indigo-200 border border-slate-700/60 px-2 py-0.5 rounded-md transition" data-name="Pond / Die Cut Custom" data-type="total" data-price="150000">+ Pond / Die Cut</button>
-                        <button type="button" class="quick-chip-btn bg-slate-800/90 hover:bg-indigo-950 hover:border-indigo-500/60 text-slate-300 hover:text-indigo-200 border border-slate-700/60 px-2 py-0.5 rounded-md transition" data-name="Emboss / Deboss" data-type="pcs" data-price="350">+ Emboss / Deboss</button>
-                        <button type="button" class="quick-chip-btn bg-slate-800/90 hover:bg-indigo-950 hover:border-indigo-500/60 text-slate-300 hover:text-indigo-200 border border-slate-700/60 px-2 py-0.5 rounded-md transition" data-name="Lem Samping / Lipat Manual" data-type="pcs" data-price="200">+ Lem Manual</button>
-                        <button type="button" class="quick-chip-btn bg-slate-800/90 hover:bg-indigo-950 hover:border-indigo-500/60 text-slate-300 hover:text-indigo-200 border border-slate-700/60 px-2 py-0.5 rounded-md transition" data-name="Pasang Mata Ayam / Eyelet" data-type="pcs" data-price="250">+ Mata Ayam</button>
-                        <button type="button" class="quick-chip-btn bg-slate-800/90 hover:bg-indigo-950 hover:border-indigo-500/60 text-slate-300 hover:text-indigo-200 border border-slate-700/60 px-2 py-0.5 rounded-md transition" data-name="Nomorator / Barcode" data-type="pcs" data-price="150">+ Nomorator</button>
-                        <button type="button" class="quick-chip-btn bg-slate-800/90 hover:bg-indigo-950 hover:border-indigo-500/60 text-slate-300 hover:text-indigo-200 border border-slate-700/60 px-2 py-0.5 rounded-md transition" data-name="Sablon Tambahan Khusus" data-type="total" data-price="120000">+ Sablon Khusus</button>
-                        <button type="button" class="quick-chip-btn bg-slate-800/90 hover:bg-indigo-950 hover:border-indigo-500/60 text-slate-300 hover:text-indigo-200 border border-slate-700/60 px-2 py-0.5 rounded-md transition" data-name="Pasang Pita / Tali Kur" data-type="pcs" data-price="500">+ Tali / Pita</button>
+                        ${chipsHtml}
                     </div>
 
                     <!-- Custom Finishing List Container -->
@@ -1588,6 +2029,22 @@
                         addCustomFinishing(name, type, price);
                     });
                 });
+
+                if (savedState) {
+                    if (savedState.jmlLipatan !== undefined && document.getElementById('jumlah-lipatan')) document.getElementById('jumlah-lipatan').value = savedState.jmlLipatan;
+                    if (savedState.foilP !== undefined && document.getElementById('hotfoil-panjang')) document.getElementById('hotfoil-panjang').value = savedState.foilP;
+                    if (savedState.foilL !== undefined && document.getElementById('hotfoil-lebar')) document.getElementById('hotfoil-lebar').value = savedState.foilL;
+                    if (savedState.stickerType !== undefined && document.getElementById('sticker-cutting-type')) document.getElementById('sticker-cutting-type').value = savedState.stickerType;
+                    savedState.checked.forEach(k => {
+                        const cb = document.querySelector(`#finishing-options input[data-key="${k}"]`);
+                        if (cb) {
+                            cb.checked = true;
+                            if (k === 'lipat') document.getElementById('jumlah-lipatan-container')?.classList.remove('hidden');
+                            if (k === 'hotfoil') document.getElementById('hotfoil-container')?.classList.remove('hidden');
+                            if (k === 'stickercut') document.getElementById('sticker-cutting-container')?.classList.remove('hidden');
+                        }
+                    });
+                }
 
                 renderCustomFinishingList();
             }
@@ -2135,7 +2592,7 @@
                 const p_size = size.p + (bleed * 2);
                 const l_size = size.l + (bleed * 2);
                 const mode = el.jenisMesin.value;
-                const mesin = SPESIFIKASI_MESIN[mode] || SPESIFIKASI_MESIN.offset_sprint;
+                const mesin = SETTINGS.mesin[mode] || SETTINGS.mesin.offset_sprint;
 
                 // Pola muat di mesin (bisa posisi vertikal atau horizontal)
                 const fitsPatternInMachine = (p_size <= mesin.maxP && l_size <= mesin.maxL) || (p_size <= mesin.maxL && l_size <= mesin.maxP);
@@ -2364,7 +2821,7 @@
                 const p_size = size.p + (bleed * 2);
                 const l_size = size.l + (bleed * 2);
 
-                const plano = UKURAN_PLANO.find(p => p.id === el.planoSelector.value) || UKURAN_PLANO[0];
+                const plano = SETTINGS.ukuranPlano.find(p => p.id === el.planoSelector.value) || SETTINGS.ukuranPlano[0];
                 const layout = findBestLayout(plano.planoP, plano.planoL, p_size, l_size);
                 drawLayoutSVG(layout, plano, size.multiplier);
 
@@ -2380,12 +2837,12 @@
                 const mode = el.jenisMesin.value;
 
                 let candidatePlanos = [];
-                if (mode === 'digital') candidatePlanos = UKURAN_PLANO.filter(p => p.id.startsWith('a3'));
-                else if (mode === 'dtf') candidatePlanos = UKURAN_PLANO.filter(p => p.id.startsWith('a3') || p.id === 'a4');
+                if (mode === 'digital') candidatePlanos = SETTINGS.ukuranPlano.filter(p => p.id.startsWith('a3'));
+                else if (mode === 'dtf') candidatePlanos = SETTINGS.ukuranPlano.filter(p => p.id.startsWith('a3') || p.id === 'a4');
                 else {
-                    const bahan = JENIS_KERTAS.find(k => k.id === el.bahanKertas.value);
-                    if (bahan && bahan.id.startsWith('kraft')) candidatePlanos = UKURAN_PLANO.filter(p => p.id.startsWith('plano_90_120'));
-                    else candidatePlanos = UKURAN_PLANO.filter(p => p.id.startsWith('plano_79_109') || p.id === 'plano_65_100');
+                    const bahan = SETTINGS.jenisKertas.find(k => k.id === el.bahanKertas.value);
+                    if (bahan && (bahan.id.startsWith('kraft') || bahan.planoGroup === 'jumbo')) candidatePlanos = SETTINGS.ukuranPlano.filter(p => p.id.startsWith('plano_90_120'));
+                    else candidatePlanos = SETTINGS.ukuranPlano.filter(p => p.id.startsWith('plano_79_109') || p.id === 'plano_65_100');
                 }
 
                 let bestPlano = null;
@@ -2412,7 +2869,7 @@
                 const p = sizeP + (bleed * 2);
                 const l = sizeL + (bleed * 2);
                 const qty = customJumlah !== null ? customJumlah : (parseInt(el.jumlah.value) || 1000);
-                const plano = UKURAN_PLANO.find(u => u.id === el.planoSelector.value) || UKURAN_PLANO[0];
+                const plano = SETTINGS.ukuranPlano.find(u => u.id === el.planoSelector.value) || SETTINGS.ukuranPlano[0];
                 const sisiCetak = customSisi !== null ? customSisi : (parseInt(el.sisi.value) || 1);
                 const bahanKertasId = customBahan || el.bahanKertas.value;
 
@@ -2427,43 +2884,47 @@
 
                 let insheet = 0;
                 if (el.jenisMesin.value.startsWith('offset')) {
-                    insheet = 25 * (plano.factor || 1);
+                    insheet = (Number(SETTINGS.general.insheetBase) || 0) * (plano.factor || 1);
                 }
 
                 let costBahan = 0, costCetak = 0, totalBiayaFinishing = 0;
 
                 if (el.jenisMesin.value === 'digital') {
-                    const price = HARGA_DIGITAL.hargaBahan[bahanKertasId] || 3000;
+                    const price = SETTINGS.hargaDigital.hargaBahan[bahanKertasId] ?? 3000;
                     costBahan = totalPlano * price;
                     const jWarna = parseInt(el.jumlahWarna?.value) || 4;
-                    const baseClick = (jWarna === 1) ? (HARGA_DIGITAL.biayaProduksiPerLembarBW || 1500) : HARGA_DIGITAL.biayaProduksiPerLembar;
-                    const printRate = isBook ? (baseClick / 2) : baseClick;
+                    const baseClick = (jWarna === 1) ? (SETTINGS.hargaDigital.biayaProduksiPerLembarBW ?? 1500) : (SETTINGS.hargaDigital.biayaProduksiPerLembar ?? 4000);
+                    const bookDiv = Math.max(1, Number(SETTINGS.pricing.bookPrintDivisorDigital) || 2);
+                    const printRate = isBook ? (baseClick / bookDiv) : baseClick;
                     costCetak = totalPlano * printRate * sisiCetak;
                 } else if (el.jenisMesin.value === 'dtf') {
-                    const price = HARGA_DIGITAL.hargaBahan[bahanKertasId] || 20000;
+                    const price = SETTINGS.hargaDigital.hargaBahan[bahanKertasId] ?? 20000;
                     costBahan = totalPlano * price;
                 } else { // Offset
                     const price = getPaperPrice(bahanKertasId, el.planoSelector.value);
                     costBahan = (totalPlano + insheet) * price;
 
                     const jumlahWarna = parseInt(el.jumlahWarna.value) || 4;
+                    const tier1List = SETTINGS.hargaOffsetTiered1Warna;
+                    const tier4List = SETTINGS.hargaOffsetTiered4Warna;
                     if (jumlahWarna === 1) {
-                        const tier = HARGA_OFFSET_TIERED_1_WARNA.find(t => qty >= t.minQty && qty <= t.maxQty);
+                        const tier = tier1List.find(t => qty >= t.minQty && qty <= t.maxQty) || tier1List[tier1List.length - 1];
                         costCetak = tier ? (tier.baseCost + tier.clickCost) : 1250000;
                     } else {
-                        const tier4 = HARGA_OFFSET_TIERED_4_WARNA.find(t => qty >= t.minQty && qty <= t.maxQty);
+                        const tier4 = tier4List.find(t => qty >= t.minQty && qty <= t.maxQty) || tier4List[tier4List.length - 1];
                         const c4 = tier4 ? (tier4.baseCost + tier4.clickCost) : 1700000;
                         if (jumlahWarna === 4) {
                             costCetak = c4;
                         } else {
-                            const tier1 = HARGA_OFFSET_TIERED_1_WARNA.find(t => qty >= t.minQty && qty <= t.maxQty);
+                            const tier1 = tier1List.find(t => qty >= t.minQty && qty <= t.maxQty) || tier1List[tier1List.length - 1];
                             const c1 = tier1 ? (tier1.baseCost + tier1.clickCost) : 1250000;
                             const step = (c4 - c1) / 3;
                             costCetak = c1 + (step * (jumlahWarna - 1));
                         }
                     }
                     costCetak *= sisiCetak;
-                    if (isBook) costCetak = costCetak / 2;
+                    const bookDivOff = Math.max(1, Number(SETTINGS.pricing.bookPrintDivisorOffset) || 2);
+                    if (isBook) costCetak = costCetak / bookDivOff;
                 }
 
                 // Finishing Cost Calculations
@@ -2471,7 +2932,7 @@
                     const laminasiPilihan = el.laminasi.value;
                     if (laminasiPilihan !== 'none') {
                         const sisiLaminasi = parseInt(laminasiPilihan.split('_')[1]) || 1;
-                        const hargaLaminasiPerLembar = el.jenisMesin.value === 'digital' ? HARGA_DIGITAL.finishing.laminasiPerLembar : HARGA_OFFSET_FINISHING.laminasiPerPlano;
+                        const hargaLaminasiPerLembar = el.jenisMesin.value === 'digital' ? SETTINGS.hargaDigital.finishing.laminasiPerLembar : SETTINGS.hargaOffsetFinishing.laminasiPerPlano;
                         totalBiayaFinishing += (totalPlano * hargaLaminasiPerLembar * sisiLaminasi);
                     }
 
@@ -2480,12 +2941,12 @@
                         const isDigital = el.jenisMesin.value === 'digital';
                         if ((isDigital && ['spotuv', 'hotfoil', 'lipat'].includes(key)) || (!isDigital && ['stickercut', 'laminatingkaku'].includes(key))) return;
 
-                        const costRule = HARGA_OFFSET_FINISHING[key] || HARGA_DIGITAL.finishing[key];
+                        const costRule = SETTINGS.hargaOffsetFinishing[key] || SETTINGS.hargaDigital.finishing[key];
                         if (!costRule) return;
 
                         let biayaItem = 0;
                         if (key === 'potong') {
-                            biayaItem = isDigital ? HARGA_DIGITAL.finishing.potongJadi : Math.max(costRule.min, qty * costRule.per_pcs);
+                            biayaItem = isDigital ? SETTINGS.hargaDigital.finishing.potongJadi : Math.max(costRule.min, qty * costRule.per_pcs);
                         } else if (key === 'lipat') {
                             const jmlLipatan = parseInt(document.getElementById('jumlah-lipatan')?.value) || 1;
                             biayaItem = Math.max(costRule.min, qty * jmlLipatan * costRule.per_lipatan_pcs);
@@ -2500,10 +2961,10 @@
                                 biayaItem = Math.max(costRule.min, patternsNeeded * area * costRule.per_cm2) * sisiCetak;
                             }
                         } else if (key === 'laminatingkaku') {
-                            biayaItem = totalPlano * HARGA_DIGITAL.finishing.laminatingKakuPerLembar;
+                            biayaItem = totalPlano * SETTINGS.hargaDigital.finishing.laminatingKakuPerLembar;
                         } else if (key === 'stickercut') {
                             const tipe = document.getElementById('sticker-cutting-type')?.value || 'bawah5';
-                            biayaItem = totalPlano * HARGA_DIGITAL.finishing.cuttingStiker[tipe];
+                            biayaItem = totalPlano * SETTINGS.hargaDigital.finishing.cuttingStiker[tipe];
                         }
 
                         if (biayaItem > 0) totalBiayaFinishing += biayaItem;
@@ -2540,14 +3001,17 @@
 
                     let bindingRate = 0;
                     const halIsi = parseInt(document.getElementById('hal_isi')?.value) || 32;
+                    const br = SETTINGS.bindingRates;
                     if (pid === 'bukuStaples') {
-                        bindingRate = isDigital ? 600 : 400; // Staples manual/tengah standar
+                        bindingRate = isDigital ? br.bukuStaples.digital : br.bukuStaples.offset;
                     } else if (pid === 'bukuKawat') {
-                        bindingRate = isDigital ? 1350 : 1000; // Jahit kawat mesin / saddle stitcher
+                        bindingRate = isDigital ? br.bukuKawat.digital : br.bukuKawat.offset;
                     } else if (pid === 'bukuPerfect') {
-                        bindingRate = isDigital ? (3500 + halIsi * 30) : (2500 + halIsi * 20);
+                        bindingRate = isDigital
+                            ? (br.bukuPerfect.digitalBase + halIsi * br.bukuPerfect.digitalPerHal)
+                            : (br.bukuPerfect.offsetBase + halIsi * br.bukuPerfect.offsetPerHal);
                     } else if (pid === 'bukuSpiral') {
-                        bindingRate = isDigital ? 5000 : 4500;
+                        bindingRate = isDigital ? br.bukuSpiral.digital : br.bukuSpiral.offset;
                     }
                     const costBinding = qty * bindingRate;
 
@@ -2619,7 +3083,7 @@
                 const activeSize = availableSizes[currentActiveSizeIndex] || availableSizes[0] || { p: 10, l: 10, multiplier: 1 };
                 const p = activeSize.p + (bleed * 2);
                 const l = activeSize.l + (bleed * 2);
-                const plano = UKURAN_PLANO.find(u => u.id === el.planoSelector.value) || UKURAN_PLANO[0];
+                const plano = SETTINGS.ukuranPlano.find(u => u.id === el.planoSelector.value) || SETTINGS.ukuranPlano[0];
                 const layout = findBestLayout(plano.planoP, plano.planoL, p, l);
                 const isBook = el.productSelector.value.startsWith('buku');
                 const patternsNeeded = isBook ? Math.ceil(qty * (activeSize.multiplier || 1)) : Math.ceil(qty / (activeSize.multiplier || 1));
@@ -2638,33 +3102,35 @@
                 }
 
                 // 1. Potong Jadi
-                let costPotong = isDigital ? HARGA_DIGITAL.finishing.potongJadi : Math.max(HARGA_OFFSET_FINISHING.potong.min, qty * HARGA_OFFSET_FINISHING.potong.per_pcs);
+                const offFin = SETTINGS.hargaOffsetFinishing;
+                const digFin = SETTINGS.hargaDigital.finishing;
+                let costPotong = isDigital ? digFin.potongJadi : Math.max(offFin.potong.min, qty * offFin.potong.per_pcs);
                 setBadge('badge-cost-potong', costPotong);
 
                 // 2. Lipat Mesin
                 const jmlLipatan = parseInt(document.getElementById('jumlah-lipatan')?.value) || 1;
-                let costLipat = Math.max(HARGA_OFFSET_FINISHING.lipat.min, qty * jmlLipatan * HARGA_OFFSET_FINISHING.lipat.per_lipatan_pcs);
+                let costLipat = Math.max(offFin.lipat.min, qty * jmlLipatan * offFin.lipat.per_lipatan_pcs);
                 setBadge('badge-cost-lipat', costLipat);
 
                 // 3. Spot UV
                 const areaPattern = Math.max(1, (p - bleed * 2) * (l - bleed * 2));
-                let costSpotUV = Math.max(HARGA_OFFSET_FINISHING.spotuv.min, patternsNeeded * areaPattern * HARGA_OFFSET_FINISHING.spotuv.per_cm2) * sisiCetak;
+                let costSpotUV = Math.max(offFin.spotuv.min, patternsNeeded * areaPattern * offFin.spotuv.per_cm2) * sisiCetak;
                 setBadge('badge-cost-spotuv', costSpotUV);
 
                 // 4. Hot Foil
                 const foilP = parseFloat(document.getElementById('hotfoil-panjang')?.value) || 5;
                 const foilL = parseFloat(document.getElementById('hotfoil-lebar')?.value) || 5;
                 const areaFoil = foilP * foilL;
-                let costHotFoil = Math.max(HARGA_OFFSET_FINISHING.hotfoil.min, patternsNeeded * areaFoil * HARGA_OFFSET_FINISHING.hotfoil.per_cm2) * sisiCetak;
+                let costHotFoil = Math.max(offFin.hotfoil.min, patternsNeeded * areaFoil * offFin.hotfoil.per_cm2) * sisiCetak;
                 setBadge('badge-cost-hotfoil', costHotFoil);
 
                 // 5. Kiss Cut Stiker (Digital)
                 const typeSticker = document.getElementById('sticker-cutting-type')?.value || 'bawah5';
-                let costStickerCut = totalPlano * HARGA_DIGITAL.finishing.cuttingStiker[typeSticker];
+                let costStickerCut = totalPlano * digFin.cuttingStiker[typeSticker];
                 setBadge('badge-cost-stickercut', isDigital ? costStickerCut : 0);
 
                 // 6. Laminating Hard Press (Digital)
-                let costLaminatingKaku = totalPlano * HARGA_DIGITAL.finishing.laminatingKakuPerLembar;
+                let costLaminatingKaku = totalPlano * digFin.laminatingKakuPerLembar;
                 setBadge('badge-cost-laminatingkaku', isDigital ? costLaminatingKaku : 0);
             }
 
@@ -2723,28 +3189,22 @@
                 const jenisMesin = el.jenisMesin.value;
                 totalModalCache = breakdown.totalModal;
 
-                let totalJual = 0; let hargaSatuanAktual = 0; let hargaPerLembar = 0;
+                const summary = computeSellingSummary(totalModalCache, breakdown.totalPlano, jumlah, jenisMesin);
+                el.jualPerLembarContainer.classList.toggle('hidden', !summary.isDigitalOrDtf);
 
-                if (jenisMesin === 'digital' || jenisMesin === 'dtf') {
-                    el.jualPerLembarContainer.classList.remove('hidden');
-                    const biayaSettingDigital = 25000;
-                    totalJual = totalModalCache + biayaSettingDigital;
-
-                    hargaSatuanAktual = jumlah > 0 ? totalJual / jumlah : 0;
-                    if (breakdown.totalPlano > 0) hargaPerLembar = totalJual / breakdown.totalPlano;
-
-                    const calculatedProfit = totalJual - totalModalCache;
-                    el.profitVal.textContent = formatRupiah(calculatedProfit);
+                if (summary.isDigitalOrDtf || summary.profit > 0) {
+                    const noteParts = [];
+                    if (summary.biayaSetting > 0) noteParts.push(`Setting ${formatRupiah(summary.biayaSetting)}`);
+                    if (summary.marginPercent > 0) noteParts.push(`Margin ${summary.marginPercent}%`);
+                    if (el.profitFormulaNote) el.profitFormulaNote.textContent = noteParts.join(' + ');
+                    el.profitVal.textContent = formatRupiah(summary.profit);
                     el.profitContainer.classList.remove('hidden');
-                } else { // Offset
-                    el.jualPerLembarContainer.classList.add('hidden');
-                    totalJual = totalModalCache;
-                    hargaSatuanAktual = jumlah > 0 ? totalJual / jumlah : 0;
+                } else {
                     el.profitContainer.classList.add('hidden');
                 }
 
-                el.jualSatuanAktual.textContent = formatRupiah(hargaSatuanAktual);
-                el.jualPerLembar.textContent = formatRupiah(hargaPerLembar);
+                el.jualSatuanAktual.textContent = formatRupiah(summary.hargaSatuanAktual);
+                el.jualPerLembar.textContent = formatRupiah(summary.hargaPerLembar);
                 el.modalTotal.textContent = formatRupiah(totalModalCache);
 
                 document.getElementById('detail-bahan').textContent = formatRupiah(breakdown.biayaBahan);
@@ -2752,12 +3212,16 @@
                 document.getElementById('detail-finishing').textContent = formatRupiah(breakdown.totalBiayaFinishing);
 
                 if (resetRounded) {
-                    const finalSatuan = (jenisMesin.startsWith('offset')) ? roundToNearest25(hargaSatuanAktual) : Math.ceil(hargaSatuanAktual);
-                    el.jualSatuanRounded.value = finalSatuan;
-                    el.jualTotal.textContent = formatRupiah(finalSatuan * jumlah);
+                    el.jualSatuanRounded.value = summary.roundedSatuan;
+                    el.jualTotal.textContent = formatRupiah(summary.roundedSatuan * jumlah);
                 } else {
                     const roundedPrice = parseFloat(el.jualSatuanRounded.value) || 0;
                     el.jualTotal.textContent = formatRupiah(roundedPrice * jumlah);
+                    if (summary.isDigitalOrDtf || summary.marginPercent > 0 || roundedPrice * jumlah > totalModalCache) {
+                        const actualProfit = (roundedPrice * jumlah) - totalModalCache;
+                        el.profitVal.textContent = formatRupiah(actualProfit);
+                        if (actualProfit > 0) el.profitContainer.classList.remove('hidden');
+                    }
                 }
                 generatePenawaran();
             }
@@ -2828,7 +3292,7 @@
                 }
 
                 const specLines = [
-                    `*PENAWARAN HARGA CETAK*`,
+                    SETTINGS.general.waTitle || `*PENAWARAN HARGA CETAK*`,
                     `----------------------------`,
                     `- Produk: ${el.productSelector.options[el.productSelector.selectedIndex].text}`,
                     `- Dimensi Jadi: ${ukuranDetail}`,
@@ -2852,7 +3316,7 @@
                 if (el.jenisMesin.value !== 'dtf') {
                     customFinishings.forEach(item => {
                         if (item.active && item.name && item.name.trim() !== '') {
-                            const priceInfo = item.price > 0 
+                            const priceInfo = item.price > 0
                                 ? (item.priceType === 'pcs' ? `(+${formatRupiah(item.price)}/pcs)` : `(+${formatRupiah(item.price)} Total)`)
                                 : '';
                             finishingDetails.push(`${item.name.trim()}${priceInfo ? ' ' + priceInfo : ''}`);
@@ -2870,49 +3334,32 @@
                 const currentRoundedUnit = parseFloat(el.jualSatuanRounded.value) || 0;
                 const unitLabel = pid === 'kotakTutupTerpisah' ? 'set' : 'pcs';
 
-                if (isDigital) {
-                    // Digital Printing / DTF: Tiers kuantitas kecil-menengah (100, 300, 500, 1.000 pcs)
-                    const digitalBaseQuantities = [100, 300, 500, 1000];
-                    const quantities = Array.from(new Set([
-                        ...(requestedQty > 0 && requestedQty <= 2000 ? [requestedQty] : []),
-                        ...digitalBaseQuantities
-                    ])).sort((a, b) => a - b);
+                const baseQuantities = isDigital
+                    ? parseTierQuantities(SETTINGS.general.waTiersDigital, [100, 300, 500, 1000])
+                    : parseTierQuantities(SETTINGS.general.waTiersOffset, [1000, 2000, 3000, 5000, 10000]);
 
-                    quantities.forEach(qty => {
-                        let result = getCombinedBreakdown(qty);
+                const includeReq = isDigital
+                    ? (requestedQty > 0 && requestedQty <= 2000)
+                    : (requestedQty >= 1000);
 
-                        if (result && !result.error) {
-                            const biayaSettingDigital = 25000;
-                            const totalModalDigi = result.totalModal + biayaSettingDigital;
-                            const unitPrice = totalModalDigi / qty;
-                            const roundedUnitPrice = (qty === requestedQty && currentRoundedUnit > 0) ? currentRoundedUnit : Math.ceil(unitPrice);
-                            const totalHargaTier = roundedUnitPrice * qty;
+                const quantities = Array.from(new Set([
+                    ...(includeReq ? [requestedQty] : []),
+                    ...baseQuantities
+                ])).sort((a, b) => a - b);
 
-                            penawaranText += `\n• ${qty.toLocaleString('id-ID')} pcs: *${formatRupiah(roundedUnitPrice)} / ${unitLabel}* (Total: ${formatRupiah(totalHargaTier)})`;
-                        }
-                    });
-                } else {
-                    // Offset Printing: Tiers kuantitas besar (diatas / mulai 1.000 pcs)
-                    const offsetBaseQuantities = [1000, 2000, 3000, 5000, 10000];
-                    const quantities = Array.from(new Set([
-                        ...(requestedQty >= 1000 ? [requestedQty] : []),
-                        ...offsetBaseQuantities
-                    ])).sort((a, b) => a - b);
+                quantities.forEach(qty => {
+                    const result = getCombinedBreakdown(qty);
+                    if (result && !result.error) {
+                        const tierSummary = computeSellingSummary(result.totalModal, result.totalPlano, qty, el.jenisMesin.value);
+                        const roundedUnitPrice = (qty === requestedQty && currentRoundedUnit > 0) ? currentRoundedUnit : tierSummary.roundedSatuan;
+                        const totalHargaTier = roundedUnitPrice * qty;
+                        penawaranText += `\n• ${qty.toLocaleString('id-ID')} pcs: *${formatRupiah(roundedUnitPrice)} / ${unitLabel}* (Total: ${formatRupiah(totalHargaTier)})`;
+                    }
+                });
 
-                    quantities.forEach(qty => {
-                        let result = getCombinedBreakdown(qty);
-
-                        if (result && !result.error) {
-                            const unitPrice = result.totalModal / qty;
-                            const roundedUnitPrice = (qty === requestedQty && currentRoundedUnit > 0) ? currentRoundedUnit : roundToNearest25(unitPrice);
-                            const totalHargaTier = roundedUnitPrice * qty;
-
-                            penawaranText += `\n• ${qty.toLocaleString('id-ID')} pcs: *${formatRupiah(roundedUnitPrice)} / ${unitLabel}* (Total: ${formatRupiah(totalHargaTier)})`;
-                        }
-                    });
-                }
-
-                penawaranText += `\n\n_Catatan: Harga dapat berubah sewaktu-waktu sesuai kestabilan bahan._\n\nTerima kasih! 🙏\n*Dooren'z Percetakan*`;
+                const footerNote = SETTINGS.general.waFooterNote || `_Catatan: Harga dapat berubah sewaktu-waktu sesuai kestabilan bahan._`;
+                const shopName = SETTINGS.general.shopName || `Dooren'z Percetakan`;
+                penawaranText += `\n\n${footerNote}\n\nTerima kasih! 🙏\n*${shopName}*`;
                 el.whatsappText.value = penawaranText;
             }
 
@@ -2963,7 +3410,7 @@
 
             // --- 9. OPTIMIZATION SUGGESTION LOGIC ---
             function generateSimpleOptimizationSuggestions(product, currentValues, bleed) {
-                const plano = UKURAN_PLANO.find(p => p.id === el.planoSelector.value) || UKURAN_PLANO[0];
+                const plano = SETTINGS.ukuranPlano.find(p => p.id === el.planoSelector.value) || SETTINGS.ukuranPlano[0];
                 const baselineSizeResult = product.calculate(currentValues, bleed);
                 let baselineNormalizedYield = 0; let baselineWaste = 100; let baselineActiveSizeName = '';
 
@@ -3065,7 +3512,7 @@
 
             function runCustomOptimization() {
                 const productId = el.productSelector.value; const product = products[productId];
-                const bleed = parseFloat(el.bleedInput.value) || 0; const plano = UKURAN_PLANO.find(p => p.id === el.planoSelector.value) || UKURAN_PLANO[0];
+                const bleed = parseFloat(el.bleedInput.value) || 0; const plano = SETTINGS.ukuranPlano.find(p => p.id === el.planoSelector.value) || SETTINGS.ukuranPlano[0];
                 const baselineValues = {}; const targetValues = {}; let allBaselineValid = true;
 
                 product.fields.forEach(field => {
@@ -3457,11 +3904,1072 @@
             el.copyWhatsappButton.addEventListener('click', copyToClipboard);
             el.runCustomOptimizationBtn.addEventListener('click', runCustomOptimization);
 
+            // --- 12. ADMIN SETTING MODAL ENGINE ---
+            const adminModal = document.getElementById('admin-modal');
+            const adminTabBody = document.getElementById('admin-tab-body');
+            const adminCustomDot = document.getElementById('admin-custom-dot');
+            const adminSaveStatus = document.getElementById('admin-save-status');
+            let activeAdminTab = 'bahan';
+            let adminDraft = null;
+            let adminPaperSearch = '';
+            let autoSyncOffsetPecahan = true;
+            const expandedOffsetRows = new Set();
+
+            function updateAdminIndicator() {
+                const hasCustom = !!localStorage.getItem(ADMIN_STORAGE_KEY);
+                if (adminCustomDot) adminCustomDot.classList.toggle('hidden', !hasCustom);
+            }
+
+            function renderAdminTabsNav() {
+                document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+                    const isAct = btn.dataset.adminTab === activeAdminTab;
+                    btn.className = isAct
+                        ? 'admin-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-indigo-600 text-white shadow-sm'
+                        : 'admin-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-slate-800 text-slate-300 hover:bg-slate-700';
+                });
+            }
+
+            function openAdminModal() {
+                adminDraft = normalizeSettings(JSON.parse(JSON.stringify(SETTINGS)));
+                activeAdminTab = 'bahan';
+                renderAdminTabsNav();
+                renderAdminTab();
+                adminModal.classList.remove('hidden');
+                adminModal.classList.add('flex');
+            }
+
+            function closeAdminModal() {
+                adminModal.classList.add('hidden');
+                adminModal.classList.remove('flex');
+                adminDraft = null;
+            }
+
+            function showAdminStatus(msg, isError = false) {
+                if (!adminSaveStatus) return;
+                adminSaveStatus.textContent = msg;
+                adminSaveStatus.className = `text-xs font-semibold ${isError ? 'text-rose-400' : 'text-emerald-400'}`;
+                adminSaveStatus.classList.remove('hidden');
+                setTimeout(() => adminSaveStatus.classList.add('hidden'), 2600);
+            }
+
+            function syncOffsetDerivedPrices(paperId, basePlanoId, baseVal) {
+                const prices = adminDraft.hargaBahanOffset[paperId] || (adminDraft.hargaBahanOffset[paperId] = {});
+                if (basePlanoId === 'plano_79_109') {
+                    prices['plano_65_100'] = Math.round(baseVal * 0.75);
+                    ['plano_79_109_per_3', 'plano_79_109_per_4', 'plano_79_109_per_5', 'plano_79_109_per_6_custom'].forEach(pid => {
+                        const pl = adminDraft.ukuranPlano.find(u => u.id === pid);
+                        if (pl && pl.factor) prices[pid] = Math.round(baseVal / pl.factor);
+                    });
+                } else if (basePlanoId === 'plano_90_120') {
+                    ['plano_90_120_per_4', 'plano_90_120_per_6'].forEach(pid => {
+                        const pl = adminDraft.ukuranPlano.find(u => u.id === pid);
+                        if (pl && pl.factor) prices[pid] = Math.round(baseVal / pl.factor);
+                    });
+                }
+            }
+
+            function renderAdminTab() {
+                if (!adminDraft || !adminTabBody) return;
+                if (activeAdminTab === 'bahan') renderAdminTabBahan();
+                else if (activeAdminTab === 'cetak') renderAdminTabCetak();
+                else if (activeAdminTab === 'finishing') renderAdminTabFinishing();
+                else if (activeAdminTab === 'lainnya') renderAdminTabLainnya();
+                else if (activeAdminTab === 'rumusan') renderAdminTabRumusan();
+            }
+
+            function renderAdminTabBahan() {
+                const q = adminPaperSearch.trim().toLowerCase();
+                const digPapers = adminDraft.jenisKertas.filter(k => (k.mesin.includes('digital') || k.mesin.includes('dtf')) && (!q || k.nama.toLowerCase().includes(q) || k.id.toLowerCase().includes(q)));
+                const offPapers = adminDraft.jenisKertas.filter(k => k.mesin.includes('offset') && (!q || k.nama.toLowerCase().includes(q) || k.id.toLowerCase().includes(q)));
+
+                adminTabBody.innerHTML = `
+                    <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                        <input type="text" id="admin-paper-search-inp" value="${escapeHtml(adminPaperSearch)}" placeholder="🔍 Cari nama atau ID kertas..." class="form-input text-xs py-1.5 max-w-xs">
+                        <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                            <input type="checkbox" id="admin-auto-sync-pecahan" ${autoSyncOffsetPecahan ? 'checked' : ''} class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-indigo-600">
+                            <span>Auto-hitung harga pecahan (1/3, 1/4, 1/5, 1/6) & 65x100 saat Plano Utama diubah</span>
+                        </label>
+                    </div>
+
+                    <!-- Digital & DTF -->
+                    <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+                            <div>
+                                <h3 class="text-sm font-bold text-cyan-300">Kertas & Film Digital / DTF (Harga per Lembar)</h3>
+                                <p class="text-[11px] text-slate-400">Berlaku untuk mesin Digital Printing (A3+) dan Sablon Film DTF.</p>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="text-[11px] uppercase text-slate-400 border-b border-slate-800">
+                                        <th class="py-2 pr-2">Nama Bahan</th>
+                                        <th class="py-2 px-2">Mesin</th>
+                                        <th class="py-2 px-2 text-center">Isi Buku</th>
+                                        <th class="py-2 px-2">Harga / Lembar (Rp)</th>
+                                        <th class="py-2 pl-2 text-right">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800/60">
+                                    ${digPapers.map(k => {
+                                        const isDefault = DEFAULT_JENIS_KERTAS.some(d => d.id === k.id);
+                                        const price = adminDraft.hargaDigital.hargaBahan[k.id] ?? 0;
+                                        return `
+                                        <tr data-paper-id="${escapeHtml(k.id)}">
+                                            <td class="py-1.5 pr-2"><input type="text" class="adm-paper-name form-input text-xs py-1 px-2" value="${escapeHtml(k.nama)}"></td>
+                                            <td class="py-1.5 px-2 text-slate-400">${k.mesin.join(', ')}</td>
+                                            <td class="py-1.5 px-2 text-center"><input type="checkbox" class="adm-paper-book w-4 h-4 rounded bg-slate-900 border-slate-700 text-indigo-600" ${k.isBookOnly ? 'checked' : ''}></td>
+                                            <td class="py-1.5 px-2 w-40"><input type="number" min="0" step="100" class="adm-dig-price form-input text-xs py-1 px-2 text-right font-bold text-emerald-400" value="${price}"></td>
+                                            <td class="py-1.5 pl-2 text-right">${isDefault ? '<span class="text-[10px] text-slate-500">Bawaan</span>' : '<button type="button" class="adm-del-paper text-rose-400 hover:text-rose-300 text-xs font-semibold">Hapus</button>'}</td>
+                                        </tr>`;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pt-3 border-t border-slate-800 grid grid-cols-1 sm:grid-cols-12 gap-2 items-end">
+                            <div class="sm:col-span-4">
+                                <label class="block text-[10px] text-slate-400 mb-1">Tambah Bahan Digital/DTF Baru</label>
+                                <input type="text" id="new-dig-name" placeholder="Contoh: Art Carton 350gr" class="form-input text-xs py-1.5">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-[10px] text-slate-400 mb-1">Mesin</label>
+                                <select id="new-dig-mesin" class="form-select text-xs py-1.5">
+                                    <option value="digital">Digital</option>
+                                    <option value="dtf">DTF</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-[10px] text-slate-400 mb-1">Role Buku</label>
+                                <select id="new-dig-role" class="form-select text-xs py-1.5">
+                                    <option value="">Umum</option>
+                                    <option value="cover">Cover Buku</option>
+                                    <option value="isi">Isi Buku</option>
+                                    <option value="both">Cover & Isi</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-[10px] text-slate-400 mb-1">Harga/Lbr (Rp)</label>
+                                <input type="number" id="new-dig-price" value="3500" min="0" step="100" class="form-input text-xs py-1.5">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <button type="button" id="add-dig-paper-btn" class="w-full py-1.5 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition">+ Tambah</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Offset -->
+                    <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                        <div class="border-b border-slate-800 pb-2.5">
+                            <h3 class="text-sm font-bold text-indigo-300">Kertas Offset (Harga per Lembar Plano & Pecahan)</h3>
+                            <p class="text-[11px] text-slate-400">Ubah harga Plano Utama atau klik "Detail Pecahan" untuk atur harga per ukuran potongan plano secara manual.</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="text-[11px] uppercase text-slate-400 border-b border-slate-800">
+                                        <th class="py-2 pr-2">Nama Kertas Offset</th>
+                                        <th class="py-2 px-2 text-center">Khusus Buku</th>
+                                        <th class="py-2 px-2">Plano Utama (79x109 / 90x120)</th>
+                                        <th class="py-2 px-2">Plano 65x100</th>
+                                        <th class="py-2 pl-2 text-right">Detail / Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800/60">
+                                    ${offPapers.map(k => {
+                                        const isDefault = DEFAULT_JENIS_KERTAS.some(d => d.id === k.id);
+                                        const prices = adminDraft.hargaBahanOffset[k.id] || {};
+                                        const isJumbo = k.id.startsWith('kraft') || k.planoGroup === 'jumbo';
+                                        const baseKey = isJumbo ? 'plano_90_120' : 'plano_79_109';
+                                        const basePrice = prices[baseKey] ?? 0;
+                                        const p65 = prices['plano_65_100'] ?? 0;
+                                        const isExpanded = expandedOffsetRows.has(k.id);
+                                        const subPlanos = isJumbo
+                                            ? ['plano_90_120_per_4', 'plano_90_120_per_6']
+                                            : ['plano_79_109_per_3', 'plano_79_109_per_4', 'plano_79_109_per_5', 'plano_79_109_per_6_custom'];
+                                        return `
+                                        <tr data-paper-id="${escapeHtml(k.id)}">
+                                            <td class="py-1.5 pr-2"><input type="text" class="adm-paper-name form-input text-xs py-1 px-2" value="${escapeHtml(k.nama)}"></td>
+                                            <td class="py-1.5 px-2 text-center"><input type="checkbox" class="adm-paper-book w-4 h-4 rounded bg-slate-900 border-slate-700 text-indigo-600" ${k.isBookOnly ? 'checked' : ''}></td>
+                                            <td class="py-1.5 px-2 w-40">
+                                                <input type="number" min="0" step="50" data-base-key="${baseKey}" class="adm-off-base form-input text-xs py-1 px-2 text-right font-bold text-emerald-400" value="${basePrice}">
+                                            </td>
+                                            <td class="py-1.5 px-2 w-36">
+                                                ${isJumbo ? '<span class="text-slate-500 text-[11px]">- (Jumbo)</span>' : `<input type="number" min="0" step="25" data-plano-key="plano_65_100" class="adm-off-plano form-input text-xs py-1 px-2 text-right text-slate-200" value="${p65}">`}
+                                            </td>
+                                            <td class="py-1.5 pl-2 text-right whitespace-nowrap space-x-2">
+                                                <button type="button" class="adm-toggle-pecahan text-indigo-400 hover:text-indigo-300 text-[11px] font-semibold">${isExpanded ? '▲ Tutup' : '▼ Detail Pecahan'}</button>
+                                                ${isDefault ? '' : '<button type="button" class="adm-del-paper text-rose-400 hover:text-rose-300 text-[11px] font-semibold">Hapus</button>'}
+                                            </td>
+                                        </tr>
+                                        ${isExpanded ? `
+                                        <tr class="bg-slate-950/70" data-paper-id="${escapeHtml(k.id)}">
+                                            <td colspan="5" class="p-3">
+                                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                                    ${subPlanos.map(spId => {
+                                                        const pl = adminDraft.ukuranPlano.find(u => u.id === spId);
+                                                        const val = prices[spId] ?? Math.round(basePrice / (pl?.factor || 1));
+                                                        return `<div>
+                                                            <label class="block text-[10px] text-slate-400 mb-1">${escapeHtml(pl ? pl.nama : spId)}</label>
+                                                            <input type="number" min="0" step="10" data-plano-key="${spId}" class="adm-off-plano form-input text-xs py-1 text-right" value="${val}">
+                                                        </div>`;
+                                                    }).join('')}
+                                                </div>
+                                            </td>
+                                        </tr>` : ''}`;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pt-3 border-t border-slate-800 grid grid-cols-1 sm:grid-cols-12 gap-2 items-end">
+                            <div class="sm:col-span-4">
+                                <label class="block text-[10px] text-slate-400 mb-1">Tambah Kertas Offset Baru</label>
+                                <input type="text" id="new-off-name" placeholder="Contoh: Ivory 400gr" class="form-input text-xs py-1.5">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-[10px] text-slate-400 mb-1">Ukuran Plano</label>
+                                <select id="new-off-group" class="form-select text-xs py-1.5">
+                                    <option value="std">79 x 109 cm</option>
+                                    <option value="jumbo">90 x 120 cm</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-[10px] text-slate-400 mb-1">Role Buku</label>
+                                <select id="new-off-role" class="form-select text-xs py-1.5">
+                                    <option value="">Umum</option>
+                                    <option value="cover">Cover Buku</option>
+                                    <option value="isi">Isi Buku</option>
+                                    <option value="both">Cover & Isi</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-[10px] text-slate-400 mb-1">Harga Plano (Rp)</label>
+                                <input type="number" id="new-off-price" value="6000" min="0" step="100" class="form-input text-xs py-1.5">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <button type="button" id="add-off-paper-btn" class="w-full py-1.5 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition">+ Tambah</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('admin-paper-search-inp')?.addEventListener('input', e => {
+                    adminPaperSearch = e.target.value;
+                    renderAdminTabBahan();
+                    const inp = document.getElementById('admin-paper-search-inp');
+                    if (inp) { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
+                });
+                document.getElementById('admin-auto-sync-pecahan')?.addEventListener('change', e => {
+                    autoSyncOffsetPecahan = e.target.checked;
+                });
+
+                adminTabBody.querySelectorAll('tr[data-paper-id]').forEach(row => {
+                    const pid = row.dataset.paperId;
+                    const paperObj = adminDraft.jenisKertas.find(k => k.id === pid);
+                    row.querySelector('.adm-paper-name')?.addEventListener('input', e => { if (paperObj) paperObj.nama = e.target.value; });
+                    row.querySelector('.adm-paper-book')?.addEventListener('change', e => { if (paperObj) paperObj.isBookOnly = e.target.checked; });
+                    row.querySelector('.adm-dig-price')?.addEventListener('input', e => { adminDraft.hargaDigital.hargaBahan[pid] = Number(e.target.value) || 0; });
+                    row.querySelector('.adm-off-base')?.addEventListener('input', e => {
+                        const baseKey = e.target.dataset.baseKey;
+                        const val = Number(e.target.value) || 0;
+                        if (!adminDraft.hargaBahanOffset[pid]) adminDraft.hargaBahanOffset[pid] = {};
+                        adminDraft.hargaBahanOffset[pid][baseKey] = val;
+                        if (autoSyncOffsetPecahan) {
+                            syncOffsetDerivedPrices(pid, baseKey, val);
+                            const nextRow = row.nextElementSibling;
+                            const p65Inp = row.querySelector('[data-plano-key="plano_65_100"]');
+                            if (p65Inp && adminDraft.hargaBahanOffset[pid]['plano_65_100'] !== undefined) p65Inp.value = adminDraft.hargaBahanOffset[pid]['plano_65_100'];
+                            if (nextRow && nextRow.dataset.paperId === pid) {
+                                nextRow.querySelectorAll('[data-plano-key]').forEach(inp => {
+                                    inp.value = adminDraft.hargaBahanOffset[pid][inp.dataset.planoKey] ?? 0;
+                                });
+                            }
+                        }
+                    });
+                    row.querySelectorAll('.adm-off-plano').forEach(inp => {
+                        inp.addEventListener('input', e => {
+                            if (!adminDraft.hargaBahanOffset[pid]) adminDraft.hargaBahanOffset[pid] = {};
+                            adminDraft.hargaBahanOffset[pid][e.target.dataset.planoKey] = Number(e.target.value) || 0;
+                        });
+                    });
+                    row.querySelector('.adm-toggle-pecahan')?.addEventListener('click', () => {
+                        if (expandedOffsetRows.has(pid)) expandedOffsetRows.delete(pid);
+                        else expandedOffsetRows.add(pid);
+                        renderAdminTabBahan();
+                    });
+                    row.querySelector('.adm-del-paper')?.addEventListener('click', () => {
+                        adminDraft.jenisKertas = adminDraft.jenisKertas.filter(k => k.id !== pid);
+                        delete adminDraft.hargaDigital.hargaBahan[pid];
+                        delete adminDraft.hargaBahanOffset[pid];
+                        renderAdminTabBahan();
+                    });
+                });
+
+                document.getElementById('add-dig-paper-btn')?.addEventListener('click', () => {
+                    const nama = document.getElementById('new-dig-name').value.trim();
+                    const mesinVal = document.getElementById('new-dig-mesin').value;
+                    const roleVal = document.getElementById('new-dig-role').value;
+                    const price = Number(document.getElementById('new-dig-price').value) || 0;
+                    if (!nama) return;
+                    const id = 'custom_' + mesinVal + '_' + Date.now();
+                    adminDraft.jenisKertas.push({ id, nama, jenis: mesinVal === 'dtf' ? 'stiker' : 'kertas', mesin: [mesinVal], isBookOnly: roleVal === 'isi', bookRole: roleVal || undefined });
+                    adminDraft.hargaDigital.hargaBahan[id] = price;
+                    renderAdminTabBahan();
+                });
+
+                document.getElementById('add-off-paper-btn')?.addEventListener('click', () => {
+                    const nama = document.getElementById('new-off-name').value.trim();
+                    const group = document.getElementById('new-off-group').value;
+                    const roleVal = document.getElementById('new-off-role').value;
+                    const price = Number(document.getElementById('new-off-price').value) || 0;
+                    if (!nama) return;
+                    const id = 'custom_off_' + Date.now();
+                    adminDraft.jenisKertas.push({ id, nama, jenis: 'kertas', mesin: ['offset'], isBookOnly: roleVal === 'isi', bookRole: roleVal || undefined, planoGroup: group === 'jumbo' ? 'jumbo' : 'std' });
+                    const baseKey = group === 'jumbo' ? 'plano_90_120' : 'plano_79_109';
+                    adminDraft.hargaBahanOffset[id] = { [baseKey]: price };
+                    syncOffsetDerivedPrices(id, baseKey, price);
+                    renderAdminTabBahan();
+                });
+            }
+
+            function renderTierTableHtml(tiers, prefix) {
+                return `
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="text-[11px] uppercase text-slate-400 border-b border-slate-800">
+                                <th class="py-2 pr-2">Min Qty</th>
+                                <th class="py-2 px-2">Max Qty (kosong = ∞)</th>
+                                <th class="py-2 px-2">Biaya Plat / Setup (Rp)</th>
+                                <th class="py-2 px-2">Ongkos Cetak / Click (Rp)</th>
+                                <th class="py-2 px-2 text-right">Total Ongkos</th>
+                                <th class="py-2 pl-2 text-right">Hapus</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/60">
+                            ${tiers.map((t, idx) => `
+                            <tr data-tier-prefix="${prefix}" data-tier-idx="${idx}">
+                                <td class="py-1.5 pr-2"><input type="number" min="1" class="adm-t-min form-input text-xs py-1 px-2" value="${t.minQty}"></td>
+                                <td class="py-1.5 px-2"><input type="number" min="1" placeholder="∞ (Tak Terbatas)" class="adm-t-max form-input text-xs py-1 px-2" value="${Number.isFinite(t.maxQty) ? t.maxQty : ''}"></td>
+                                <td class="py-1.5 px-2"><input type="number" min="0" step="10000" class="adm-t-base form-input text-xs py-1 px-2 text-right" value="${t.baseCost}"></td>
+                                <td class="py-1.5 px-2"><input type="number" min="0" step="10000" class="adm-t-click form-input text-xs py-1 px-2 text-right" value="${t.clickCost}"></td>
+                                <td class="py-1.5 px-2 text-right font-bold text-emerald-400 adm-t-total">${formatRupiah((t.baseCost || 0) + (t.clickCost || 0))}</td>
+                                <td class="py-1.5 pl-2 text-right"><button type="button" class="adm-t-del text-rose-400 hover:text-rose-300 font-semibold">✕</button></td>
+                            </tr>`).join('')}
+                        </tbody>
+                    </table>
+                </div>`;
+            }
+
+            function renderAdminTabCetak() {
+                adminTabBody.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                            <h3 class="text-sm font-bold text-cyan-300 border-b border-slate-800 pb-2">Ongkos Cetak Digital Printing & DTF</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">Biaya Klik Full Color / Lbr A3+ (Rp)</label>
+                                    <input type="number" id="adm-dig-color" min="0" step="100" value="${adminDraft.hargaDigital.biayaProduksiPerLembar}" class="form-input text-xs py-1.5 font-bold text-emerald-400">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">Biaya Klik 1 Warna / B&W / Lbr (Rp)</label>
+                                    <input type="number" id="adm-dig-bw" min="0" step="100" value="${adminDraft.hargaDigital.biayaProduksiPerLembarBW}" class="form-input text-xs py-1.5 font-bold text-emerald-400">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">Biaya Setting / Setup Digital & DTF (Rp)</label>
+                                    <input type="number" id="adm-dig-setting" min="0" step="1000" value="${adminDraft.pricing.biayaSettingDigital}" class="form-input text-xs py-1.5 font-bold text-amber-300">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">Pembagi Rate Cetak Buku Digital</label>
+                                    <input type="number" id="adm-dig-bookdiv" min="1" step="0.5" value="${adminDraft.pricing.bookPrintDivisorDigital}" class="form-input text-xs py-1.5">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                            <h3 class="text-sm font-bold text-indigo-300 border-b border-slate-800 pb-2">Parameter Umum Mesin Offset</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">Insheet Dasar (Lembar / Plano Utama)</label>
+                                    <input type="number" id="adm-off-insheet" min="0" step="5" value="${adminDraft.general.insheetBase}" class="form-input text-xs py-1.5 font-bold text-indigo-300">
+                                    <p class="text-[10px] text-slate-500 mt-1">Otomatis × faktor pecahan plano (mis. 1/4 plano = ×4).</p>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">Pembagi Rate Cetak Buku Offset</label>
+                                    <input type="number" id="adm-off-bookdiv" min="1" step="0.5" value="${adminDraft.pricing.bookPrintDivisorOffset}" class="form-input text-xs py-1.5">
+                                    <p class="text-[10px] text-slate-500 mt-1">Default 2 (rumus spread buku ÷ 2).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <div>
+                                <h3 class="text-sm font-bold text-indigo-300">Tier Harga Offset 4 Warna (CMYK)</h3>
+                                <p class="text-[11px] text-slate-400">Untuk 2 & 3 warna, sistem memakai interpolasi linier antara tier 1 Warna dan 4 Warna.</p>
+                            </div>
+                            <button type="button" id="add-tier-4-btn" class="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold">+ Tambah Tier</button>
+                        </div>
+                        ${renderTierTableHtml(adminDraft.hargaOffsetTiered4Warna, '4w')}
+                    </div>
+
+                    <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <h3 class="text-sm font-bold text-slate-200">Tier Harga Offset 1 Warna (Monochrome)</h3>
+                            <button type="button" id="add-tier-1-btn" class="px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold">+ Tambah Tier</button>
+                        </div>
+                        ${renderTierTableHtml(adminDraft.hargaOffsetTiered1Warna, '1w')}
+                    </div>
+                `;
+
+                document.getElementById('adm-dig-color')?.addEventListener('input', e => { adminDraft.hargaDigital.biayaProduksiPerLembar = Number(e.target.value) || 0; });
+                document.getElementById('adm-dig-bw')?.addEventListener('input', e => { adminDraft.hargaDigital.biayaProduksiPerLembarBW = Number(e.target.value) || 0; });
+                document.getElementById('adm-dig-setting')?.addEventListener('input', e => { adminDraft.pricing.biayaSettingDigital = Number(e.target.value) || 0; });
+                document.getElementById('adm-dig-bookdiv')?.addEventListener('input', e => { adminDraft.pricing.bookPrintDivisorDigital = Math.max(1, Number(e.target.value) || 1); });
+                document.getElementById('adm-off-insheet')?.addEventListener('input', e => { adminDraft.general.insheetBase = Math.max(0, Number(e.target.value) || 0); });
+                document.getElementById('adm-off-bookdiv')?.addEventListener('input', e => { adminDraft.pricing.bookPrintDivisorOffset = Math.max(1, Number(e.target.value) || 1); });
+
+                adminTabBody.querySelectorAll('tr[data-tier-prefix]').forEach(row => {
+                    const list = row.dataset.tierPrefix === '4w' ? adminDraft.hargaOffsetTiered4Warna : adminDraft.hargaOffsetTiered1Warna;
+                    const idx = parseInt(row.dataset.tierIdx, 10);
+                    const t = list[idx];
+                    const updateTot = () => {
+                        const totEl = row.querySelector('.adm-t-total');
+                        if (totEl) totEl.textContent = formatRupiah((t.baseCost || 0) + (t.clickCost || 0));
+                    };
+                    row.querySelector('.adm-t-min')?.addEventListener('input', e => { t.minQty = Math.max(1, parseInt(e.target.value) || 1); });
+                    row.querySelector('.adm-t-max')?.addEventListener('input', e => { t.maxQty = e.target.value.trim() === '' ? Infinity : (parseInt(e.target.value) || Infinity); });
+                    row.querySelector('.adm-t-base')?.addEventListener('input', e => { t.baseCost = Number(e.target.value) || 0; updateTot(); });
+                    row.querySelector('.adm-t-click')?.addEventListener('input', e => { t.clickCost = Number(e.target.value) || 0; updateTot(); });
+                    row.querySelector('.adm-t-del')?.addEventListener('click', () => {
+                        if (list.length <= 1) return;
+                        list.splice(idx, 1);
+                        renderAdminTabCetak();
+                    });
+                });
+
+                document.getElementById('add-tier-4-btn')?.addEventListener('click', () => {
+                    const last = adminDraft.hargaOffsetTiered4Warna[adminDraft.hargaOffsetTiered4Warna.length - 1];
+                    const nextMin = Number.isFinite(last?.maxQty) ? last.maxQty + 1 : 10001;
+                    adminDraft.hargaOffsetTiered4Warna.push({ minQty: nextMin, maxQty: Infinity, baseCost: last?.baseCost || 1000000, clickCost: last?.clickCost || 1000000 });
+                    renderAdminTabCetak();
+                });
+                document.getElementById('add-tier-1-btn')?.addEventListener('click', () => {
+                    const last = adminDraft.hargaOffsetTiered1Warna[adminDraft.hargaOffsetTiered1Warna.length - 1];
+                    const nextMin = Number.isFinite(last?.maxQty) ? last.maxQty + 1 : 9001;
+                    adminDraft.hargaOffsetTiered1Warna.push({ minQty: nextMin, maxQty: Infinity, baseCost: last?.baseCost || 750000, clickCost: last?.clickCost || 1000000 });
+                    renderAdminTabCetak();
+                });
+            }
+
+            function renderAdminTabFinishing() {
+                const df = adminDraft.hargaDigital.finishing;
+                const of = adminDraft.hargaOffsetFinishing;
+                const br = adminDraft.bindingRates;
+
+                adminTabBody.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                            <h3 class="text-sm font-bold text-cyan-300 border-b border-slate-800 pb-2">Finishing Digital (A3+)</h3>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div><label class="block text-[11px] text-slate-400 mb-1">Laminasi / Lembar (Rp)</label><input type="number" id="adm-df-lam" value="${df.laminasiPerLembar}" class="form-input text-xs py-1.5"></div>
+                                <div><label class="block text-[11px] text-slate-400 mb-1">Laminating Kaku / Lembar (Rp)</label><input type="number" id="adm-df-kaku" value="${df.laminatingKakuPerLembar}" class="form-input text-xs py-1.5"></div>
+                                <div><label class="block text-[11px] text-slate-400 mb-1">Kiss Cut &lt; 5 cm / Lbr (Rp)</label><input type="number" id="adm-df-cut5" value="${df.cuttingStiker.bawah5}" class="form-input text-xs py-1.5"></div>
+                                <div><label class="block text-[11px] text-slate-400 mb-1">Kiss Cut &gt; 5 cm / Lbr (Rp)</label><input type="number" id="adm-df-cuta5" value="${df.cuttingStiker.atas5}" class="form-input text-xs py-1.5"></div>
+                                <div class="col-span-2"><label class="block text-[11px] text-slate-400 mb-1">Potong Jadi Digital Flat (Rp)</label><input type="number" id="adm-df-potong" value="${df.potongJadi}" class="form-input text-xs py-1.5"></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                            <h3 class="text-sm font-bold text-indigo-300 border-b border-slate-800 pb-2">Finishing Offset</h3>
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <div class="col-span-2"><label class="block text-[11px] text-slate-400 mb-1">Laminasi per Plano (Rp)</label><input type="number" id="adm-of-lam" value="${of.laminasiPerPlano}" class="form-input text-xs py-1.5"></div>
+                                <div><label class="block text-[11px] text-slate-400 mb-1">Potong Min (Rp)</label><input type="number" id="adm-of-pot-min" value="${of.potong.min}" class="form-input text-xs py-1.5"></div>
+                                <div><label class="block text-[11px] text-slate-400 mb-1">Potong / Pcs (Rp)</label><input type="number" id="adm-of-pot-pcs" value="${of.potong.per_pcs}" class="form-input text-xs py-1.5"></div>
+                                <div><label class="block text-[11px] text-slate-400 mb-1">Lipat Min (Rp)</label><input type="number" id="adm-of-lip-min" value="${of.lipat.min}" class="form-input text-xs py-1.5"></div>
+                                <div><label class="block text-[11px] text-slate-400 mb-1">Lipat / Lipatan·Pcs (Rp)</label><input type="number" id="adm-of-lip-pcs" value="${of.lipat.per_lipatan_pcs}" class="form-input text-xs py-1.5"></div>
+                                <div><label class="block text-[11px] text-slate-400 mb-1">Spot UV Min (Rp)</label><input type="number" id="adm-of-uv-min" value="${of.spotuv.min}" class="form-input text-xs py-1.5"></div>
+                                <div><label class="block text-[11px] text-slate-400 mb-1">Spot UV / cm² (Rp)</label><input type="number" step="0.05" id="adm-of-uv-cm" value="${of.spotuv.per_cm2}" class="form-input text-xs py-1.5"></div>
+                                <div><label class="block text-[11px] text-slate-400 mb-1">Hot Foil Min (Rp)</label><input type="number" id="adm-of-foil-min" value="${of.hotfoil.min}" class="form-input text-xs py-1.5"></div>
+                                <div><label class="block text-[11px] text-slate-400 mb-1">Hot Foil / cm² (Rp)</label><input type="number" step="1" id="adm-of-foil-cm" value="${of.hotfoil.per_cm2}" class="form-input text-xs py-1.5"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                        <h3 class="text-sm font-bold text-indigo-300 border-b border-slate-800 pb-2">Ongkos Jilid Buku (per Buku)</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                            <div class="p-3 rounded-lg bg-slate-950/60 border border-slate-800 space-y-2">
+                                <p class="font-bold text-slate-200">Staples Tengah</p>
+                                <div><label class="text-[10px] text-slate-400">Digital (Rp)</label><input type="number" id="adm-br-st-dig" value="${br.bukuStaples.digital}" class="form-input text-xs py-1"></div>
+                                <div><label class="text-[10px] text-slate-400">Offset (Rp)</label><input type="number" id="adm-br-st-off" value="${br.bukuStaples.offset}" class="form-input text-xs py-1"></div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-950/60 border border-slate-800 space-y-2">
+                                <p class="font-bold text-slate-200">Jahit Kawat</p>
+                                <div><label class="text-[10px] text-slate-400">Digital (Rp)</label><input type="number" id="adm-br-kw-dig" value="${br.bukuKawat.digital}" class="form-input text-xs py-1"></div>
+                                <div><label class="text-[10px] text-slate-400">Offset (Rp)</label><input type="number" id="adm-br-kw-off" value="${br.bukuKawat.offset}" class="form-input text-xs py-1"></div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-950/60 border border-slate-800 space-y-2">
+                                <p class="font-bold text-slate-200">Lem Panas (Base + /Hal)</p>
+                                <div class="grid grid-cols-2 gap-1.5">
+                                    <div><label class="text-[10px] text-slate-400">Dig Base</label><input type="number" id="adm-br-pf-db" value="${br.bukuPerfect.digitalBase}" class="form-input text-xs py-1"></div>
+                                    <div><label class="text-[10px] text-slate-400">Dig /Hal</label><input type="number" id="adm-br-pf-dh" value="${br.bukuPerfect.digitalPerHal}" class="form-input text-xs py-1"></div>
+                                    <div><label class="text-[10px] text-slate-400">Off Base</label><input type="number" id="adm-br-pf-ob" value="${br.bukuPerfect.offsetBase}" class="form-input text-xs py-1"></div>
+                                    <div><label class="text-[10px] text-slate-400">Off /Hal</label><input type="number" id="adm-br-pf-oh" value="${br.bukuPerfect.offsetPerHal}" class="form-input text-xs py-1"></div>
+                                </div>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-950/60 border border-slate-800 space-y-2">
+                                <p class="font-bold text-slate-200">Spiral / Wire-O</p>
+                                <div><label class="text-[10px] text-slate-400">Digital (Rp)</label><input type="number" id="adm-br-sp-dig" value="${br.bukuSpiral.digital}" class="form-input text-xs py-1"></div>
+                                <div><label class="text-[10px] text-slate-400">Offset (Rp)</label><input type="number" id="adm-br-sp-off" value="${br.bukuSpiral.offset}" class="form-input text-xs py-1"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <h3 class="text-sm font-bold text-indigo-300">Preset Chip Rekomendasi Cepat Finishing Kustom</h3>
+                            <button type="button" id="adm-add-chip-btn" class="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold">+ Tambah Preset Chip</button>
+                        </div>
+                        <div class="space-y-2">
+                            ${(adminDraft.customFinishingPresets || []).map((ch, idx) => `
+                            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center bg-slate-950/60 p-2 rounded-lg border border-slate-800" data-chip-idx="${idx}">
+                                <div class="sm:col-span-3"><input type="text" class="adm-ch-label form-input text-xs py-1" value="${escapeHtml(ch.label)}" placeholder="Label tombol"></div>
+                                <div class="sm:col-span-4"><input type="text" class="adm-ch-name form-input text-xs py-1" value="${escapeHtml(ch.name)}" placeholder="Nama finishing"></div>
+                                <div class="sm:col-span-2">
+                                    <select class="adm-ch-type form-select text-xs py-1">
+                                        <option value="total" ${ch.type === 'total' ? 'selected' : ''}>Flat Total</option>
+                                        <option value="pcs" ${ch.type === 'pcs' ? 'selected' : ''}>Per Pcs</option>
+                                    </select>
+                                </div>
+                                <div class="sm:col-span-2"><input type="number" class="adm-ch-price form-input text-xs py-1 text-right" value="${ch.price || 0}" min="0" step="50"></div>
+                                <div class="sm:col-span-1 text-right"><button type="button" class="adm-ch-del text-rose-400 hover:text-rose-300 font-bold">✕</button></div>
+                            </div>`).join('')}
+                        </div>
+                    </div>
+                `;
+
+                const bindNum = (id, setter) => document.getElementById(id)?.addEventListener('input', e => setter(Number(e.target.value) || 0));
+                bindNum('adm-df-lam', v => df.laminasiPerLembar = v);
+                bindNum('adm-df-kaku', v => df.laminatingKakuPerLembar = v);
+                bindNum('adm-df-cut5', v => df.cuttingStiker.bawah5 = v);
+                bindNum('adm-df-cuta5', v => df.cuttingStiker.atas5 = v);
+                bindNum('adm-df-potong', v => df.potongJadi = v);
+                bindNum('adm-of-lam', v => of.laminasiPerPlano = v);
+                bindNum('adm-of-pot-min', v => of.potong.min = v);
+                bindNum('adm-of-pot-pcs', v => of.potong.per_pcs = v);
+                bindNum('adm-of-lip-min', v => of.lipat.min = v);
+                bindNum('adm-of-lip-pcs', v => of.lipat.per_lipatan_pcs = v);
+                bindNum('adm-of-uv-min', v => of.spotuv.min = v);
+                bindNum('adm-of-uv-cm', v => of.spotuv.per_cm2 = v);
+                bindNum('adm-of-foil-min', v => of.hotfoil.min = v);
+                bindNum('adm-of-foil-cm', v => of.hotfoil.per_cm2 = v);
+                bindNum('adm-br-st-dig', v => br.bukuStaples.digital = v);
+                bindNum('adm-br-st-off', v => br.bukuStaples.offset = v);
+                bindNum('adm-br-kw-dig', v => br.bukuKawat.digital = v);
+                bindNum('adm-br-kw-off', v => br.bukuKawat.offset = v);
+                bindNum('adm-br-pf-db', v => br.bukuPerfect.digitalBase = v);
+                bindNum('adm-br-pf-dh', v => br.bukuPerfect.digitalPerHal = v);
+                bindNum('adm-br-pf-ob', v => br.bukuPerfect.offsetBase = v);
+                bindNum('adm-br-pf-oh', v => br.bukuPerfect.offsetPerHal = v);
+                bindNum('adm-br-sp-dig', v => br.bukuSpiral.digital = v);
+                bindNum('adm-br-sp-off', v => br.bukuSpiral.offset = v);
+
+                adminTabBody.querySelectorAll('[data-chip-idx]').forEach(row => {
+                    const idx = parseInt(row.dataset.chipIdx, 10);
+                    const ch = adminDraft.customFinishingPresets[idx];
+                    row.querySelector('.adm-ch-label')?.addEventListener('input', e => ch.label = e.target.value);
+                    row.querySelector('.adm-ch-name')?.addEventListener('input', e => ch.name = e.target.value);
+                    row.querySelector('.adm-ch-type')?.addEventListener('change', e => ch.type = e.target.value);
+                    row.querySelector('.adm-ch-price')?.addEventListener('input', e => ch.price = Number(e.target.value) || 0);
+                    row.querySelector('.adm-ch-del')?.addEventListener('click', () => {
+                        adminDraft.customFinishingPresets.splice(idx, 1);
+                        renderAdminTabFinishing();
+                    });
+                });
+                document.getElementById('adm-add-chip-btn')?.addEventListener('click', () => {
+                    adminDraft.customFinishingPresets.push({ name: 'Finishing Baru', label: '+ Finishing Baru', type: 'pcs', price: 250 });
+                    renderAdminTabFinishing();
+                });
+            }
+
+            function renderAdminTabLainnya() {
+                const pr = adminDraft.pricing;
+                const gn = adminDraft.general;
+                adminTabBody.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                            <h3 class="text-sm font-bold text-emerald-400 border-b border-slate-800 pb-2">Margin Profit, Pembulatan & Bleed</h3>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">Margin Profit Offset (%)</label>
+                                    <input type="number" id="adm-pr-moff" min="0" step="1" value="${pr.marginOffsetPercent}" class="form-input text-xs py-1.5 font-bold text-emerald-400">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">Margin Profit Digital/DTF (%)</label>
+                                    <input type="number" id="adm-pr-mdig" min="0" step="1" value="${pr.marginDigitalPercent}" class="form-input text-xs py-1.5 font-bold text-emerald-400">
+                                </div>
+                                <div class="col-span-2">
+                                    <label class="block text-[11px] text-slate-400 mb-1">Basis Pengali Margin (%)</label>
+                                    <select id="adm-pr-mbasis" class="form-select text-xs py-1.5">
+                                        <option value="modal" ${pr.marginBasis === 'modal' ? 'selected' : ''}>% dari Total HPP Modal</option>
+                                        <option value="modal_plus_setting" ${pr.marginBasis === 'modal_plus_setting' ? 'selected' : ''}>% dari (Total HPP Modal + Biaya Setting)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">Pembulatan Satuan Offset (Rp)</label>
+                                    <input type="number" id="adm-pr-roff" min="1" step="1" value="${pr.roundingOffset}" class="form-input text-xs py-1.5">
+                                    <p class="text-[10px] text-slate-500 mt-0.5">Kelipatan ke atas (default: 25)</p>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] text-slate-400 mb-1">Pembulatan Satuan Digital (Rp)</label>
+                                    <input type="number" id="adm-pr-rdig" min="1" step="1" value="${pr.roundingDigital}" class="form-input text-xs py-1.5">
+                                    <p class="text-[10px] text-slate-500 mt-0.5">1 = ceil Rp 1 (default: 1)</p>
+                                </div>
+                                <div class="col-span-2">
+                                    <label class="block text-[11px] text-slate-400 mb-1">Default Bleed Margin (cm / sisi)</label>
+                                    <input type="number" id="adm-gn-bleed" min="0" step="0.05" value="${gn.defaultBleed}" class="form-input text-xs py-1.5">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                            <h3 class="text-sm font-bold text-indigo-300 border-b border-slate-800 pb-2">Pengaturan Penawaran WhatsApp</h3>
+                            <div class="space-y-2.5">
+                                <div><label class="block text-[11px] text-slate-400 mb-1">Nama Percetakan (Footer WA)</label><input type="text" id="adm-gn-shop" value="${escapeHtml(gn.shopName)}" class="form-input text-xs py-1.5"></div>
+                                <div><label class="block text-[11px] text-slate-400 mb-1">Judul Header WA</label><input type="text" id="adm-gn-watitle" value="${escapeHtml(gn.waTitle)}" class="form-input text-xs py-1.5"></div>
+                                <div><label class="block text-[11px] text-slate-400 mb-1">Catatan Kaki WA</label><input type="text" id="adm-gn-wanote" value="${escapeHtml(gn.waFooterNote)}" class="form-input text-xs py-1.5"></div>
+                                <div class="grid grid-cols-2 gap-2.5">
+                                    <div><label class="block text-[11px] text-slate-400 mb-1">Tier Qty WA Digital/DTF</label><input type="text" id="adm-gn-tdig" value="${escapeHtml(gn.waTiersDigital)}" class="form-input text-xs py-1.5" placeholder="100, 300, 500, 1000"></div>
+                                    <div><label class="block text-[11px] text-slate-400 mb-1">Tier Qty WA Offset</label><input type="text" id="adm-gn-toff" value="${escapeHtml(gn.waTiersOffset)}" class="form-input text-xs py-1.5" placeholder="1000, 2000, 3000, 5000, 10000"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                        <h3 class="text-sm font-bold text-indigo-300 border-b border-slate-800 pb-2">Spesifikasi & Batas Ukuran Mesin Cetak</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="text-[11px] uppercase text-slate-400 border-b border-slate-800">
+                                        <th class="py-2 pr-2">Nama Mesin</th>
+                                        <th class="py-2 px-2">Maks Panjang (cm)</th>
+                                        <th class="py-2 px-2">Maks Lebar (cm)</th>
+                                        <th class="py-2 pl-2">Label Dimensi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800/60">
+                                    ${Object.values(adminDraft.mesin).map(m => `
+                                    <tr data-mesin-id="${escapeHtml(m.id)}">
+                                        <td class="py-1.5 pr-2"><input type="text" class="adm-m-nama form-input text-xs py-1" value="${escapeHtml(m.nama)}"></td>
+                                        <td class="py-1.5 px-2 w-36"><input type="number" step="0.1" min="1" class="adm-m-maxp form-input text-xs py-1 text-right" value="${m.maxP}"></td>
+                                        <td class="py-1.5 px-2 w-36"><input type="number" step="0.1" min="1" class="adm-m-maxl form-input text-xs py-1 text-right" value="${m.maxL}"></td>
+                                        <td class="py-1.5 pl-2"><input type="text" class="adm-m-label form-input text-xs py-1" value="${escapeHtml(m.labelDimensi)}"></td>
+                                    </tr>`).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                        <h3 class="text-sm font-bold text-indigo-300 border-b border-slate-800 pb-2">Daftar Ukuran Sheet / Plano</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="text-[11px] uppercase text-slate-400 border-b border-slate-800">
+                                        <th class="py-2 pr-2">Nama Sheet / Plano</th>
+                                        <th class="py-2 px-2">Panjang (cm)</th>
+                                        <th class="py-2 px-2">Lebar (cm)</th>
+                                        <th class="py-2 pl-2">Faktor Pecahan</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800/60">
+                                    ${adminDraft.ukuranPlano.map((p, idx) => `
+                                    <tr data-plano-idx="${idx}">
+                                        <td class="py-1.5 pr-2"><input type="text" class="adm-pl-nama form-input text-xs py-1" value="${escapeHtml(p.nama)}"></td>
+                                        <td class="py-1.5 px-2 w-28"><input type="number" step="0.1" min="1" class="adm-pl-p form-input text-xs py-1 text-right" value="${p.planoP}"></td>
+                                        <td class="py-1.5 px-2 w-28"><input type="number" step="0.1" min="1" class="adm-pl-l form-input text-xs py-1 text-right" value="${p.planoL}"></td>
+                                        <td class="py-1.5 pl-2 w-28"><input type="number" step="1" min="1" class="adm-pl-f form-input text-xs py-1 text-right" value="${p.factor}"></td>
+                                    </tr>`).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('adm-pr-moff')?.addEventListener('input', e => pr.marginOffsetPercent = Math.max(0, Number(e.target.value) || 0));
+                document.getElementById('adm-pr-mdig')?.addEventListener('input', e => pr.marginDigitalPercent = Math.max(0, Number(e.target.value) || 0));
+                document.getElementById('adm-pr-mbasis')?.addEventListener('change', e => pr.marginBasis = e.target.value);
+                document.getElementById('adm-pr-roff')?.addEventListener('input', e => pr.roundingOffset = Math.max(1, Number(e.target.value) || 1));
+                document.getElementById('adm-pr-rdig')?.addEventListener('input', e => pr.roundingDigital = Math.max(1, Number(e.target.value) || 1));
+                document.getElementById('adm-gn-bleed')?.addEventListener('input', e => gn.defaultBleed = Math.max(0, Number(e.target.value) || 0));
+                document.getElementById('adm-gn-shop')?.addEventListener('input', e => gn.shopName = e.target.value);
+                document.getElementById('adm-gn-watitle')?.addEventListener('input', e => gn.waTitle = e.target.value);
+                document.getElementById('adm-gn-wanote')?.addEventListener('input', e => gn.waFooterNote = e.target.value);
+                document.getElementById('adm-gn-tdig')?.addEventListener('input', e => gn.waTiersDigital = e.target.value);
+                document.getElementById('adm-gn-toff')?.addEventListener('input', e => gn.waTiersOffset = e.target.value);
+
+                adminTabBody.querySelectorAll('tr[data-mesin-id]').forEach(row => {
+                    const m = adminDraft.mesin[row.dataset.mesinId];
+                    const syncLbl = () => {
+                        const lbl = `${m.maxL} x ${m.maxP} cm${m.id === 'digital' ? ' (A3+)' : (m.id === 'dtf' ? ' (A3)' : '')}`;
+                        m.labelDimensi = lbl;
+                        const lInp = row.querySelector('.adm-m-label');
+                        if (lInp) lInp.value = lbl;
+                    };
+                    row.querySelector('.adm-m-nama')?.addEventListener('input', e => m.nama = e.target.value);
+                    row.querySelector('.adm-m-maxp')?.addEventListener('input', e => { m.maxP = Number(e.target.value) || 1; syncLbl(); });
+                    row.querySelector('.adm-m-maxl')?.addEventListener('input', e => { m.maxL = Number(e.target.value) || 1; syncLbl(); });
+                    row.querySelector('.adm-m-label')?.addEventListener('input', e => m.labelDimensi = e.target.value);
+                });
+
+                adminTabBody.querySelectorAll('tr[data-plano-idx]').forEach(row => {
+                    const p = adminDraft.ukuranPlano[parseInt(row.dataset.planoIdx, 10)];
+                    row.querySelector('.adm-pl-nama')?.addEventListener('input', e => p.nama = e.target.value);
+                    row.querySelector('.adm-pl-p')?.addEventListener('input', e => p.planoP = Number(e.target.value) || 1);
+                    row.querySelector('.adm-pl-l')?.addEventListener('input', e => p.planoL = Number(e.target.value) || 1);
+                    row.querySelector('.adm-pl-f')?.addEventListener('input', e => p.factor = Math.max(1, parseInt(e.target.value) || 1));
+                });
+            }
+
+            function renderAdminTabRumusan() {
+                const sp = adminDraft.spine;
+                const blk = sp.bulking;
+
+                const updatePriceSim = () => {
+                    const simModal = Number(document.getElementById('sim-modal')?.value) || 0;
+                    const simQty = Math.max(1, parseInt(document.getElementById('sim-qty')?.value) || 1);
+                    const simMesin = document.getElementById('sim-mesin')?.value || 'offset_sprint';
+                    const isDig = simMesin === 'digital' || simMesin === 'dtf';
+                    const bSet = isDig ? (Number(adminDraft.pricing.biayaSettingDigital) || 0) : 0;
+                    const mPct = isDig ? (Number(adminDraft.pricing.marginDigitalPercent) || 0) : (Number(adminDraft.pricing.marginOffsetPercent) || 0);
+                    const basis = adminDraft.pricing.marginBasis === 'modal_plus_setting' ? (simModal + bSet) : simModal;
+                    const mAmt = basis * (mPct / 100);
+                    const tot = simModal + bSet + mAmt;
+                    const unit = tot / simQty;
+                    const step = isDig ? (Number(adminDraft.pricing.roundingDigital) || 1) : (Number(adminDraft.pricing.roundingOffset) || 25);
+                    const rounded = roundToStep(unit, step);
+                    const out = document.getElementById('sim-output');
+                    if (out) {
+                        out.innerHTML = `
+                            <span>Setting: <strong>${formatRupiah(bSet)}</strong></span>
+                            <span>• Margin (${mPct}%): <strong>${formatRupiah(mAmt)}</strong></span>
+                            <span>• Total Jual: <strong class="text-emerald-400">${formatRupiah(tot)}</strong></span>
+                            <span>• Satuan Pas: <strong>${formatRupiah(unit)}</strong></span>
+                            <span>• Dibulatkan (kelipatan ${step}): <strong class="text-indigo-300">${formatRupiah(rounded)}</strong></span>
+                        `;
+                    }
+                };
+
+                const updateSpineSim = () => {
+                    const hal = parseInt(document.getElementById('sim-sp-hal')?.value) || 64;
+                    const gsm = parseInt(document.getElementById('sim-sp-gsm')?.value) || 120;
+                    const bType = document.getElementById('sim-sp-type')?.value || 'artpaper';
+                    const factor = Number(blk[bType]) || blk.default;
+                    const rawCm = (Math.ceil(hal / 2) * gsm * factor) / 10;
+                    const finalCm = Math.max(sp.minSpineCm, parseFloat(rawCm.toFixed(2)));
+                    const out = document.getElementById('sim-sp-out');
+                    if (out) out.innerHTML = `Hasil Spine: <strong class="text-cyan-300">${(finalCm * 10).toFixed(1)} mm (${finalCm.toFixed(2)} cm)</strong>`;
+                };
+
+                const productCardsHtml = Object.entries(PRODUCT_FORMULA_DEFS).map(([pid, def]) => {
+                    const pName = products[pid]?.name || pid;
+                    const ov = adminDraft.productFormulas?.[pid] || {};
+                    const extraP = ov.extraP ?? 0;
+                    const extraL = ov.extraL ?? 0;
+                    return `
+                    <div class="bg-slate-950/70 rounded-xl border border-slate-800 p-3.5 space-y-2.5" data-fpid="${pid}">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-2">
+                            <div>
+                                <h4 class="font-bold text-indigo-300 text-xs">${escapeHtml(pName)}</h4>
+                                <p class="text-[10px] text-slate-400">Variabel: <code class="text-cyan-300">${def.vars.join(', ')}</code></p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label class="text-[10px] text-slate-400">+P (cm): <input type="number" step="0.1" class="adm-f-extrap form-input text-[11px] py-0.5 px-1.5 w-16 inline-block" value="${extraP}"></label>
+                                <label class="text-[10px] text-slate-400">+L (cm): <input type="number" step="0.1" class="adm-f-extral form-input text-[11px] py-0.5 px-1.5 w-16 inline-block" value="${extraL}"></label>
+                                <button type="button" class="adm-f-reset px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-semibold">Reset</button>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            ${def.sizes.map((sDef, idx) => {
+                                const pExpr = ov.sizes?.[idx]?.pExpr ?? sDef.pExpr;
+                                const lExpr = ov.sizes?.[idx]?.lExpr ?? sDef.lExpr;
+                                const testP = safeEvalMath(pExpr, def.sample);
+                                const testL = safeEvalMath(lExpr, def.sample);
+                                const isValid = Number.isFinite(testP) && Number.isFinite(testL);
+                                return `
+                                <div class="grid grid-cols-1 lg:grid-cols-12 gap-2 items-center bg-slate-900/70 p-2 rounded-lg border border-slate-800/70" data-fsize-idx="${idx}">
+                                    <div class="lg:col-span-2 font-semibold text-slate-200 text-[11px]">${escapeHtml(sDef.name)}</div>
+                                    <div class="lg:col-span-4">
+                                        <span class="text-[10px] text-slate-400 block mb-0.5">Rumus Panjang (P):</span>
+                                        <input type="text" class="adm-f-pexpr form-input font-mono text-[11px] py-1 px-2" value="${escapeHtml(pExpr)}">
+                                    </div>
+                                    <div class="lg:col-span-4">
+                                        <span class="text-[10px] text-slate-400 block mb-0.5">Rumus Lebar (L):</span>
+                                        <input type="text" class="adm-f-lexpr form-input font-mono text-[11px] py-1 px-2" value="${escapeHtml(lExpr)}">
+                                    </div>
+                                    <div class="lg:col-span-2 text-right adm-f-preview text-[11px] ${isValid ? 'text-emerald-400' : 'text-rose-400'} font-semibold">
+                                        ${isValid ? `${(testP + extraP).toFixed(1)} × ${(testL + extraL).toFixed(1)} cm` : '⚠ Rumus Error'}
+                                    </div>
+                                </div>`;
+                            }).join('')}
+                        </div>
+                    </div>`;
+                }).join('');
+
+                adminTabBody.innerHTML = `
+                    <!-- Ringkasan Rumusan HPP & Harga Jual -->
+                    <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                        <h3 class="text-sm font-bold text-indigo-300 border-b border-slate-800 pb-2">Rumusan Kalkulasi HPP & Harga Jual Aktif</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-[11px] text-slate-300">
+                            <div class="p-3 rounded-lg bg-slate-950/60 border border-slate-800 space-y-1.5">
+                                <p class="font-bold text-cyan-300">1. Kebutuhan Sheet & Bahan:</p>
+                                <p>• <code>Pola Dibutuhkan</code> = Buku ? <code>ceil(Qty × Multiplier)</code> : <code>ceil(Qty ÷ Multiplier)</code></p>
+                                <p>• <code>Total Plano</code> = <code>ceil(Pola Dibutuhkan ÷ Muat_Per_Plano)</code></p>
+                                <p>• <code>Insheet Offset</code> = <code>${adminDraft.general.insheetBase} × Faktor_Pecahan_Plano</code></p>
+                                <p>• <code>Biaya Bahan</code> = Digital: <code>Total_Plano × Harga_Lembar</code> | Offset: <code>(Total_Plano + Insheet) × Harga_Plano</code></p>
+                            </div>
+                            <div class="p-3 rounded-lg bg-slate-950/60 border border-slate-800 space-y-1.5">
+                                <p class="font-bold text-emerald-400">2. Ongkos Cetak, Margin & Pembulatan:</p>
+                                <p>• <code>Cetak Digital</code> = <code>Total_Plano × (Buku ? Rate÷${adminDraft.pricing.bookPrintDivisorDigital} : Rate) × Sisi</code></p>
+                                <p>• <code>Cetak Offset</code> = <code>(Base_Tier + Click_Tier) × Sisi</code> (2–3 warna: interpolasi linier 1W↔4W; Buku ÷ ${adminDraft.pricing.bookPrintDivisorOffset})</p>
+                                <p>• <code>Harga Jual</code> = <code>HPP + Biaya_Setting + (Basis × Margin%)</code></p>
+                                <p>• <code>Satuan Bulat</code> = <code>ceil(Harga_Satuan ÷ Kelipatan) × Kelipatan</code></p>
+                            </div>
+                        </div>
+                        <!-- Live Simulator -->
+                        <div class="p-3 rounded-xl bg-indigo-950/30 border border-indigo-500/30 space-y-2">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="font-bold text-indigo-300 text-xs mr-1">🧮 Simulator Harga Jual:</span>
+                                <input type="number" id="sim-modal" value="1000000" step="50000" class="form-input text-xs py-1 w-32" title="Simulasi HPP Modal">
+                                <input type="number" id="sim-qty" value="1000" min="1" class="form-input text-xs py-1 w-24" title="Simulasi Qty">
+                                <select id="sim-mesin" class="form-select text-xs py-1 w-40">
+                                    <option value="offset_sprint">Offset</option>
+                                    <option value="digital">Digital / DTF</option>
+                                </select>
+                            </div>
+                            <div id="sim-output" class="flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-slate-300"></div>
+                        </div>
+                    </div>
+
+                    <!-- Parameter Spine Buku -->
+                    <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+                            <div>
+                                <h3 class="text-sm font-bold text-cyan-300">Rumusan Punggung Buku (Spine Perfect Binding)</h3>
+                                <p class="text-[11px] text-slate-400"><code>Spine (cm) = max(MinSpine, (ceil(Hal_Isi ÷ 2) × GSM × Bulking_Factor) ÷ 10)</code></p>
+                            </div>
+                            <div class="flex items-center gap-2 text-[11px]">
+                                <input type="number" id="sim-sp-hal" value="64" min="4" class="form-input text-xs py-1 w-16" title="Hal Isi">
+                                <input type="number" id="sim-sp-gsm" value="120" min="40" class="form-input text-xs py-1 w-16" title="GSM">
+                                <select id="sim-sp-type" class="form-select text-xs py-1 w-28">
+                                    <option value="artpaper">Art Paper</option>
+                                    <option value="bookpaper">Bookpaper</option>
+                                    <option value="hvs">HVS</option>
+                                    <option value="matte">Matte</option>
+                                    <option value="default">Default</option>
+                                </select>
+                                <span id="sim-sp-out"></span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+                            <div><label class="block text-[10px] text-slate-400 mb-1">Min Spine (cm)</label><input type="number" step="0.01" min="0" id="adm-sp-min" value="${sp.minSpineCm}" class="form-input text-xs py-1"></div>
+                            <div><label class="block text-[10px] text-slate-400 mb-1">Bulking Bookpaper</label><input type="number" step="0.00005" min="0" id="adm-sp-bp" value="${blk.bookpaper}" class="form-input text-xs py-1"></div>
+                            <div><label class="block text-[10px] text-slate-400 mb-1">Bulking HVS</label><input type="number" step="0.00005" min="0" id="adm-sp-hvs" value="${blk.hvs}" class="form-input text-xs py-1"></div>
+                            <div><label class="block text-[10px] text-slate-400 mb-1">Bulking Art Paper</label><input type="number" step="0.00005" min="0" id="adm-sp-ap" value="${blk.artpaper}" class="form-input text-xs py-1"></div>
+                            <div><label class="block text-[10px] text-slate-400 mb-1">Bulking Matte</label><input type="number" step="0.00005" min="0" id="adm-sp-mt" value="${blk.matte}" class="form-input text-xs py-1"></div>
+                            <div><label class="block text-[10px] text-slate-400 mb-1">Bulking Default</label><input type="number" step="0.00005" min="0" id="adm-sp-df" value="${blk.default}" class="form-input text-xs py-1"></div>
+                        </div>
+                    </div>
+
+                    <!-- Rumusan Ukuran Bentangan Produk -->
+                    <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-4 space-y-3">
+                        <div class="border-b border-slate-800 pb-2">
+                            <h3 class="text-sm font-bold text-indigo-300">Rumusan Ukuran Bentangan Pola Produk (Bisa Diedit)</h3>
+                            <p class="text-[11px] text-slate-400">Sesuaikan rumus panjang (P), lebar (L), atau tambahkan toleransi pisau/lipatan (+P / +L cm). Hasil uji otomatis pakai angka contoh standar.</p>
+                        </div>
+                        <div class="space-y-3">
+                            ${productCardsHtml}
+                        </div>
+                    </div>
+                `;
+
+                ['sim-modal', 'sim-qty', 'sim-mesin'].forEach(id => {
+                    document.getElementById(id)?.addEventListener('input', updatePriceSim);
+                    document.getElementById(id)?.addEventListener('change', updatePriceSim);
+                });
+                updatePriceSim();
+
+                ['sim-sp-hal', 'sim-sp-gsm', 'sim-sp-type'].forEach(id => {
+                    document.getElementById(id)?.addEventListener('input', updateSpineSim);
+                    document.getElementById(id)?.addEventListener('change', updateSpineSim);
+                });
+                const bindSp = (id, fn) => document.getElementById(id)?.addEventListener('input', e => { fn(Number(e.target.value) || 0); updateSpineSim(); });
+                bindSp('adm-sp-min', v => sp.minSpineCm = v);
+                bindSp('adm-sp-bp', v => blk.bookpaper = v);
+                bindSp('adm-sp-hvs', v => blk.hvs = v);
+                bindSp('adm-sp-ap', v => blk.artpaper = v);
+                bindSp('adm-sp-mt', v => blk.matte = v);
+                bindSp('adm-sp-df', v => blk.default = v);
+                updateSpineSim();
+
+                adminTabBody.querySelectorAll('[data-fpid]').forEach(card => {
+                    const pid = card.dataset.fpid;
+                    const def = PRODUCT_FORMULA_DEFS[pid];
+                    const ensureOv = () => {
+                        if (!adminDraft.productFormulas) adminDraft.productFormulas = {};
+                        if (!adminDraft.productFormulas[pid]) adminDraft.productFormulas[pid] = { extraP: 0, extraL: 0, sizes: [] };
+                        return adminDraft.productFormulas[pid];
+                    };
+                    const refreshCardPreviews = () => {
+                        const ov = adminDraft.productFormulas?.[pid] || {};
+                        const exP = parseFloat(ov.extraP) || 0;
+                        const exL = parseFloat(ov.extraL) || 0;
+                        card.querySelectorAll('[data-fsize-idx]').forEach(sRow => {
+                            const idx = parseInt(sRow.dataset.fsizeIdx, 10);
+                            const pExpr = sRow.querySelector('.adm-f-pexpr').value;
+                            const lExpr = sRow.querySelector('.adm-f-lexpr').value;
+                            const tP = safeEvalMath(pExpr, def.sample);
+                            const tL = safeEvalMath(lExpr, def.sample);
+                            const ok = Number.isFinite(tP) && Number.isFinite(tL);
+                            const prev = sRow.querySelector('.adm-f-preview');
+                            if (prev) {
+                                prev.className = `lg:col-span-2 text-right adm-f-preview text-[11px] font-semibold ${ok ? 'text-emerald-400' : 'text-rose-400'}`;
+                                prev.textContent = ok ? `${(tP + exP).toFixed(1)} × ${(tL + exL).toFixed(1)} cm` : '⚠ Rumus Error';
+                            }
+                        });
+                    };
+
+                    card.querySelector('.adm-f-extrap')?.addEventListener('input', e => {
+                        ensureOv().extraP = parseFloat(e.target.value) || 0;
+                        refreshCardPreviews();
+                    });
+                    card.querySelector('.adm-f-extral')?.addEventListener('input', e => {
+                        ensureOv().extraL = parseFloat(e.target.value) || 0;
+                        refreshCardPreviews();
+                    });
+                    card.querySelectorAll('[data-fsize-idx]').forEach(sRow => {
+                        const idx = parseInt(sRow.dataset.fsizeIdx, 10);
+                        const saveSizeExpr = () => {
+                            const ov = ensureOv();
+                            if (!ov.sizes) ov.sizes = [];
+                            ov.sizes[idx] = {
+                                pExpr: sRow.querySelector('.adm-f-pexpr').value,
+                                lExpr: sRow.querySelector('.adm-f-lexpr').value
+                            };
+                            refreshCardPreviews();
+                        };
+                        sRow.querySelector('.adm-f-pexpr')?.addEventListener('input', saveSizeExpr);
+                        sRow.querySelector('.adm-f-lexpr')?.addEventListener('input', saveSizeExpr);
+                    });
+                    card.querySelector('.adm-f-reset')?.addEventListener('click', () => {
+                        if (adminDraft.productFormulas) delete adminDraft.productFormulas[pid];
+                        renderAdminTabRumusan();
+                    });
+                });
+            }
+
+            function applySettingsToApp(nextSettings, persist = true) {
+                SETTINGS = normalizeSettings(nextSettings);
+                if (persist) {
+                    localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(SETTINGS));
+                }
+                el.bleedInput.value = SETTINGS.general.defaultBleed ?? 0.75;
+                populateMesinOptions();
+                populateBahanOptions(el.jenisMesin.value);
+                setupFinishingOptions(true);
+                updateAdminIndicator();
+                if (el.resultContainer && !el.resultContainer.classList.contains('hidden')) {
+                    calculateAll();
+                }
+            }
+
+            document.getElementById('open-admin-btn')?.addEventListener('click', openAdminModal);
+            document.getElementById('open-admin-inline-btn')?.addEventListener('click', openAdminModal);
+            document.getElementById('close-admin-btn')?.addEventListener('click', closeAdminModal);
+            document.getElementById('admin-cancel-btn')?.addEventListener('click', closeAdminModal);
+            adminModal?.addEventListener('click', e => { if (e.target === adminModal) closeAdminModal(); });
+
+            document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    activeAdminTab = btn.dataset.adminTab;
+                    renderAdminTabsNav();
+                    renderAdminTab();
+                });
+            });
+
+            document.getElementById('admin-save-btn')?.addEventListener('click', () => {
+                if (!adminDraft) return;
+                // Validate any custom formula overrides before saving
+                if (adminDraft.productFormulas) {
+                    for (const [pid, ov] of Object.entries(adminDraft.productFormulas)) {
+                        const def = PRODUCT_FORMULA_DEFS[pid];
+                        if (!def || !ov?.sizes) continue;
+                        for (let i = 0; i < def.sizes.length; i++) {
+                            const sOv = ov.sizes[i];
+                            if (!sOv) continue;
+                            if (!Number.isFinite(safeEvalMath(sOv.pExpr || def.sizes[i].pExpr, def.sample)) ||
+                                !Number.isFinite(safeEvalMath(sOv.lExpr || def.sizes[i].lExpr, def.sample))) {
+                                activeAdminTab = 'rumusan';
+                                renderAdminTabsNav();
+                                renderAdminTabRumusan();
+                                showAdminStatus(`⚠ Rumus tidak valid pada produk ${products[pid]?.name || pid}!`, true);
+                                return;
+                            }
+                        }
+                    }
+                }
+                applySettingsToApp(adminDraft, true);
+                showAdminStatus('✓ Tersimpan & Diterapkan!');
+            });
+
+            document.getElementById('admin-reset-btn')?.addEventListener('click', () => {
+                if (!confirm('Reset semua harga, margin, mesin, plano, dan rumusan kembali ke bawaan pabrik?')) return;
+                localStorage.removeItem(ADMIN_STORAGE_KEY);
+                adminDraft = cloneDefaultSettings();
+                applySettingsToApp(adminDraft, false);
+                renderAdminTab();
+                showAdminStatus('✓ Direset ke Default!');
+            });
+
+            document.getElementById('admin-export-btn')?.addEventListener('click', () => {
+                const data = JSON.stringify(adminDraft || SETTINGS, null, 2);
+                const blob = new Blob([data], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `admin-setting-kalkulator-${new Date().toISOString().slice(0, 10)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+
+            document.getElementById('admin-import-input')?.addEventListener('change', e => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    try {
+                        const parsed = JSON.parse(ev.target.result);
+                        adminDraft = normalizeSettings(parsed);
+                        renderAdminTab();
+                        showAdminStatus('✓ File JSON dimuat! Klik Simpan & Terapkan.');
+                    } catch (err) {
+                        showAdminStatus('⚠ File JSON tidak valid.', true);
+                    }
+                    e.target.value = '';
+                };
+                reader.readAsText(file);
+            });
+
             // --- INITIAL SETUP EXECUTION ---
+            el.bleedInput.value = SETTINGS.general.defaultBleed ?? 0.75;
+            populateMesinOptions();
             generateForm(el.productSelector.value);
             setupFinishingOptions();
             handleJenisMesinChange();
             renderHistory();
+            updateAdminIndicator();
         });
     </script>
 </body>
